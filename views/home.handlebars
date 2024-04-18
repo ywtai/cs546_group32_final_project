@@ -1,0 +1,13 @@
+<title>Home</title>
+<h1 class="title">Find a Park</h1>
+
+<main class="main-content">
+    <p class="description">This Website is for searching natianal park reviews!</p>
+    <form action="/searchparks" method="post" class="park-search-form">
+        <label for="searchName">
+            Name
+            <input type="text" id="searchName" name="searchName" placeholder="Name of Park" value="{{parks.name}}">
+        </label>
+        <button type="submit" class="submit-btn">Search Parks</button>
+    </form>
+</main>
