@@ -1,0 +1,19 @@
+<title>Movies Found</title>
+<main class="main-content">
+<link rel="stylesheet" href="/public/css/searchResult.css">
+<link rel="stylesheet" href="/public/css/styles.css">
+    <article class="parks-found">
+        <h1 class="title">Parks Found</h1>
+        <ol>
+            {{#each parks}}
+                    <li>
+                        <h2>{{this.fullName}}</h2>
+                        <img class="searchResultImage" src="{{this.images.[0].url}}" alt="{{this.name}} Poster">
+                        <p>{{this.description}}</p>
+                    </li>
+            {{/each}}
+        </ol>
+    </article>
+    <br>
+    <a href="/">Search for Another Park</a>
+</main>
