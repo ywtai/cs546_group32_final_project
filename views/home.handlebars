@@ -2,12 +2,40 @@
 <h1 class="title">Find a Park</h1>
 
 <main class="main-content">
-    <p class="description">This Website is for searching natianal park reviews!</p>
-    <form action="/searchparks" method="post" class="park-search-form">
-        <label for="searchName">
+    <p class="description">This Website is for searching national park reviews!</p>
+    <form action="/searchparks" method="post" class="park-search-form" id="searchForm">
+        <label for="searchType">
+            Search By
+            <select id="searchType" name="searchType" onchange="updateSearchFields()">
+                <option value="name">Name</option>
+                <option value="state">State</option>
+                <option value="activity">Activity</option>
+            </select>
+        </label>
+        <label for="searchQuery" id="queryLabel">
             Name
-            <input type="text" id="searchName" name="searchName" placeholder="Name of Park" value="{{parks.name}}">
+            <input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park name">
         </label>
         <button type="submit" class="submit-btn">Search Parks</button>
     </form>
 </main>
+
+<script>
+function updateSearchFields() {
+    var searchType = document.getElementById('searchType').value;
+    var queryLabel = document.getElementById('queryLabel');
+    var searchForm = document.getElementById('searchForm');
+    
+    if (searchType === 'activity') {
+        queryLabel.innerHTML = 'Activity<select id="searchQuery" name="searchQuery" multiple size="4" style="width: 100%;">' +
+                               '<option value="hiking">Hiking</option>' +
+                               '<option value="camping">Camping</option>' +
+                               '<option value="fishing">Fishing</option>' +
+                               '<option value="biking">Biking</option>' +
+                               '</select>';
+    } else {
+        queryLabel.innerHTML = `<span>${searchType.charAt(0).toUpperCase() + searchType.slice(1)}</span>` +
+                               `<input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park ${searchType}">`;
+    }
+}
+</script>
