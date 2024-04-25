@@ -3,7 +3,7 @@
 
 <main class="main-content">
     <p class="description">This Website is for searching national park reviews!</p>
-    <form action="/searchparks" method="post" class="park-search-form" id="searchForm">
+    <form action="/searchparks" method="get" class="park-search-form" id="searchForm">
         <label for="searchType">
             Search By
             <select id="searchType" name="searchType" onchange="updateSearchFields()">
@@ -136,7 +136,7 @@ function updateSearchFields() {
                                 '<option value="WY">Wyoming</option>' +
                                 '</select>';
     } else {
-        queryLabel.innerHTML = `<span>${searchType.charAt(0).toUpperCase() + searchType.slice(1)}</span>` +
+        queryLabel.innerHTML = `<span>${searchType.charAt(0).toUpperCase() + searchType.slice(1)} </span>` +
                             `<input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park ${searchType}">`;
     }
 }

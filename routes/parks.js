@@ -14,10 +14,13 @@ router.route('/').get(async (req, res) => {
     }
 });
 
-router.route('/searchparks').post(async (req, res) => {
+router.route('/searchparks')
+.get(async (req, res) => {
     //code here for POST this is where your form will be submitting searchMoviesByName and then call your data function passing in the searchMoviesByName and then rendering the search results of up to 20 Movies.
-    const searchType = req.body.searchType;
+    const searchType = req.query.searchType;
+    const searchQuery = req.query.searchQuery;
     const page  = parseInt(req.query.page) || 1;
+    console.log(page);
     const pageSize = 20; // Number of results per page
     const offset = (page - 1) * pageSize;
 
@@ -26,7 +29,7 @@ router.route('/searchparks').post(async (req, res) => {
         let totalParks = 0;
         switch (searchType) {
             case 'state':
-                const state = req.body.searchQuery.trim();
+                const state = searchQuery.trim();
                 if (!state) {
                     throw new Error("Please provide a state to search.");
                 }
@@ -34,7 +37,7 @@ router.route('/searchparks').post(async (req, res) => {
                 break;
 
             case 'name':
-                const name = req.body.searchQuery.trim();
+                const name = searchQuery.trim();
                 if (!name) {
                     throw new Error("Please provide a name to search.");
                 }
@@ -42,7 +45,7 @@ router.route('/searchparks').post(async (req, res) => {
                 break;
 
             case 'activity':
-                const activities = req.body.searchQuery;
+                const activities = searchQuery;
                 if (!activities || activities.length === 0) {
                     throw new Error("Please select at least one activity to search.");
                 }
@@ -57,12 +60,36 @@ router.route('/searchparks').post(async (req, res) => {
             res.status(404).render('error', { error: `We're sorry, but no results were found.` });
         } else {
             const totalPages = Math.ceil(totalParks / pageSize);
-            res.render('parkSearchResults', { parks: parkList, currentPage: page, totalPages });
+            const hasPreviousPage = page > 1;
+            const hasNextPage = page < totalPages;
+            const previousPage = hasPreviousPage ? page - 1 : null;
+            const nextPage = hasNextPage ? page + 1 : null;
+
+            let pages = [];
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push({
+                    number: i,
+                    isActive: i === page
+                });
+            }
+            res.render('parkSearchResults', { parks: parkList,
+                                            currentPage: page,
+                                            pages: pages,
+                                            previousPage: previousPage,
+                                            nextPage: nextPage,
+                                            hasPreviousPage: hasPreviousPage,
+                                            hasNextPage: hasNextPage, 
+                                            searchType: searchType,
+                                            searchQuery: searchQuery}
+                                            );
         }
     } catch (e) {
         console.error(e);
         res.status(500).render('error', { error: 'Internal Server Error. Please try again later.' });
     }
+})
+.post(async (req, res) => {
+    
 });
 
 export default router;

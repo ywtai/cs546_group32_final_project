@@ -15,17 +15,17 @@
         </ol>
     </article>
     <nav>
-        <ul>
-            {{#if previousPage}}
-                <li><a href="/searchparks?page={{decrement currentPage}}">Previous</a></li>
+        <div class="pagination">
+            {{#if hasPreviousPage}}
+                <a href="/searchparks?page={{previousPage}}&searchType={{searchType}}&searchQuery={{searchQuery}}">&laquo;Previous</a>
             {{/if}}
             {{#each pages}}
-                <li><a href="/searchparks?page={{this}}">{{this}}</a></li>
+                <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
             {{/each}}
-            {{#if nextPage}}
-                <li><a href="/searchparks?page={{increment currentPage}}">Next</a></li>
+            {{#if hasNextPage}}
+                <a href="/searchparks?page={{nextPage}}&searchType={{searchType}}&searchQuery={{searchQuery}}">Next&raquo;</a>
             {{/if}}
-        </ul>
+        </div>
     </nav>
     <br>
     <a href="/">Search for Another Park</a>
