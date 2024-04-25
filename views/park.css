@@ -1,0 +1,444 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/*header {*/
+/*    background-image: url('3C86137D-1DD8-B71B-0B978BACD7EBAEF1.jpg'); !* Replace with the path to your image *!*/
+/*    background-size: cover; !* Cover the entire area of the header *!*/
+/*    background-position: center; !* Center the background image *!*/
+/*    height: 300px; !* Set the height you want for your header *!*/
+/*    width: 100%; !* Ensure the header spans the width of the page *!*/
+/*    background-color: #005500;*/
+/*    color: white;*/
+/*    text-align: center;*/
+/*    padding: 20px;*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    position: relative;*/
+/*}*/
+
+.site-header {
+    background: #333; /* Dark background for the top part of the header */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-top .website-icon {
+    height: 30px; /* Adjust as needed */
+}
+
+.site-title {
+    font-size: 2.0em;
+    margin-left: 10px; /* Space from the icon */
+}
+
+.login-btn, .search-toggle, .menu-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+/* Adjust margin and padding as needed */
+.login-btn i, .search-toggle i, .menu-toggle i {
+    margin-right: 5px;
+}
+
+.header-bottom {
+    background: rgba(0,0,0,0.01); /* Translucent overlay */
+    text-align: center;
+    padding: 10px;
+}
+
+.header-bottom .park-name {
+    font-size: 1.5em;
+    color: white;
+}
+
+.park-image img {
+    width: 100%;
+    display: block; /* Ensures no margin or padding around image */
+    height: 400px; /* Maintain aspect ratio */
+}
+
+
+/*.header-bg {*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    transition: opacity 1s ease-in-out;*/
+/*    opacity: 0;*/
+/*}*/
+
+/*.header-bg.active {*/
+/*    opacity: 1;*/
+/*    z-index: 0;*/
+/*}*/
+
+/*.header-bg.previous {*/
+/*    z-index: -1;*/
+/*}*/
+
+review {
+    background-color: #005500;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    height: 200px;
+}
+
+nav#navbar {
+    background-color: #333;
+    color: white;
+    overflow: auto;
+}
+
+nav#navbar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav#navbar ul li {
+    float: left;
+}
+
+nav#navbar ul li a {
+    display: block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+nav#navbar ul li a:hover,
+nav#navbar ul li a.active {
+    background-color: #555;
+}
+
+main {
+    padding: 20px;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.card {
+    flex: 1 1 300px;
+    padding: 100px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background-color: #fff;
+    margin: 20px;
+    text-align: left;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.more-info {
+    padding: 10px 0;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.login-container {
+    float: right;
+    padding: 10px 20px;
+}
+
+.user-greeting {
+    color: white;
+}
+
+.user-greeting #logoutButton {
+    background-color: #f44336;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+
+.comments-container {
+    margin-top: 10px;
+    background-color: #eee;
+    padding: 10px;
+}
+
+button {
+    margin: 5px;
+}
+
+.load-more {
+    display: none; /* Hidden by default, shown with JavaScript */
+}
+
+/* Style for posts list and comments */
+.posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+}
+
+.posts-list {
+    padding: 20px;
+}
+.post-link {
+    display: block;
+    background: #f8f8f8;
+    margin: 10px 0;
+    padding: 15px;
+    text-decoration: none;
+    color: black;
+    border: 1px solid #ccc;
+}
+.post-link:hover {
+    background: #e9e9e9;
+}
+
+.add-post-btn {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.add-post-btn:hover {
+    background-color: #45a049;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    width: 50%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.rating .star {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ccc;
+}
+
+.rating .star.selected {
+    color: gold;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+}
+
+/* Styling for form elements */
+input[type="text"],
+textarea,
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="file"] {
+    background-color: #f8f8f8;
+    padding: 8px;
+}
+
+button.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button.btn:hover {
+    background-color: #45a049;
+}
+
+/* Close button specific style */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px; /* Large size for easy click */
+    cursor: pointer; /* Cursor to indicate clickable */
+}
+
+.close:hover {
+    color: #777; /* Darker grey on hover for interaction feedback */
+}
+
+/* Rating Stars Enhancement */
+.rating .star {
+    cursor: pointer;
+    font-size: 30px; /* Larger stars for easier interaction */
+    color: #ccc; /* Lighter grey for non-selected stars */
+    margin-right: 5px; /* Space between stars */
+}
+
+.rating .star:hover,
+.rating .star.selected {
+    color: #ffcd3c; /* Gold color for emphasis on selection and hover */
+}
+
+.favorite-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #ccc;
+}
+
+.favorite-btn.favorited {
+    color: red;
+}
+
+.login-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.login-btn i {
+    margin-right: 8px;
+}
+
+.login-btn:hover {
+    background-color: #005500;
+}
+
+/* Search Bar Styles */
+
+.search-bar label {
+    position: absolute;
+    left: 15px;
+    top: -15px; /* Adjust as needed */
+    background-color: rgba(0,0,0,0.01);
+    color: white;
+    padding: 0 5px;
+    font-size: 14px;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: rgba(0,0,0,0.01); /* Or any color that matches your theme */
+    padding: 10px;
+}
+
+.search-icon-container {
+    margin-right: 10px;
+    color: white; /* Adjust color as needed */
+}
+
+.find-park {
+    margin-right: 20px;
+    color: white; /* Adjust color as needed */
+}
+
+.dropdown-container select {
+    padding: 10px 30px;
+    border-radius: 4px;
+    border: 2px solid #ccc;
+}
+
+/* Style to reset the default appearance of the select dropdown */
+.dropdown-container select {
+    -webkit-appearance: none; /* For Safari */
+    -moz-appearance: none;    /* For Firefox */
+    appearance: none;         /* Standard syntax */
+    background-color: white;  /* Dropdown background color */
+}
+
+/* Adding custom arrow using background-image if needed */
+.dropdown-container select {
+    background-image: url('dropdown-arrow.png'); /* Path to custom arrow image */
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-size: 12px; /* Adjust size as necessary */
+}
+
