@@ -46,26 +46,26 @@ export const searchByName = async (name) => {
     // }
 }
 
-export const searchByCode = async (code) => {
-    const query = 'parkCode=' + code.toLowerCase();
+// export const searchByCode = async (code) => {
+//     const query = 'parkCode=' + code.toLowerCase();
 
-    try {
-        const {data} = await axios.get(`${apiUrl}/parks?${query}&apikey=${apikey}`);
-        return data.data;
-    } catch(e) {
-        console.error(e);
-        throw new Error('An error occurred while searching parks.');
-    }
-}
+//     try {
+//         const {data} = await axios.get(`${apiUrl}/parks?${query}&apikey=${apikey}`);
+//         return data.data;
+//     } catch(e) {
+//         console.error(e);
+//         throw new Error('An error occurred while searching parks.');
+//     }
+// }
 
-export const searchByActivity = async (activityNames) => {
+export const searchByActivity = async (activityIds) => {
     try {
         const parkCollection = await parks();
-        if (!Array.isArray(activityNames)) {
-            activityNames = [activityNames];
+        if (!Array.isArray(activityIds)) {
+            activityIds = [activityIds];
         }
 
-        const query = { "activities.name": { $in: activityNames.map(name => new RegExp(`^${name}$`, 'i')) } };
+        const query = { "activities.id": { $in: activityIds } };
         const parkList = await parkCollection.find(query).toArray();
         return parkList;
     } catch (e) {

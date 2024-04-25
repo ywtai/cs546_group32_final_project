@@ -1,6 +1,6 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/movies.js that you will call in your routes below
 import * as express from 'express';
-import { searchByState, searchByActivity, searchByName, searchByCode } from '../data/searchPark.js';
+import { searchByState, searchByActivity, searchByName } from '../data/searchPark.js';
 
 const router = express.Router();
 
