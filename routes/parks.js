@@ -16,11 +16,9 @@ router.route('/').get(async (req, res) => {
 
 router.route('/searchparks')
 .get(async (req, res) => {
-    //code here for POST this is where your form will be submitting searchMoviesByName and then call your data function passing in the searchMoviesByName and then rendering the search results of up to 20 Movies.
     const searchType = req.query.searchType;
     const searchQuery = req.query.searchQuery;
     const page  = parseInt(req.query.page) || 1;
-    console.log(page);
     const pageSize = 20; // Number of results per page
     const offset = (page - 1) * pageSize;
 
@@ -72,6 +70,51 @@ router.route('/searchparks')
                     isActive: i === page
                 });
             }
+
+            let pagesFirst3 = [];
+            let pagesLast3 = [];
+            let pagesCur3 = [];
+            let overPage = false;
+            let showFirstEllipsis = false;
+            let showLastEllipsis = false;
+            let showCur3 = false;
+            if (totalPages > 8) {
+                overPage = true;
+                const firstPages = [1, 2, 3];
+                const lastPages = [totalPages - 2, totalPages - 1, totalPages];
+                let middlePages = [];
+            
+                showFirstEllipsis = page > 4;
+                showLastEllipsis = page < (totalPages - 3);
+            
+                if (page <= 4) { 
+                    middlePages = [4, 5, 6].filter(p => !lastPages.includes(p));
+                    showFirstEllipsis = false;  
+                    showLastEllipsis = true;
+                } else if (page >= totalPages - 3) {  
+                    middlePages = [totalPages - 3, totalPages - 4, totalPages - 5].reverse().filter(p => !firstPages.includes(p));
+                    showFirstEllipsis = true;
+                    showLastEllipsis = false; 
+                } else {  
+                    middlePages = [page - 1, page, page + 1];
+                }
+            
+                pagesFirst3 = firstPages.map(num => ({
+                    number: num,
+                    isActive: num === page
+                }));
+            
+                pagesLast3 = lastPages.map(num => ({
+                    number: num,
+                    isActive: num === page
+                }));
+            
+                pagesCur3 = middlePages.map(num => ({
+                    number: num,
+                    isActive: num === page
+                }));
+            }
+            
             res.render('parkSearchResults', { parks: parkList,
                                             currentPage: page,
                                             pages: pages,
@@ -80,8 +123,15 @@ router.route('/searchparks')
                                             hasPreviousPage: hasPreviousPage,
                                             hasNextPage: hasNextPage, 
                                             searchType: searchType,
-                                            searchQuery: searchQuery}
-                                            );
+                                            searchQuery: searchQuery,
+                                            pagesFirst3: pagesFirst3,
+                                            pagesLast3: pagesLast3,
+                                            pagesCur3: pagesCur3,
+                                            overPage: overPage,
+                                            showFirstEllipsis: showFirstEllipsis,
+                                            showLastEllipsis: showLastEllipsis,
+                                        }
+                                        );
         }
     } catch (e) {
         console.error(e);

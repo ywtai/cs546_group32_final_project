@@ -33,7 +33,6 @@ export const searchByName = async (name, pageSize, offset) => {
         name = validation.checkString(name);
         const parkCollection = await parks();
         const query = { parkName: { $regex: new RegExp(name, 'i') } };
-
         const totalParks = await parkCollection.countDocuments(query);
         const parkList = await parkCollection.find(query)
                                                 .skip(offset)
@@ -71,9 +70,7 @@ export const searchByName = async (name, pageSize, offset) => {
 export const searchByActivity = async (activityIds, pageSize, offset) => {
     try {
         const parkCollection = await parks();
-        if (!Array.isArray(activityIds)) {
-            activityIds = [activityIds];
-        }
+        activityIds = activityIds.split(',');
 
         const query = { "activities.id": { $in: activityIds } };
 

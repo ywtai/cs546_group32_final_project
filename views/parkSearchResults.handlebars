@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/public/css/styles.css">
     <article class="parks-found">
         <h1 class="title">Parks Found</h1>
-        <ol>
+        <ul>
             {{#each parks}}
                     <li>
                         <h2>{{this.parkName}}</h2>
@@ -12,16 +12,35 @@
                         <p>{{this.description}}</p>
                     </li>
             {{/each}}
-        </ol>
+        </ul>
     </article>
     <nav>
         <div class="pagination">
             {{#if hasPreviousPage}}
                 <a href="/searchparks?page={{previousPage}}&searchType={{searchType}}&searchQuery={{searchQuery}}">&laquo;Previous</a>
             {{/if}}
-            {{#each pages}}
-                <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
-            {{/each}}
+            {{#if overPage}}
+                {{#each pagesFirst3}}
+                    <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
+                {{/each}}
+                {{#if showFirstEllipsis}}
+                    <a>...</a>
+                {{/if}}
+                {{#each pagesCur3}}
+                    <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
+                {{/each}}
+                {{#if showLastEllipsis}}
+                    <a>...</a>
+                {{/if}}
+                {{#each pagesLast3}}
+                    <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
+                {{/each}}
+            {{else}}
+                {{#each pages}}
+                    <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
+                {{/each}}
+            {{/if}}
+            
             {{#if hasNextPage}}
                 <a href="/searchparks?page={{nextPage}}&searchType={{searchType}}&searchQuery={{searchQuery}}">Next&raquo;</a>
             {{/if}}

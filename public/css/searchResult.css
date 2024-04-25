@@ -19,9 +19,9 @@
     text-decoration: none;
 }
   
-  .pagination a.active {
+.pagination a.active {
     background-color: #007bff;
     color: white;
-  }
+}
   
-  .pagination a:hover:not(.active) {background-color: #ddd;}
+.pagination a:hover:not(.active) {background-color: #ddd;}
