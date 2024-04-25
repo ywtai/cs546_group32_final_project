@@ -15,3 +15,5 @@ const getCollectionFn = (collection) => {
 
 //TODO: YOU WILL NEED TO CHANGE THE CODE BELOW TO HAVE THE COLLECTION(S) REQUIRED BY THE ASSIGNMENT
 export const parks = getCollectionFn('parks');
+export const users = getCollectionFn('users');
+

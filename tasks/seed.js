@@ -6,7 +6,7 @@ const db = await dbConnection();
 await db.dropDatabase();
 
 const saveParksFromApi = async () => {
-	let apiKey = ''; //please enter your api key
+	let apiKey = 'mmtm7icVWdJiWqXvlmWM9iFtZgKItcJrK6RySfgg'; //please enter your api key
 	let limit = '600';
 	let endpoint = 'https://developer.nps.gov/api/v1/parks?';
 	let url = endpoint + 'limit=' + limit + '&api_key=' + apiKey;
