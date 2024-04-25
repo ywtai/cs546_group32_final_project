@@ -19,6 +19,18 @@
         </label>
         <button type="submit" class="submit-btn">Search Parks</button>
     </form>
+    <div class="top5">
+        <h2>Top 5 Rating Parks</h2>
+        <ol>
+            {{#each top5}}
+                    <li>
+                        <h2>{{this.parkName}}</h2>
+                        <img class="top5Image" src="{{this.photos.[0].url}}" alt="{{this.parkName}} Poster">
+                        <p>{{this.description}}</p>
+                    </li>
+            {{/each}}
+        </ol>
+    </div>
 </main>
 
 <script>

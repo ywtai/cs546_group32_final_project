@@ -108,6 +108,18 @@ export const searchByActivity = async (activityIds, pageSize, offset) => {
     // }
 }
 
+export const searchTop5 = async () => {
+    try {
+        const parkCollection = await parks();
+        const parkList = await parkCollection.aggregate([{$sort: {averageRating: 1}},
+                                                        {$limit: 5}]).toArray();
+        return parkList;
+    } catch (e) {
+        console.error('Error searching for parks by activities:', e);
+        throw e;
+    }
+}
 // console.log(await searchByActivity(['camping', 'biking', 'hiking']));
 // console.log(await searchByName('joshua'));
 // console.log(await searchByCode('cuis'));
+// console.log(await searchTop5());
