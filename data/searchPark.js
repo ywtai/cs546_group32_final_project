@@ -2,8 +2,6 @@ import axios from "axios";
 import validation from '../validation.js';
 import { parks } from "../config/mongoCollections.js";
 
-// const apikey = '&api_key=mmtm7icVWdJiWqXvlmWM9iFtZgKItcJrK6RySfgg';
-// const apiUrl = 'https://developer.nps.gov/api/v1';
 
 export const searchByState = async (stateCode) => {
     try {
