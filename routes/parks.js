@@ -18,11 +18,7 @@ router.route('/searchparks').post(async (req, res) => {
     const searchType = req.body.searchType;
     if (searchType === 'state') {
         try {
-            const state = req.body.searchQuery.trim();
-            if (!state) {
-                return res.status(400).render('error', {error: "Please provide a state to search."});
-            }
-    
+            const state = req.body.searchQuery;
             const parkList = await searchByState(state);
             if (!parkList || parkList === 0) {
                 res.status(404).render('error', {error : `We're sorry, but no results were found for "${state}".`});
@@ -51,9 +47,9 @@ router.route('/searchparks').post(async (req, res) => {
     } else {
         try {
             const activities = req.body.searchQuery;
-         
+            
             if (!activities) {
-                return res.status(400).render('error', {error: "Please provide a name to search."});
+                return res.status(400).render('error', {error: "Please select a activity to search."});
             }
             
             const parkList = await searchByActivity(activities);
