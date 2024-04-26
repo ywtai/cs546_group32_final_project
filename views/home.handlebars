@@ -1,24 +1,31 @@
 <title>Home</title>
+<script src="/public/js/client_side_validation.js" defer></script>
+
 <h1 class="title">Find a Park</h1>
 
 <main class="main-content">
     <p class="description">This Website is for searching national park reviews!</p>
     <form action="/searchparks" method="get" class="park-search-form" id="searchForm">
-        <label for="searchType">
-            Search By
-            <select id="searchType" name="searchType" onchange="updateSearchFields()">
-                <option value="name">Name</option>
-                <option value="state">State</option>
-                <option value="activity">Activity</option>
-            </select>
-        </label>
-        <br>
-        <label for="searchQuery" id="queryLabel">
-            Name 
-            <input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park name">
-        </label>
-        <button type="submit" class="submit-btn">Search Parks</button>
+        <div class="form-row">
+            <label for="searchType">
+                Search By
+                <select id="searchType" name="searchType" onchange="updateSearchFields()">
+                    <option value="name">Name</option>
+                    <option value="state">State</option>
+                    <option value="activity">Activity</option>
+                </select>
+            </label>
+            <label for="searchQuery" id="queryLabel">
+                Name 
+                <input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park name">
+            
+            </label>
+
+        </div>
+            <button type="submit" class="submit-btn">Search Parks</button>
+
     </form>
+
     <div class="top5">
         <h2>Top 5 Rating Parks</h2>
         <ol>

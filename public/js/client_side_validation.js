@@ -244,3 +244,20 @@
   
   };
 
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('searchForm');
+
+    if (searchForm) {
+      searchForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const searchQuery = document.getElementById('searchQuery').value.trim();
+          const searchType = document.getElementById('searchType').value.trim();
+
+          if (!searchQuery) {
+            alert(`Please provide a ${searchType} to search.`);
+          } else {
+            searchForm.submit();
+          }
+      });
+  }
+  })
