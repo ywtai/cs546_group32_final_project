@@ -1,6 +1,8 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/movies.js that you will call in your routes below
 import * as express from 'express';
 import { searchByState, searchByActivity, searchByName, searchByCode } from '../data/searchPark.js';
+import { parksData } from "../data/index.js";
+import validation from "../validation.js";
 
 const router = express.Router();
 
@@ -65,5 +67,30 @@ router.route('/searchparks').post(async (req, res) => {
     }
     
   });
+
+router.route('/:id').get(async (req, res) => {
+	let parkId = req.params.id;
+
+	try {
+		parkId = validation.checkId(parkId, 'id parameter in URL');
+	} catch (e) {
+		res.status(500).json({error: e.message});
+	}
+
+	const allData = [];
+
+	try {
+		const parkDetail = await parksData.getParkById(parkId);
+		allData.push(parkDetail);
+
+		//show the park detail page
+		res.render('parkById', {
+			htmlTitle: parkDetail.Title,
+			parkData: allData,
+		});
+	} catch (e) {
+		res.status(500).json({error: e.message});
+	}
+});
 
 export default router;
