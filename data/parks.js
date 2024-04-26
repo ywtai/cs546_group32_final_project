@@ -48,12 +48,12 @@ const exportedMethods = {
 
 		const newId = insertInfo.insertedId.toString()
     
-    const park = await this.get(newId);
+    const park = await this.getParkById(newId);
 
     return park;
   },
 
-	async get(id) {
+	async getParkById(id) {
     id = validation.checkId(id);
   
     const parkCollection = await parks();
