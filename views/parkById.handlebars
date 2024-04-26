@@ -1,0 +1,57 @@
+<main class='park-detail'>
+    {{#each parkData}}
+    <article class="container">
+        <h1>{{this.parkName}}</h1>
+        {{#if this.photos}}
+        <img class="park-poster" alt="{{this.parkName}} Image" src="{{this.photos.[0].url}}">
+        {{/if}}
+        <h2>Description</h2>
+        <p class="description">{{this.description}}</p>
+        <section class="info">
+            <h3>Park Info</h3>
+            <dl>
+                <dt>Park Code:</dt>
+                <dd>{{this.parkCode}}</dd>
+                <dt>Location:</dt>
+                <dd>{{this.state}}</dd>
+                <dt>Address:</dt>
+                <!-- Assuming address structure -->
+                <dd>{{this.address.[0].line1}}, {{this.address.[0].city}}</dd>
+                <dt>Operating Times:</dt>
+                <!-- Assuming operating time structure -->
+                <dd>{{this.operatingTime.[0].description}}</dd>
+                <dt>Activities:</dt>
+                <dd>
+                    {{#each this.activities}}
+                    {{this.name}}{{#unless @last}}, {{/unless}}
+                    {{/each}}
+                </dd>
+            </dl>
+        </section>
+        <section class="ratings">
+            <h4 class="rating">Ratings and Reviews</h4>
+            {{#if this.reviews}}
+            <table class="my_coolratings_table">
+                <tr>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Date</th>
+                    <th>Review</th>
+                </tr>
+                {{#each this.reviews}}
+                <tr>
+                    <td>{{this.userName}}</td>
+                    <td>{{this.rating}}</td>
+                    <td>{{this.reviewDate}}</td>
+                    <td>{{this.title}}</td>
+                </tr>
+                {{/each}}
+            </table>
+            {{else}}
+            <p>No reviews yet.</p>
+            {{/if}}
+        </section>
+    </article>
+    {{/each}}
+    <a class="search-other" href="/">Search for Another Park</a>
+</main>

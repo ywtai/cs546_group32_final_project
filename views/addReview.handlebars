@@ -1,0 +1,36 @@
+{{#if hasErrors}}
+<p class=" not-found">
+  {{errors}}
+</p>
+{{/if}}
+<main class='review-detail'>
+    <article class="container">
+        <h1>Submit Your Review</h1>
+        <form action="/reviews/addReview/{{parkId}}" method="POST" enctype="multipart/form-data">
+            <section class="info">
+                <dl>
+                    <dt>User ID:</dt>
+                    <dd><input type="text" id="userId" name="userId" required></dd>
+                    
+                    <dt>Title:</dt>
+                    <dd><input type="text" id="title" name="title" required></dd>
+                    
+                    <dt>User Name:</dt>
+                    <dd><input type="text" id="userName" name="userName" required></dd>
+                    
+                    <dt>Content:</dt>
+                    <dd><textarea id="content" name="content" required></textarea></dd>
+                    
+					{{!-- have to change --}}
+                    <dt>Photos:</dt>
+                    <dd><input type="number" id="photos" name="photos" accept="image/*" required></dd>
+                    
+                    <dt>Rating:</dt>
+                    <dd><input type="number" id="rating" name="rating" min="1" max="5" required></dd>
+                </dl>
+            </section>
+			{{!-- have to change --}}
+            <button id="reviewSubmit" name="reviewSubmit" type="submit" class="addReview-button">Submit Review</button>
+        </form>
+    </article>
+</main>

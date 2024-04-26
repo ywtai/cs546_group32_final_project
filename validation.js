@@ -23,8 +23,9 @@ const exportedMethods = {
       return strVal;
     },
 
-    checkRating(rating) {
-      if (typeof rating !== 'number') throw `Error: rating is not a number`;
+    checkRating(ratingString) {
+      let rating = Number(ratingString);
+      if (isNaN(rating)) throw `Error: rating is not a number`;
       if (rating < 1 || rating > 5) throw `Error: rating should be between 1 to 5`;
       if (rating % 1 !== 0) {
         if (rating.toString().split(".")[1].length > 1)
