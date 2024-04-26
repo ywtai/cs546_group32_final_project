@@ -1,23 +1,43 @@
 <title>Home</title>
+<script src="/public/js/client_side_validation.js" defer></script>
+
 <h1 class="title">Find a Park</h1>
 
 <main class="main-content">
     <p class="description">This Website is for searching national park reviews!</p>
-    <form action="/searchparks" method="post" class="park-search-form" id="searchForm">
-        <label for="searchType">
-            Search By
-            <select id="searchType" name="searchType" onchange="updateSearchFields()">
-                <option value="name">Name</option>
-                <option value="state">State</option>
-                <option value="activity">Activity</option>
-            </select>
-        </label>
-        <label for="searchQuery" id="queryLabel">
-            Name
-            <input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park name">
-        </label>
-        <button type="submit" class="submit-btn">Search Parks</button>
+    <form action="/searchparks" method="get" class="park-search-form" id="searchForm">
+        <div class="form-row">
+            <label for="searchType">
+                Search By
+                <select id="searchType" name="searchType" onchange="updateSearchFields()">
+                    <option value="name">Name</option>
+                    <option value="state">State</option>
+                    <option value="activity">Activity</option>
+                </select>
+            </label>
+            <label for="searchQuery" id="queryLabel">
+                Name 
+                <input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park name">
+            
+            </label>
+
+        </div>
+            <button type="submit" class="submit-btn">Search Parks</button>
+
     </form>
+
+    <div class="top5">
+        <h2>Top 5 Rating Parks</h2>
+        <ol>
+            {{#each top5}}
+                    <li>
+                        <h2>{{this.parkName}}</h2>
+                        <img class="top5Image" src="{{this.photos.[0].url}}" alt="{{this.parkName}} Poster">
+                        <p>{{this.description}}</p>
+                    </li>
+            {{/each}}
+        </ol>
+    </div>
 </main>
 
 <script>
@@ -27,15 +47,104 @@ function updateSearchFields() {
     var searchForm = document.getElementById('searchForm');
     
     if (searchType === 'activity') {
-        queryLabel.innerHTML = 'Activity<select id="searchQuery" name="searchQuery" multiple size="4" style="width: 100%;">' +
-                               '<option value="hiking">Hiking</option>' +
-                               '<option value="camping">Camping</option>' +
-                               '<option value="fishing">Fishing</option>' +
-                               '<option value="biking">Biking</option>' +
+        queryLabel.innerHTML = 'Activity <select id="searchQuery" name="searchQuery" multiple size="10" style="width: 100%;">' +
+                               '<option value="09DF0950-D319-4557-A57E-04CD2F63FF42">Arts and Culture</option>' +
+                               '<option value="13A57703-BB1A-41A2-94B8-53B692EB7238">Astronomy</option>' +
+                               '<option value="5F723BAD-7359-48FC-98FA-631592256E35">Auto and ATV</option>' +
+                               '<option value="7CE6E935-F839-4FEC-A63E-052B1DEF39D2">Biking</option>' +
+                               '<option value="071BA73C-1D3C-46D4-A53C-00D5602F7F0E">Boating</option>' +
+                               '<option value="A59947B7-3376-49B4-AD02-C0423E08C5F7">Camping</option>' +
+                               '<option value="07CBCA6A-46B8-413F-8B6C-ABEDEBF9853E">Canyoneering</option>' +
+                               '<option value="BA316D0F-92AE-4E00-8C80-DBD605DC58C3">Caving</option>' +
+                               '<option value="B12FAAB9-713F-4B38-83E4-A273F5A43C77">Climbing</option>' +
+                               '<option value="C11D3746-5063-4BD0-B245-7178D1AD866C">Compass and GPS</option>' +
+                               '<option value="8C495067-8E94-4D78-BBD4-3379DACF6550">Dog Sledding</option>' +
+                               '<option value="AE42B46C-E4B7-4889-A122-08FE180371AE">Fishing</option>' +
+                               '<option value="D72206E4-6CD1-4441-A355-F8F1827466B1">Flying</option>' +
+                               '<option value="1DFACD97-1B9C-4F5A-80F2-05593604799E">Food</option>' +
+                               '<option value="3F3ABD16-2C52-4EAA-A1F6-4235DE5686F0">Golfing</option>' +
+                               '<option value="B33DC9B6-0B7D-4322-BAD7-A13A34C584A3">Guided Tours</option>' +
+                               '<option value="42FD78B9-2B90-4AA9-BC43-F10E9FEA8B5A">Hands-On</option>' +
+                               '<option value="BFF8C027-7C8F-480B-A5F8-CD8CE490BFBA">Hiking</option>' +
+                               '<option value="0307955A-B65C-4CE4-A780-EB36BAAADF0B">Horse Trekking</option>' +
+                               '<option value="8386EEAF-985F-4DE8-9037-CCF91975AC94">Hunting and Gathering</option>' +
+                               '<option value="5FF5B286-E9C3-430E-B612-3380D8138600">Ice Skating</option>' +
+                               '<option value="DF4A35E0-7983-4A3E-BC47-F37B872B0F25">Junior Ranger Program</option>' +
+                               '<option value="B204DE60-5A24-43DD-8902-C81625A09A74">Living History</option>' +
+                               '<option value="C8F98B28-3C10-41AE-AA99-092B3B398C43">Museum Exhibits</option>' +
+                               '<option value="4D224BCA-C127-408B-AC75-A51563C42411">Paddling</option>' +
+                               '<option value="0C0D142F-06B5-4BE1-8B44-491B90F93DEB">Park Film</option>' +
+                               '<option value="7779241F-A70B-49BC-86F0-829AE332C708">Playground</option>' +
+                               '<option value="42CF4021-8524-428E-866A-D33097A4A764">SCUBA Diving</option>' +
+                               '<option value="24380E3F-AD9D-4E38-BF13-C8EEB21893E7">Shopping</option>' +
+                               '<option value="F9B1D433-6B86-4804-AED7-B50A519A3B7C">Skiing</option>' +
+                               '<option value="3EBF7EAC-68FC-4754-B6A4-0C38A1583D45">Snorkeling</option>' +
+                               '<option value="C38B3C62-1BBF-4EA1-A1A2-35DE21B74C17">Snow Play</option>' +
+                               '<option value="7C912B83-1B1B-4807-9B66-97C12211E48E">Snowmobiling</option>' +
+                               '<option value="01D717BC-18BB-4FE4-95BA-6B13AD702038">Snowshoeing</option>' +
+                               '<option value="AE3C95F5-E05B-4A28-81DD-1C5FD4BE88E2">Surfing</option>' +
+                               '<option value="587BB2D3-EC35-41B2-B3F7-A39E2B088AEE">Swimming</option>' +
+                               '<option value="94369BFD-F186-477E-8713-AE2A745154DA">Team Sports</option>' +
+                               '<option value="4D06CEED-90C6-4B69-B264-32CC90B69BA6">Tubing</option>' +
+                               '<option value="8A1C7B17-C2C6-4F7C-9539-EA1E19971D80">Water Skiing</option>' +
+                               '<option value="0B685688-3405-4E2A-ABBA-E3069492EC50">Wildlife Watching</option>' +
                                '</select>';
+    } else if (searchType === 'state') {
+        queryLabel.innerHTML = 'State <select id="searchQuery" name="searchQuery">' +
+                                '<option value="AL">Alabama</option>' +
+                                '<option value="AK">Alaska</option>' +
+                                '<option value="AZ">Arizona</option>' +
+                                '<option value="AR">Arkansas</option>' +
+                                '<option value="CA">California</option>' +
+                                '<option value="CO">Colorado</option>' +
+                                '<option value="CT">Connecticut</option>' +
+                                '<option value="DE">Delaware</option>' +
+                                '<option value="FL">Florida</option>' +
+                                '<option value="GA">Georgia</option>' +
+                                '<option value="HI">Hawaii</option>' +
+                                '<option value="ID">Idaho</option>' +
+                                '<option value="IL">Illinois</option>' +
+                                '<option value="IN">Indiana</option>' +
+                                '<option value="IA">Iowa</option>' +
+                                '<option value="KS">Kansas</option>' +
+                                '<option value="KY">Kentucky</option>' +
+                                '<option value="LA">Louisiana</option>' +
+                                '<option value="ME">Maine</option>' +
+                                '<option value="MD">Maryland</option>' +
+                                '<option value="MA">Massachusetts</option>' +
+                                '<option value="MI">Michigan</option>' +
+                                '<option value="MN">Minnesota</option>' +
+                                '<option value="MS">Mississippi</option>' +
+                                '<option value="MO">Missouri</option>' +
+                                '<option value="MT">Montana</option>' +
+                                '<option value="NE">Nebraska</option>' +
+                                '<option value="NV">Nevada</option>' +
+                                '<option value="NH">New Hampshire</option>' +
+                                '<option value="NJ">New Jersey</option>' +
+                                '<option value="NM">New Mexico</option>' +
+                                '<option value="NY">New York</option>' +
+                                '<option value="NC">North Carolina</option>' +
+                                '<option value="ND">North Dakota</option>' +
+                                '<option value="OH">Ohio</option>' +
+                                '<option value="OK">Oklahoma</option>' +
+                                '<option value="OR">Oregon</option>' +
+                                '<option value="PA">Pennsylvania</option>' +
+                                '<option value="RI">Rhode Island</option>' +
+                                '<option value="SC">South Carolina</option>' +
+                                '<option value="SD">South Dakota</option>' +
+                                '<option value="TN">Tennessee</option>' +
+                                '<option value="TX">Texas</option>' +
+                                '<option value="UT">Utah</option>' +
+                                '<option value="VT">Vermont</option>' +
+                                '<option value="VA">Virginia</option>' +
+                                '<option value="WA">Washington</option>' +
+                                '<option value="WV">West Virginia</option>' +
+                                '<option value="WI">Wisconsin</option>' +
+                                '<option value="WY">Wyoming</option>' +
+                                '</select>';
     } else {
-        queryLabel.innerHTML = `<span>${searchType.charAt(0).toUpperCase() + searchType.slice(1)}</span>` +
-                               `<input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park ${searchType}">`;
+        queryLabel.innerHTML = `<span>${searchType.charAt(0).toUpperCase() + searchType.slice(1)} </span>` +
+                            `<input type="text" id="searchQuery" name="searchQuery" placeholder="Enter park ${searchType}">`;
     }
 }
 </script>

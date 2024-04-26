@@ -1,0 +1,19 @@
+<body>
+<link rel="stylesheet" href="/public/css/styles.css">
+</body>
+
+<div class="container">
+    <h1 class="login">{{title}}</h1>
+    <form id="login-form" action="/login" method="POST">
+        <label for="usernameOrEmail">Email Address or your username:</label>
+        <input type="usernameOrEmail" name="usernameOrEmail" id="usernameOrEmail" value = {{usernameOrEmail}}><br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="loginpassword" value = {{password}}><br>
+        <input type="submit" value="Login">
+    </form>
+    <div id="error" class="error" hidden>I'm an error. I will change through Client-Side JS</div>
+    {{#if message}}
+        <p> {{this.message}}</p>
+    {{/if}}
+    <a href="/register">Click here to register!</a>
+    <script src="../public/js/client_side_validation.js"></script>
