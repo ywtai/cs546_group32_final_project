@@ -89,7 +89,7 @@ router
       return res.status(404).json({error: e});
     } 
   })
-  .patch(async (req, res) => {
+  .patch(upload.none(), async (req, res) => {
     let updateObject = req.body;
     if (!updateObject || Object.keys(updateObject).length === 0) {
       return res
@@ -125,7 +125,7 @@ router
       return res.status(404).send({error: e});
     }
   })
-  .delete(async (req, res) => {
+  .delete(upload.none(), async (req, res) => {
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
