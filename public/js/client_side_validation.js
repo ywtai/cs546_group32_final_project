@@ -25,7 +25,7 @@
                     dateOfBirth.value,
                     bio.value
                     )) 
-                userName = helpers.checkuserName(userName.value);
+                let validuserName = helpers.checkuserName(userName.value);
                 email = helpers.checkEmail(email.value);
                 password = helpers.checkPassword(password.value);
                 confirmPassword = helpers.checkPassword(confirmPassword.value)
