@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { searchByState, searchByActivity, searchByName, searchTop5 } from '../data/searchPark.js';
-import {parksData, reviewData} from "./data/index.js";
+import {parksData, reviewData} from "../data/index.js";
 import validation from "../validation.js";
 
 const router = express.Router();
