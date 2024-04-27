@@ -80,7 +80,6 @@ router.route('/searchparks')
             let overPage = false;
             let showFirstEllipsis = false;
             let showLastEllipsis = false;
-            let showCur3 = false;
             if (totalPages > 8) {
                 overPage = true;
                 const firstPages = [1, 2, 3];
@@ -145,29 +144,29 @@ router.route('/searchparks')
     
 });
 
-router.route('/:id').get(async (req, res) => {
-	let parkId = req.params.id;
+// router.route('/:id').get(async (req, res) => {
+// 	let parkId = req.params.id;
 
-	try {
-		parkId = validation.checkId(parkId, 'id parameter in URL');
-	} catch (e) {
-		res.status(500).json({error: e.message});
-	}
+// 	try {
+// 		parkId = validation.checkId(parkId, 'id parameter in URL');
+// 	} catch (e) {
+// 		res.status(500).json({error: e.message});
+// 	}
 
-	const allData = [];
+// 	const allData = [];
 
-	try {
-		const parkDetail = await parksData.getParkById(parkId);
-		allData.push(parkDetail);
+// 	try {
+// 		const parkDetail = await parksData.getParkById(parkId);
+// 		allData.push(parkDetail);
 
-		//show the park detail page
-		res.render('parkById', {
-			htmlTitle: parkDetail.Title,
-			parkData: allData,
-		});
-	} catch (e) {
-		res.status(500).json({error: e.message});
-	}
-});
+// 		//show the park detail page
+// 		res.render('parkById', {
+// 			htmlTitle: parkDetail.Title,
+// 			parkData: allData,
+// 		});
+// 	} catch (e) {
+// 		res.status(500).json({error: e.message});
+// 	}
+// });
 
 export default router;

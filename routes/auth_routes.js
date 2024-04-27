@@ -55,7 +55,7 @@ router
         password);
 
       if(user.insertedUser){
-        res.redirect('/login')
+        res.redirect('/auth/login')
       }
     }catch(e){
         return res.status(500).render('error', {title: "Error", message:"Internal Server Error"})
@@ -98,7 +98,9 @@ router
       }
       redirectBasedOnRole(req, res);
     }catch(e){
-      return res.status(500).render('error', {title: "Error", message: e});
+      
+      res.redirect('/auth/login');
+      // return res.status(500).render('error', {title: "Error", message: e.message});
     }
   });
 

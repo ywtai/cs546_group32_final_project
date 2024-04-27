@@ -4,7 +4,7 @@
 
 <div class="container">
     <h1 class="login">{{title}}</h1>
-    <form id="login-form" action="/login" method="POST">
+    <form id="login-form" action="/auth/login" method="POST">
         <label for="usernameOrEmail">Email Address or your username:</label>
         <input type="usernameOrEmail" name="usernameOrEmail" id="usernameOrEmail" value = {{usernameOrEmail}}><br>
         <label for="password">Password:</label>
@@ -15,5 +15,5 @@
     {{#if message}}
         <p> {{this.message}}</p>
     {{/if}}
-    <a href="/register">Click here to register!</a>
+    <a href="/auth/register">Click here to register!</a>
     <script src="../public/js/client_side_validation.js"></script>
