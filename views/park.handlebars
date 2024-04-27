@@ -1,38 +1,45 @@
 <header class="site-header">
     <div class="header-top">
-        <img src="Aurora.ico" alt="Aurora Icon" class="website-icon">
+        <img src="/public/icon/Aurora.ico" alt="Aurora Icon" class="website-icon">
         <span class="site-title">Aurora </span>
         <div class="search-container">
-                    <button class="fas fa-search"></button>
-                    <div class="search-item">
-                        <span class="search-label">Find a Park By States</span>
-                        <select id="stateDropdown" class="search-dropdown">
-                            <option value="">Select State...</option>
-                            <option value="AL">AL</option>
-                            <option value="AK">AK</option>
-                            <option value="WY">WY</option>
-                        </select>
-                    </div>
-                    <div class="search-or">or</div>
-                    <div class="search-item">
+             <button class="fas fa-search"></button>
+             <div class="search-item">
+                 <span class="search-label">Find a Park By States</span>
+                     <select id="stateDropdown" class="search-dropdown">
+                         <option value="">Select State...</option>
+                         <option value="AL">AL</option>
+                         <option value="AK">AK</option>
+                         <option value="WY">WY</option>
+                     </select>
+                 </div>
+             <div class="search-or">or</div>
+             <div class="search-item">
                         <span class="search-label">Find a Park By Activities</span>
                         <select id="ActivitiesDropdown" class="search-dropdown" name="activity">
                             <option value="">Select Activities...</option>
                             <option value="AL">Fishing</option>
                             <option value="AK">Biking</option>
-                            <!-- Continue with other state codes -->
                             <option value="WY">Hike</option>
                         </select>
                     </div>
                 </div>
                 <button id="loginButton" class="login-btn">
                     <i class="fas fa-sign-in-alt"></i> Log In
-                </button>>
+                </button>
     </div>
 </header>
 
 <section class="park-image">
-    <img src="{{photos}}" style="width:100%;">
+    <img src="{{photos.url}}" style="width:100%;">
+    <header class="site-header">
+            <div class="header-bottom">
+                <h1 class="park-name">{{parkName}}</h1>
+            </div>
+            <button class="favorite-btn" onclick="toggleFavorite(this)" data-postid="1">
+                <i class="far fa-heart"></i>
+            </button>
+    </header>
 </section>
 
 <main>
@@ -44,21 +51,21 @@
     <div class="card-container">
         <div class="card-container">
                 <div class="card">
-                    <img src="location.png" class="card-image">
+                    <img src="/public/icon/location.png" class="card-image">
                     <h2>Location</h2>
                     {{#each address}}
-                        <p>{{this.line1}, {this.city}, {this.stateCode}, {this.countryCode}, {this.postalCode}}</p>
+                        <p>{{this.line1}}, {{this.city}}, {{this.stateCode}}, {{this.countryCode}}, {{this.postalCode}}</p>
                     {{/each}}
                 </div>
                 <div class="card">
-                    <img src="swim.png" class="card-image">
+                    <img src="/public/icon/swim.png" class="card-image">
                     <h2>Activities</h2>
                     {{#each activities}}
                         <p>{{this.name}}</p>
                     {{/each}}
                 </div>
                 <div class="card">
-                    <img src="clock.png" class="card-image">
+                    <img src="/public/icon/clock.png" class="card-image">
                     <h2>Operating Time</h2>
                     {{#each operatingTime}}
                         <p>{{this.description}}</p>
@@ -71,15 +78,15 @@
             <h2>User Posts</h2>
             <button id="addPostButton" class="add-post-btn" onclick="openPostForm()">+ Post</button>
             </button>
-            <div id="postsList" class="posts-list">
-
-            </div>
         </div>
     </section>
+    <div id="userPosts">
+
+    </div>
     <div id="addPostModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <form id="postForm", method="POST">
+            <form action = ""id="postForm", method="POST">
                 <h2>Add a Post</h2>
                 <label for="postTitle">Title:</label>
                 <input type="text" id="postTitle" name="postTitle" required>
@@ -88,19 +95,19 @@
                 <label for="postImage">Upload Image:</label>
                 <input type="file" id="postImage" name="postImage" accept="image/*">
                 <label>Rating:</label>
+                <input type="hidden" id="ratingValue" name="ratingValue" value="0">
                 <div class="rating">
-                    <span class="star">&#9733;</span>
-                    <span class="star">&#9733;</span>
-                    <span class="star">&#9733;</span>
-                    <span class="star">&#9733;</span>
-                    <span class="star">&#9733;</span>
+                    <span class="star" onclick="setRating(1)">&#9733;</span>
+                    <span class="star" onclick="setRating(2)">&#9733;</span>
+                    <span class="star" onclick="setRating(3)">&#9733;</span>
+                    <span class="star" onclick="setRating(4)">&#9733;</span>
+                    <span class="star" onclick="setRating(5)">&#9733;</span>
                 </div>
+                <input type="hidden" id="parkId" name="parkId" value="{{parkId}}">
                 <button type="submit" class="btn">Submit Post</button>
             </form>
         </div>
     </div>
     <!-- ...rest of your main section -->
 </main>
-<script src="park.js"></script>
-
-
+<script src="/public/js/park.js"></script>
