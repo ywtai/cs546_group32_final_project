@@ -144,29 +144,26 @@ router.route('/searchparks')
     
 });
 
-// router.route('/:id').get(async (req, res) => {
-// 	let parkId = req.params.id;
+router.route('/park/:id')
+.get(async (req, res) => {
+	let parkId = req.params.id;
+	try {
+		parkId = validation.checkId(parkId, 'id parameter in URL');
+	
 
-// 	try {
-// 		parkId = validation.checkId(parkId, 'id parameter in URL');
-// 	} catch (e) {
-// 		res.status(500).json({error: e.message});
-// 	}
+	    const allData = [];
 
-// 	const allData = [];
+		const parkDetail = await parksData.getParkById(parkId);
+		allData.push(parkDetail);
 
-// 	try {
-// 		const parkDetail = await parksData.getParkById(parkId);
-// 		allData.push(parkDetail);
-
-// 		//show the park detail page
-// 		res.render('parkById', {
-// 			htmlTitle: parkDetail.Title,
-// 			parkData: allData,
-// 		});
-// 	} catch (e) {
-// 		res.status(500).json({error: e.message});
-// 	}
-// });
+		//show the park detail page
+		res.render('parkById', {
+			htmlTitle: parkDetail.Title,
+			parkData: allData,
+		});
+	} catch (e) {
+		res.status(500).json({error: e});
+	}
+});
 
 export default router;
