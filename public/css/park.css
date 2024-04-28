@@ -159,7 +159,7 @@ nav#navbar ul li a.active {
 }
 
 main {
-    padding: 20px;
+    /* padding: 20px; */
 }
 
 .card-container {
@@ -626,3 +626,7 @@ button.btn:hover {
     margin-top: 20px;
 }
 
+.park-poster {
+    width: 50%;
+    height: auto;
+}

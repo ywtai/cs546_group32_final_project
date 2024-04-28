@@ -31,7 +31,7 @@
         <ol>
             {{#each top5}}
                     <li>
-                        <h2>{{this.parkName}}</h2>
+                        <a href="/park/{{this._id}}"><h2>{{this.parkName}}</h2></a>
                         <img class="top5Image" src="{{this.photos.[0].url}}" alt="{{this.parkName}} Poster">
                         <p>{{this.description}}</p>
                     </li>
@@ -88,9 +88,12 @@ function updateSearchFields() {
                                '<option value="4D06CEED-90C6-4B69-B264-32CC90B69BA6">Tubing</option>' +
                                '<option value="8A1C7B17-C2C6-4F7C-9539-EA1E19971D80">Water Skiing</option>' +
                                '<option value="0B685688-3405-4E2A-ABBA-E3069492EC50">Wildlife Watching</option>' +
-                               '</select>';
+                               '</select>' +
+                               '<p class="tip" style="font-size: smaller">Hold crtl or command to select multiple activities</p>';
+
     } else if (searchType === 'state') {
         queryLabel.innerHTML = 'State <select id="searchQuery" name="searchQuery">' +
+                                '<option value="">-- select a state --</option>' +
                                 '<option value="AL">Alabama</option>' +
                                 '<option value="AK">Alaska</option>' +
                                 '<option value="AZ">Arizona</option>' +

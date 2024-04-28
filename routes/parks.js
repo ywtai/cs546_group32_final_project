@@ -31,6 +31,7 @@ router.route('/searchparks')
         switch (searchType) {
             case 'state':
                 const state = searchQuery.trim();
+
                 if (!state) {
                     throw new Error("Please provide a state to search.");
                 }

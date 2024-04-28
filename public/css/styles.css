@@ -83,3 +83,11 @@ label:last-child {
     margin-right: 0; /* Remove margin from the last label */
 }
 
+a {
+    text-decoration: none;
+}
+
+.tip {
+    color: #6c757d !important;
+    margin-top: 1px;
+}
