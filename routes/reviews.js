@@ -1,7 +1,8 @@
 // Import the express router as shown in the lecture code
 // Note: please do not forget to export the router!
 import { Router } from 'express';
-import { reviewData } from "../data/index.js";
+import { reviewData, commentData } from "../data/index.js";
+import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureAdmin } from '../middleware.js'
 import validation from '../validation.js';
 import multer from 'multer';
 
@@ -10,9 +11,13 @@ const upload = multer({ storage: storage });
 
 const router = Router();
 
+router.use(logRequests);
+
 router
   .route('/addReview/:parkObjectId')
-  .get(async (req, res) => {
+  .get(ensureLoggedIn, async (req, res) => {
+    // const { userName, favoriteQuote, role, themePreference } =
+		//   req.session.user;
 		let parkId = req.params.parkObjectId;
 
 		try {
@@ -137,6 +142,37 @@ router
       return res.json(deletedReview);
     } catch (e) {
       return res.status(404).send({error: e});
+    }
+  });
+
+  router
+  .route('/review/:reviewId/comment')
+  .post(upload.none(), async (req, res) => {
+    let { userId, userName, content } = req.body;
+
+    if (!userId || !userName || !content) {
+      return res.status(400).json({ error: 'Missing one or more of the required fields: userId, userName, content.' });
+    }
+
+    try {
+      req.params.reviewId = validation.checkId(req.params.reviewId);
+      userId = validation.checkId(userId);
+      userName = validation.checkString(userName, 'User Name');
+      content = validation.checkString(content, 'Content');
+    } catch (e) {
+      return res.status(400).json({ error: e });
+    }
+
+    try {
+      const newComment = await commentData.createComment(
+        req.params.reviewId,
+        userId,
+        userName,
+        content
+      );
+      return res.status(201).json(newComment);
+    } catch (e) {
+      return res.status(500).json({ error: e });
     }
   });
 

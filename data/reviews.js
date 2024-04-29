@@ -23,7 +23,7 @@ const exportedMethods = {
       photos: photos,
       rating: rating,
       likes: 0,
-      comment: []
+      comments: []
     }
 
     if (Object.values(newReview).some(item => item === undefined || item === null))
@@ -46,10 +46,6 @@ const exportedMethods = {
 
     if (!insertInfo)
         throw 'Error: Could not add review';
-
-    const createdReviewInfo = await parkCollection.findOne(
-      {_id: new ObjectId(parkObjectId)},
-    );
 
     return {reviewSubmittedCompleted: true};
   },
