@@ -25,13 +25,13 @@
                     dateOfBirth.value,
                     bio.value
                     )) 
-                userName = helpers.checkuserName(userName.value);
-                email = helpers.checkEmail(email.value);
-                password = helpers.checkPassword(password.value);
-                confirmPassword = helpers.checkPassword(confirmPassword.value)
-                dateOfBirth = helpers.checkDateOfBirth(dateOfBirth.value)
-                bio = helpers.checkbio(bio.value);
-                if(password.value != confirmPassword.value) throw 'Password does not match!'
+                let validuserName = helpers.checkuserName(userName.value);
+                let validemail = helpers.checkEmail(email.value);
+                let validpassword = helpers.checkPassword(password.value);
+                let validconfirmPassword = helpers.checkPassword(confirmPassword.value)
+                let validdateOfBirth = helpers.checkDateOfBirth(dateOfBirth.value)
+                let validbio = helpers.checkbio(bio.value);
+                if(validpassword.value != validconfirmPassword.value) throw 'Password does not match!'
                 errorDiv.hidden = true;
                 registerForm.submit();
             }catch(e){
@@ -53,8 +53,8 @@
                     usernameOrEmail.value,
                     loginpassword.value,
                     )
-                usernameOrEmail = helpers.checkuserNameorEmail(usernameOrEmail.value);
-                loginpassword = helpers.checkPassword(loginpassword.value);
+                let validusernameOrEmail = helpers.checkuserNameorEmail(usernameOrEmail.value);
+                let validloginpassword = helpers.checkPassword(loginpassword.value);
                 errorDiv.hidden = true;
                 loginForm.submit();
             }catch(e){
