@@ -146,7 +146,23 @@ router
   });
 
   router
-  .route('/review/:reviewId/comment')
+  .route('/review/:reviewId/addcomment')
+  .get(async (req, res) => {
+		let reviewId = req.params.reviewId;
+
+		try {
+			reviewId = validation.checkId(reviewId, 'id parameter in URL');
+			res.render('addComment', { 
+				documentTitle: 'Add Review',
+				reviewId: reviewId
+			});
+		} catch (e) {
+			res.status(500).json({error: e.message});
+			if (!res.headersSent) {
+        res.status(500).send("Error processing your request.");
+      }
+		}
+	})
   .post(upload.none(), async (req, res) => {
     let { userId, userName, content } = req.body;
 
