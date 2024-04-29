@@ -145,7 +145,7 @@ router
     }
   });
 
-  router
+router
   .route('/review/:reviewId/addcomment')
   .get(async (req, res) => {
 		let reviewId = req.params.reviewId;
@@ -191,5 +191,56 @@ router
       return res.status(500).json({ error: e });
     }
   });
+
+router
+  .route('/review/:reviewId/comment/:commentId')
+  .get(async (req, res) => {
+    let commentId = validation.checkId(req.params.commentId);
+  
+    try {
+      const comment = await commentData.getComment(commentId);
+      return res.json(comment);
+    } catch (e) {
+      return res.status(404).json({error: 'Comment not found or could not be retrieved'});
+    }
+  })
+  .patch(upload.none(), async (req, res) => {
+    let commentId = validation.checkId(req.params.commentId);
+    let updateObject = req.body;
+    if (!updateObject || Object.keys(updateObject).length === 0) {
+      return res.status(400).json({error: 'There are no fields in the request body'});
+    }
+  
+    let { content } = updateObject;
+  
+    try { 
+      if (content)
+        content = validation.checkString(content, 'Content');
+  
+    } catch (e) {
+      return res.status(400).json({error: e});
+    }
+  
+    try {
+      const updatedComment = await commentData.updateComment(
+        commentId,
+        updateObject
+      );
+      return res.json(updatedComment);
+    } catch (e) {
+      return res.status(404).json({error: e});
+    }
+  })
+  .delete(upload.none(), async (req, res) => {
+    let commentId = validation.checkId(req.params.commentId);
+  
+    try {
+      await commentData.removeComment(commentId);
+      return res.status(204).send();
+    } catch (e) {
+      return res.status(404).json({error: e});
+    }
+  })
+
 
 export default router;
