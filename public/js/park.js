@@ -25,19 +25,19 @@ function openPostForm() {
     document.getElementById('addPostModal').style.display = 'block';
 }
 
-document.getElementsByClassName('close')[0].onclick = function() {
+document.getElementsByClassName('close')[0].onclick = function () {
     document.getElementById('addPostModal').style.display = 'none';
 }
 
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (event.target == document.getElementById('addPostModal')) {
         document.getElementById('addPostModal').style.display = 'none';
     }
 }
 
-document.querySelectorAll('.rating .star').forEach(function(star, idx) {
-    star.addEventListener('click', function() {
-        document.querySelectorAll('.rating .star').forEach(function(otherStar, j) {
+document.querySelectorAll('.rating .star').forEach(function (star, idx) {
+    star.addEventListener('click', function () {
+        document.querySelectorAll('.rating .star').forEach(function (otherStar, j) {
             if (j <= idx) {
                 otherStar.classList.add('selected');
             } else {
@@ -48,12 +48,12 @@ document.querySelectorAll('.rating .star').forEach(function(star, idx) {
 });
 
 function resetStars() {
-    document.querySelectorAll('.rating .star').forEach(function(star) {
+    document.querySelectorAll('.rating .star').forEach(function (star) {
         star.classList.remove('selected');
     });
 }
 
-document.getElementById('postForm').addEventListener('submit', function(event) {
+document.getElementById('postForm').addEventListener('submit', function (event) {
     event.preventDefault();
     const postTitle = document.getElementById('postTitle').value;
     const postContent = document.getElementById('postContent').value;

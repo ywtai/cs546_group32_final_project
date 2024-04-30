@@ -5,13 +5,13 @@ import { parks } from "../config/mongoCollections.js";
 export const searchByState = async (stateCode, pageSize, offset) => {
     try {
         const parkCollection = await parks();
-        const query = { state: { $regex: new RegExp(`\\b${stateCode}\\b`, 'i') }};
-        
+        const query = { state: { $regex: new RegExp(`\\b${stateCode}\\b`, 'i') } };
+
         const totalParks = await parkCollection.countDocuments(query);
         const parkList = await parkCollection.find(query)
-                                                .skip(offset)
-                                                .limit(pageSize)
-                                                .toArray();
+            .skip(offset)
+            .limit(pageSize)
+            .toArray();
         return [parkList, totalParks];
     } catch (e) {
         console.error('Error searching for parks by state code:', e);
@@ -26,9 +26,9 @@ export const searchByName = async (name, pageSize, offset) => {
         const query = { parkName: { $regex: new RegExp(name, 'i') } };
         const totalParks = await parkCollection.countDocuments(query);
         const parkList = await parkCollection.find(query)
-                                                .skip(offset)
-                                                .limit(pageSize)
-                                                .toArray();
+            .skip(offset)
+            .limit(pageSize)
+            .toArray();
         return [parkList, totalParks];
     } catch (e) {
         console.error('Error searching for parks:', e);
@@ -40,7 +40,7 @@ export const searchByName = async (name, pageSize, offset) => {
 export const searchByActivity = async (activityIds, pageSize, offset) => {
     try {
         const parkCollection = await parks();
-        
+
         if (!Array.isArray(activityIds)) {
             activityIds = [activityIds];
         }
@@ -49,9 +49,9 @@ export const searchByActivity = async (activityIds, pageSize, offset) => {
 
         const totalParks = await parkCollection.countDocuments(query);
         const parkList = await parkCollection.find(query)
-                                                .skip(offset)
-                                                .limit(pageSize)
-                                                .toArray();
+                                            .skip(offset)
+                                            .limit(pageSize)
+                                            .toArray();
         return [parkList, totalParks];
     } catch (e) {
         console.error('Error searching for parks by activities:', e);
@@ -62,8 +62,8 @@ export const searchByActivity = async (activityIds, pageSize, offset) => {
 export const searchTop5 = async () => {
     try {
         const parkCollection = await parks();
-        const parkList = await parkCollection.aggregate([{$sort: {averageRating: 1}},
-                                                        {$limit: 5}]).toArray();
+        const parkList = await parkCollection.aggregate([{ $sort: { averageRating: 1 } },
+                                                        { $limit: 5 }]).toArray();
         return parkList;
     } catch (e) {
         console.error('Error searching for parks by activities:', e);

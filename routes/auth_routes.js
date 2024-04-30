@@ -17,48 +17,48 @@ router
     res.render('register', { title: 'Register' });
   })
   .post(async (req, res) => {
-    let {  userName,
+    let { userName,
       email,
       dateOfBirth,
       password,
       confirmPassword,
-      bio} = req.body;
+      bio } = req.body;
 
-    try{
-      helpers.checkIfValid(  userName,
+    try {
+      helpers.checkIfValid(userName,
         email,
         dateOfBirth,
         bio,
         password,
         confirmPassword)
-    }catch(e){
-      return res.status(400).render('error', {title: "Error", message: e})
+    } catch (e) {
+      return res.status(400).render('error', { title: "Error", message: e })
     };
 
-    try{
+    try {
       userName = helpers.checkuserName(userName);
       email = helpers.checkEmail(email);
       dateOfBirth = helpers.checkDateOfBirth(dateOfBirth);
       bio = helpers.checkbio(bio);
       password = helpers.checkPassword(password);
       confirmPassword = helpers.checkPassword(confirmPassword);
-      if(password !== confirmPassword) throw 'Password are not match'
-    }catch(e){
-      return res.status(400).render('error', {title: "Error", message: e});
+      if (password !== confirmPassword) throw 'Password are not match'
+    } catch (e) {
+      return res.status(400).render('error', { title: "Error", message: e });
     }
-    
-    try{
+
+    try {
       const user = await registerUser(userName,
         email,
         dateOfBirth,
         bio,
         password);
 
-      if(user.insertedUser){
+      if (user.insertedUser) {
         res.redirect('/auth/login')
       }
-    }catch(e){
-        return res.status(500).render('error', {title: "Error", message:"Internal Server Error"})
+    } catch (e) {
+      return res.status(500).render('error', { title: "Error", message: "Internal Server Error" })
     }
   });
 
@@ -68,23 +68,23 @@ router
     res.render('login', { title: 'Login' });
   })
   .post(async (req, res) => {
-    let {usernameOrEmail, password} = req.body;
-    try{
+    let { usernameOrEmail, password } = req.body;
+    try {
       helpers.checkIfValid(usernameOrEmail, password)
-    }catch(e){
-      return res.status(400).render('error', {title: "Error", message: e});
+    } catch (e) {
+      return res.status(400).render('error', { title: "Error", message: e });
     }
 
-    try{
+    try {
       usernameOrEmail = helpers.checkuserNameorEmail(usernameOrEmail);
       password = helpers.checkPassword(password);
-      
 
-    }catch(e){
-      return res.status(400).render('error', {title: "Error", message: e});
+
+    } catch (e) {
+      return res.status(400).render('error', { title: "Error", message: e });
     }
 
-    try{
+    try {
       const user = await loginUser(usernameOrEmail, password);
       req.session.user = {
         userName: user.userName,
@@ -97,14 +97,14 @@ router
         comments: user.comments
       }
       redirectBasedOnRole(req, res);
-    }catch(e){
-      
+    } catch (e) {
+
       res.redirect('/auth/login');
       // return res.status(500).render('error', {title: "Error", message: e.message});
     }
   });
 
-  router.get('/user', ensureLoggedIn, (req, res) => {
+router.get('/user', ensureLoggedIn, (req, res) => {
 
   res.render('user', {
 
@@ -124,7 +124,7 @@ router
 
 router.route('/error').get(async (req, res) => {
 
-  res.render('error', {message: ""})
+  res.render('error', { message: "" })
 });
 
 router.route('/logout').get(async (req, res) => {
