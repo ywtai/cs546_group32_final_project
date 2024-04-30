@@ -51,7 +51,12 @@ router
       content = validation.checkString(content, 'Content');
       rating = validation.checkRating(rating, 'Rating');
     } catch (e) {
-      return res.status(400).json({error: e});
+      return res.status(400).render('addReview', {
+        documentTitle: 'Add Review',
+        parkId: parkId,
+        hasErrors: true,
+        errors: e.toString()
+      });
     }
 
     try {
@@ -64,18 +69,18 @@ router
         photos,
         rating
       );
-			if (reviewSubmittedCompleted) {
-				res.render('reviewSubmitted', { 
-					documentTitle: 'Review Submitted',
-					parkId: parkId
-				});
-			}
-			else {
-				res.render('error', { error: 'Fail to submit' });
-        res.status(500);
-			}
+      
+      res.render('reviewSubmitted', { 
+        documentTitle: 'Review Submitted',
+        parkId: parkId
+      });
     } catch (e) {
-      return res.status(500).json({error: e});
+      return res.status(400).render('addReview', {
+        documentTitle: 'Add Review',
+        parkId: parkId,
+        hasErrors: true,
+        errors: e.toString()
+      });
     }
   });
 
