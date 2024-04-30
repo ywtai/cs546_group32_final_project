@@ -1,6 +1,8 @@
 import helpers from '../helpers.js';
+import {ObjectId} from 'mongodb';
 import {users} from '../config/mongoCollections.js';
 import bcrypt from 'bcrypt';
+
 
 export const registerUser = async (
   userName,
@@ -69,6 +71,7 @@ export const loginUser = async (usernameOrEmail, password) => {
   if (!comparePassword) throw 'The password is incorrect!';
 
   return {
+    userId: userInfo._id,
     userName: userInfo.userName,
     email: userInfo.email,
     dateOfBirth: userInfo.dateOfBirth,
@@ -79,4 +82,20 @@ export const loginUser = async (usernameOrEmail, password) => {
     comments: userInfo.comments
   };
 };
+
+
+export const deleteFavorite = async (userId, parkId) => {
+  const userCollection = await users();
+ 
+  const updateInfo = await userCollection.updateOne(
+    { _id: new ObjectId(userId) }, // Convert to ObjectId
+    { $pull: { favorite: parkId } }
+  );
+  
+  if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+    throw 'Update failed: No user found or favorite not modified.';
+
+  return updateInfo.modifiedCount > 0;
+};
+
 

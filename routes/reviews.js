@@ -1,5 +1,4 @@
-// Import the express router as shown in the lecture code
-// Note: please do not forget to export the router!
+
 import { Router } from 'express';
 import { reviewData, commentData } from "../data/index.js";
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureAdmin } from '../middleware.js'

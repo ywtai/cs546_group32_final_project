@@ -101,27 +101,6 @@ body {
 }
 
 
-/*.header-bg {*/
-/*    position: absolute;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    right: 0;*/
-/*    bottom: 0;*/
-/*    background-size: cover;*/
-/*    background-position: center;*/
-/*    transition: opacity 1s ease-in-out;*/
-/*    opacity: 0;*/
-/*}*/
-
-/*.header-bg.active {*/
-/*    opacity: 1;*/
-/*    z-index: 0;*/
-/*}*/
-
-/*.header-bg.previous {*/
-/*    z-index: -1;*/
-/*}*/
-
 review {
     background-color: #005500;
     color: white;
@@ -130,33 +109,33 @@ review {
     height: 200px;
 }
 
-nav#navbar {
-    background-color: #333;
-    color: white;
-    overflow: auto;
-}
+/*nav#navbar {*/
+/*    background-color: #333;*/
+/*    color: white;*/
+/*    overflow: auto;*/
+/*}*/
 
-nav#navbar ul {
-    list-style-type: none;
-    padding: 0;
-}
+/*nav#navbar ul {*/
+/*    list-style-type: none;*/
+/*    padding: 0;*/
+/*}*/
 
-nav#navbar ul li {
-    float: left;
-}
+/*nav#navbar ul li {*/
+/*    float: left;*/
+/*}*/
 
-nav#navbar ul li a {
-    display: block;
-    padding: 10px 20px;
-    color: white;
-    text-decoration: none;
-    transition: background 0.3s ease;
-}
+/*nav#navbar ul li a {*/
+/*    display: block;*/
+/*    padding: 10px 20px;*/
+/*    color: white;*/
+/*    text-decoration: none;*/
+/*    transition: background 0.3s ease;*/
+/*}*/
 
-nav#navbar ul li a:hover,
-nav#navbar ul li a.active {
-    background-color: #555;
-}
+/*nav#navbar ul li a:hover,*/
+/*nav#navbar ul li a.active {*/
+/*    background-color: #555;*/
+/*}*/
 
 main {
     /* padding: 20px; */

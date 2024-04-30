@@ -80,6 +80,7 @@ document.getElementById('postForm').addEventListener('submit', function (event) 
 
 function toggleFavorite(button) {
     const icon = button.querySelector('i');
+
     if (icon.classList.contains('far')) { // Not favorited
         icon.classList.remove('far'); // 'far' is the regular heart
         icon.classList.add('fas'); // 'fas' is the solid heart

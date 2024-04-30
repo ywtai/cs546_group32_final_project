@@ -8,6 +8,11 @@
         {{#if this.photos}}
         <img class="park-poster" alt="{{this.parkName}} Image" src="{{this.photos.[0].url}}">
         {{/if}}
+        {{!-- {{#if isLogin}} --}}
+        <button class="favorite-btn" onclick="toggleFavorite(this)" data-postid="1">
+            <i class="far fa-heart"></i>
+        </button>
+        {{!-- {{/if}} --}}
         <h2>Description</h2>
         <p class="description">{{this.description}}</p>
         <section class="info">
@@ -32,29 +37,78 @@
             </dl>
         </section>
         <section class="ratings">
-            <h4 class="rating">Ratings and Reviews</h4>
+            <h4 class="rating">User Post</h4>
             {{#if this.reviews}}
             <table class="my_coolratings_table">
-                <tr>
-                    <th>User</th>
-                    <th>Rating</th>
-                    <th>Date</th>
-                    <th>Review</th>
-                </tr>
+{{!--                 <tr> --}}
+{{!--                     <th>User</th> --}}
+{{!--                     <th>Rating</th> --}}
+{{!--                     <th>Date</th> --}}
+{{!--                     <th>Review</th> --}}
+{{!--                 </tr> --}}
                 {{#each this.reviews}}
                 <tr>
-                    <td>{{this.userName}}</td>
-                    <td>{{this.rating}}</td>
-                    <td>{{this.reviewDate}}</td>
-                    <td>{{this.title}}</td>
+                    <a class='post-link' href = '/review/{{this.reviewId}}'> {{this.title}} {{this.userName}} {{this.rating}} {{this.reviewDate}} </a>
+{{!--                     <td>{{this.rating}}</td> --}}
+{{!--                     <td>{{this.reviewDate}}</td> --}}
+{{!--                     <td>{{this.title}}</td> --}}
                 </tr>
                 {{/each}}
             </table>
             {{else}}
             <p>No reviews yet.</p>
             {{/if}}
+            <section class="posts">
+               <div class="posts-header">
+                  {{!-- {{#if isLogin}} --}}
+                     <button id="addPostButton" class="add-post-btn" onclick="openPostForm()">+ Post</button>
+                  {{!-- {{/if}} --}}
+               </div>
+            </section>
+                <div id="addPostModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <form action = "/addReview/{{this.parkId}}" id="postForm" method="POST">
+                            <h2>Add a Post</h2>
+                            <label for="title">Title:</label>
+                            <input type="text" id="title" name="title" required>
+                            <label for="content">Review:</label>
+                            <textarea id="content" name="content" required></textarea>
+                            <label for="photos">Upload Image:</label>
+                            <input type="file" id="photos" name="photos" accept="image/*">
+                            <label>Rating:</label>
+                            <input type="hidden" id="ratingValue" name="ratingValue" value="0">
+                            <div class="rating">
+                                <span class="star" onclick="setRating(1)">&#9733;</span>
+                                <span class="star" onclick="setRating(2)">&#9733;</span>
+                                <span class="star" onclick="setRating(3)">&#9733;</span>
+                                <span class="star" onclick="setRating(4)">&#9733;</span>
+                                <span class="star" onclick="setRating(5)">&#9733;</span>
+                            </div>
+                            <input type="hidden" id="userName" name="userName">
+                            <button type="submit" class="btn">Submit Post</button>
+                        </form>
+                    </div>
+                </div>
         </section>
     </article>
     {{/each}}
     <a class="search-other" href="/">Search for Another Park</a>
 </main>
+<script src="/public/js/park.js"></script>
+<script>
+document.getElementById('postForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+    fetch('/addReview/{{this.parkId}}', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.json()).then(data => {
+        const table = document.querySelector('.my_coolratings_table');
+        const row = table.insertRow(-1);
+        const cell = row.insertCell(0);
+        cell.innerHTML = `<a class='post-link' href='/review/${data.reviewId}'>${data.title} ${data.userName} ${data.rating} ${data.reviewDate}</a>`;
+//         document.querySelector('.no-reviews').style.display = 'none';
+    }).catch(error => console.error('Error:', error));
+});
+</script>

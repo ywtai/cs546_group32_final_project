@@ -4,7 +4,7 @@ If the user is logged in , and 'GET /user' endpoint is called, you will render t
 
 --}}
 
-<body>
+{{!-- <body>
 <link rel="stylesheet" href="/public/css/styles.css">
 </body>
 
@@ -13,5 +13,37 @@ If the user is logged in , and 'GET /user' endpoint is called, you will render t
 <p class="content">Your bio: {{bio}}, Your favorite: {{favorite}}, your personalParkPassport{{personalParkPassport}}.</p>
 <div class="link">
     <a href="/auth/logout">Log out</a>
-</div>
+</div> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1 class="container">User Profile</h1>
+    <p>Welcome, {{userName}}, the time is now: {{currentTime}}.</p>
+    <p>Your bio: {{bio}}, Your personal Park Passport: {{personalParkPassport}}</p>
+    <div>
+        <h3>Your favorites:</h3>
+        <ul>
+            {{#each favorite}}
+            <li>
+                <a href="http://localhost:3000/park/{{this}}">Park ID: {{this}}</a>
+                <!-- Form to delete a favorite -->
+                <form action="/auth/user" method="post">
+                    <input type="hidden" name="parkId" value="{{this}}">
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <div>
+        <a href="/auth/logout">Log out</a>
+    </div>
+</body>
+</html>
+
+
+
+
+
 

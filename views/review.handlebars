@@ -1,0 +1,50 @@
+<title>Post</title>
+{{!-- <header class="site-header"> --}}
+{{!--     <div class="header-top"> --}}
+{{!--         <img src="/public/icon/Aurora.ico" alt="Aurora Icon" class="website-icon"> --}}
+{{!--         <span class="site-title">Aurora </span> --}}
+{{!--     </div> --}}
+{{!-- </header> --}}
+<section class="park-image">
+    <img src="{{photos.url}}" style="width:100%;">
+    <header class="site-header">
+            <div class="header-bottom">
+                <h1 class="park-name">{{parkName}}</h1>
+            </div>
+    </header>
+</section>
+<main>
+    <article class="post">
+            <h2>{{postTitle}}</h2>
+            <div id="postDescription" class="description">
+                <p>{{postDescription}}</p>
+                <button onclick="openEditModal()" class="edit-btn">Edit Description</button>
+            </div>
+
+            <!-- Edit Description Modal -->
+            <div id="editModal" style="display:none;">
+                <textarea id="newDescription">{{postDescription}}</textarea>
+                <button onclick="saveDescription()" class="save-btn">Save</button>
+                <button onclick="closeEditModal()" class="cancel-btn">Cancel</button>
+            </div>
+
+            <section class="comments">
+                <h3>Comments</h3>
+                {{#each comments}}
+                <div class="comment">
+                    <p><strong>{{this.author}}:</strong> {{this.text}}</p>
+                </div>
+                {{/each}}
+                <form id="addCommentForm">
+                    <textarea id="commentText" name="commentText" required></textarea>
+                    <button type="button" onclick="submitComment()">Submit Comment</button>
+                </form>
+            </section>
+
+             <form action="/delete-post" method="POST" class="delete-post-form">
+                                    <input type="hidden" name="postId" value="{{postId}}">
+                                    <button type="submit" class="delete-btn">Delete Post</button>
+                         </form>
+    </article>
+</main>
+<script src="/public/js/post.js"></script>
