@@ -31,7 +31,7 @@
                 let validconfirmPassword = helpers.checkPassword(confirmPassword.value)
                 let validdateOfBirth = helpers.checkDateOfBirth(dateOfBirth.value)
                 let validbio = helpers.checkbio(bio.value);
-                if(validpassword.value != validconfirmPassword.value) throw 'Password does not match!'
+                if(validpassword != validconfirmPassword) throw 'Password does not match!'
                 errorDiv.hidden = true;
                 registerForm.submit();
             }catch(e){
