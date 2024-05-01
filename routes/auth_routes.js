@@ -105,71 +105,73 @@ router
     }
   });
 
-  router
-  .route('/user')
-  .get(ensureLoggedIn, async (req, res) => {
-    res.render('user', {
-      title: "user",
-      currentTime: new Date().toUTCString(),
-      userId: req.session.user.userId,
-      userName: req.session.user.userName,
-      email: req.session.user.email,
-      dateOfBirth: req.session.user.dateOfBirth,
-      bio: req.session.user.bio,
-      personalParkPassport: req.session.user.personalParkPassport,
-      favorite: req.session.user.favorite,
-      reviews: req.session.user.reviews,
-      comments: req.session.user.comments
-    })
+  // router
+  // .route('/user')
+  // .get(ensureLoggedIn, async (req, res) => {
+  //   res.render('user', {
+  //     title: "user",
+  //     currentTime: new Date().toUTCString(),
+  //     userId: req.session.user.userId,
+  //     userName: req.session.user.userName,
+  //     email: req.session.user.email,
+  //     dateOfBirth: req.session.user.dateOfBirth,
+  //     bio: req.session.user.bio,
+  //     personalParkPassport: req.session.user.personalParkPassport,
+  //     favorite: req.session.user.favorite,
+  //     reviews: req.session.user.reviews,
+  //     comments: req.session.user.comments
+  //   })
+  // })
+  // .post(ensureLoggedIn, async (req, res) => {
+  //   const parkId = req.body.parkId;
+  //   const userId = req.session.user.userId;  // Make sure this matches how the session is stored
+  //   try {
+  //     const result = await deleteFavorite(userId, parkId);
+  //     if (result) {
+  //       res.redirect('/auth/user');  // Redirect to a specific page after deletion, e.g., a page showing remaining favorites
+  //     } else {
+  //       res.status(400).send('Failed to delete favorite');
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //     res.status(500).send('Server error');
+  //   }
+  // });
+
+  router.get('/user', ensureLoggedIn, (req, res) => {
+
+  res.render('user', {
+
+    title: "user",
+    currentTime: new Date().toUTCString(),
+    userId: req.session.user.userId,
+    userName: req.session.user.userName,
+    email: req.session.user.email,
+    dateOfBirth: req.session.user.dateOfBirth,
+    bio: req.session.user.bio,
+    personalParkPassport: req.session.user.personalParkPassport,
+    favorite: req.session.user.favorite,
+    reviews: req.session.user.reviews,
+    comments: req.session.user.comments
   })
-  .post(ensureLoggedIn, async (req, res) => {
-    const parkId = req.body.parkId;
-    const userId = req.session.user.userId;  // Make sure this matches how the session is stored
-    try {
-      const result = await deleteFavorite(userId, parkId);
-      if (result) {
-        res.redirect('/auth/user');  // Redirect to a specific page after deletion, e.g., a page showing remaining favorites
-      } else {
-        res.status(400).send('Failed to delete favorite');
-      }
-    } catch (error) {
-      console.log(error)
-      res.status(500).send('Server error');
+});
+
+router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
+  const parkId = req.body.parkId;
+  const userId = req.session.user.userId;  // Adjust this if session storage format differs
+  try {
+    const result = await deleteFavorite(userId, parkId);
+    if (result) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: "Failed to delete favorite" });
     }
-  });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
-//   router.get('/user', ensureLoggedIn, (req, res) => {
-
-//   res.render('user', {
-
-//     title: "user",
-//     currentTime: new Date().toUTCString(),
-//     userId: req.session.user.userId,
-//     userName: req.session.user.userName,
-//     email: req.session.user.email,
-//     dateOfBirth: req.session.user.dateOfBirth,
-//     bio: req.session.user.bio,
-//     personalParkPassport: req.session.user.personalParkPassport,
-//     favorite: req.session.user.favorite,
-//     reviews: req.session.user.reviews,
-//     comments: req.session.user.comments
-//   })
-// });
-
-// router.post('/delete-favorite', ensureLoggedIn, async (req, res) => {
-//   const parkId = req.body.parkId;
-//   const userId = req.session.user._id;  // Make sure this matches how the session is stored
-//   try {
-//     const result = await deleteFavorite(userId, parkId);
-//     if (result) {
-//       res.redirect('/');  // Redirect to a specific page after deletion, e.g., a page showing remaining favorites
-//     } else {
-//       res.status(400).send('Failed to delete favorite');
-//     }
-//   } catch (error) {
-//     res.status(500).send('Server error');
-//   }
-// });
 
 
 

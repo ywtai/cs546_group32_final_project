@@ -18,29 +18,48 @@ If the user is logged in , and 'GET /user' endpoint is called, you will render t
 <!DOCTYPE html>
 <html lang="en">
 <body>
-    <h1 class="container">User Profile</h1>
-    <p>Welcome, {{userName}}, the time is now: {{currentTime}}.</p>
-    <p>Your bio: {{bio}}, Your personal Park Passport: {{personalParkPassport}}</p>
-    <div>
-        <h3>Your favorites:</h3>
-        <ul>
+    <h1 class="container">{{title}}</h1>
+    <p class="phrase">Welcome {{userName}}, the time is now: {{currentTime}}.</p>
+    <p class="content">Your bio: {{bio}}, Your personal Park Passport: {{personalParkPassport}}</p>
+    <div class="content">
+        <p>Your favorites:</p>
+        <ul id="favoritesList">
             {{#each favorite}}
-            <li>
+            <li id="park-{{this}}">
                 <a href="http://localhost:3000/park/{{this}}">Park ID: {{this}}</a>
-                <!-- Form to delete a favorite -->
-                <form action="/auth/user" method="post">
-                    <input type="hidden" name="parkId" value="{{this}}">
-                    <button type="submit" class="delete-btn">Delete</button>
-                </form>
+                <button type="button" class="delete-btn" data-park-id="{{this}}" onclick="deleteFavorite('{{this}}')">Delete</button>
             </li>
             {{/each}}
         </ul>
     </div>
-    <div>
+    <div class="link">
         <a href="/auth/logout">Log out</a>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    function deleteFavorite(parkId) {
+        $.ajax({
+            url: '/auth/delete-favorite/' + parkId,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ parkId: parkId }),
+            success: function(response) {
+                if(response.success) {
+                    $('#park-' + parkId).remove();
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error deleting favorite.');
+            }
+        });
+    }
+    </script>
 </body>
 </html>
+
+
 
 
 
