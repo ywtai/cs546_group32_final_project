@@ -25,19 +25,19 @@ function openPostForm() {
     document.getElementById('addPostModal').style.display = 'block';
 }
 
-document.getElementsByClassName('close')[0].onclick = function () {
+document.getElementsByClassName('close')[0].onclick = function() {
     document.getElementById('addPostModal').style.display = 'none';
 }
 
-window.onclick = function (event) {
+window.onclick = function(event) {
     if (event.target == document.getElementById('addPostModal')) {
         document.getElementById('addPostModal').style.display = 'none';
     }
 }
 
-document.querySelectorAll('.rating .star').forEach(function (star, idx) {
-    star.addEventListener('click', function () {
-        document.querySelectorAll('.rating .star').forEach(function (otherStar, j) {
+document.querySelectorAll('.rating .star').forEach(function(star, idx) {
+    star.addEventListener('click', function() {
+        document.querySelectorAll('.rating .star').forEach(function(otherStar, j) {
             if (j <= idx) {
                 otherStar.classList.add('selected');
             } else {
@@ -48,30 +48,57 @@ document.querySelectorAll('.rating .star').forEach(function (star, idx) {
 });
 
 function resetStars() {
-    document.querySelectorAll('.rating .star').forEach(function (star) {
+    document.querySelectorAll('.rating .star').forEach(function(star) {
         star.classList.remove('selected');
     });
 }
 
-document.getElementById('postForm').addEventListener('submit', function (event) {
+document.getElementById('postForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    const postTitle = document.getElementById('postTitle').value;
-    const postContent = document.getElementById('postContent').value;
-    const postImage = document.getElementById('postImage').files[0];  // Assuming the first file selected
+
+    const postTitle = document.getElementById('title').value;
+    const postContent = document.getElementById('content').value;
+    const postImage = document.getElementById('photos').files[0];  // Assuming the first file selected
     const postRating = document.getElementById('ratingValue').value
+    let errorMessageDiv = document.getElementById('error_message');
+    let error = []
+    if (!postTitle || postTitle === '') {
+        error.push('Please enter your title')
+    }
 
-    // const postsSection = document.getElementById('postsList');
-    // const postLink = document.createElement('a')
-    const postLinkDiv = document.createElement('div');
-    postLinkDiv.className = 'post-link';
+    if (!postContent || postContent === '') {
+        error.push('Please enter your Content')
+    }
 
-    const linkText = `${postTitle} - ${postRating} Stars`;
-    const newLink = document.createElement('a');
-    newLink.href = "/post/" + encodeURIComponent(postTitle); // Assuming title is unique identifier for post
-    newLink.textContent = linkText;
+    if (!postImage || postImage === '') {
+        error.push('Please select one image')
+    }
+    if (!postRating || postRating === '0') {
+        error.push('Please select your rating')
+    }
+    if(error.length !== 0) {
+        let errorMessage = ''
+        for (const errorElement of error) {
+            errorMessage += errorElement + '\n';
+        }
+        errorMessageDiv.textContent = errorMessage;
+            errorMessageDiv.style.display = 'block';
+        return;
+    } else {
+        errorMessageDiv.style.display = 'none';
+    }
 
-    postLinkDiv.appendChild(newLink);
-    document.getElementById('userPosts').appendChild(postLinkDiv);
+    // let formData = new FormData(this);
+    // fetch('reviews/addReview/{{this.parkId}}', {
+    //     method: 'POST',
+    //     body: formData
+    // }).then(response => response.json()).then(data => {
+    //     const table = document.querySelector('.my_coolratings_table');
+    //     const row = table.insertRow(-1);
+    //     const cell = row.insertCell(0);
+    //     cell.innerHTML = `<a class='post-link' href='/review/${data.reviewId}'>${data.title} ${data.userName} ${data.rating} ${data.reviewDate}</a>`;
+    //     document.querySelector('.no-reviews').style.display = 'none';
+    // }).catch(error => console.error('Error:', error));
 
     document.getElementById('addPostModal').style.display = 'none';
     document.getElementById('postForm').reset();
@@ -85,18 +112,33 @@ function toggleFavorite(button) {
         icon.classList.remove('far'); // 'far' is the regular heart
         icon.classList.add('fas'); // 'fas' is the solid heart
         button.classList.add('favorited');
+        document.getElementById("far_btn").value = 0;
     } else {
         icon.classList.add('far');
         icon.classList.remove('fas');
         button.classList.remove('favorited');
+        document.getElementById("far_btn").value = 1;
     }
 }
-
 
 function setRating(rating) {
     document.getElementById('ratingValue').value = rating;
 }
 
+// document.getElementById('postForm').addEventListener('submit', function(e) {
+//     e.preventDefault();
+//     let formData = new FormData(this);
+//     fetch('/addReview/{{this.parkId}}', {
+//         method: 'POST',
+//         body: formData
+//     }).then(response => response.json()).then(data => {
+//         const table = document.querySelector('.my_coolratings_table');
+//         const row = table.insertRow(-1);
+//         const cell = row.insertCell(0);
+//         cell.innerHTML = `<a class='post-link' href='/review/${data.reviewId}'>${data.title} ${data.userName} ${data.rating} ${data.reviewDate}</a>`;
+//         document.querySelector('.no-reviews').style.display = 'none';
+//     }).catch(error => console.error('Error:', error));
+// });
 
 
 

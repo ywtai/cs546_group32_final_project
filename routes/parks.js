@@ -151,18 +151,27 @@ router.route('/park/:id')
         let parkId = req.params.id;
         try {
             parkId = validation.checkId(parkId, 'id parameter in URL');
-
-
             const allData = [];
 
             const parkDetail = await parksData.getParkById(parkId);
             allData.push(parkDetail);
 
             //show the park detail page
-            res.render('parkById', {
-                htmlTitle: parkDetail.Title,
-                parkData: allData,
-            });
+            if (!req.session.user) {
+                res.render('parkById', {
+                    parkId: parkId,
+                    parkData: allData,
+                    isLogin: false
+                });
+            } else {
+                res.render('parkById', {
+                    parkId: parkId,
+                    parkData: allData,
+                    isLogin: true,
+                    userId: req.session.user.userId,
+                    userName: req.session.user.userName
+                });
+            }
         } catch (e) {
             res.status(500).json({ error: e });
         }

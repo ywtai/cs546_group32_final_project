@@ -6,14 +6,21 @@
     <title>Aurora</title>
     <link rel="stylesheet" href="/public/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="/public/css/park.css">
+    {{!-- <link rel="stylesheet" href="/public/css/park.css"> --}}
 </head>
 
 <body>
     <header>
         <nav>
             <a id="nav-title" href="/">National Park Reviews</a></li>
-            <a href="/auth/login">Log In</a>
+            <div class="user-info">
+            {{#if isLoggedIn}}
+                <a href="/auth/user">{{user.userName}}</a>
+                <a href="/auth/logout"> Log Out</a>
+            {{else}}
+                <a href="/auth/login">Log In</a>
+            {{/if}}
+            </div>
         </nav>
     </header>
 

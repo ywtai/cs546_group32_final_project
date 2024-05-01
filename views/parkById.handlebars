@@ -1,18 +1,18 @@
 <title>Park Page</title>
-<link rel="stylesheet" href="/public/css/park.css">
-
-<main class='main-content'>
+{{!-- <link rel="stylesheet" href="/public/css/park.css"> --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<main>
+        {{#if isLogin}}
+            <button class="favorite-btn" id="far_btn"onclick="toggleFavorite(this)" data-postid="1" value="0">
+                <i class="far fa-heart"></i>
+            </button>
+        {{/if}}
     {{#each parkData}}
     <article class="container">
         <h1>{{this.parkName}}</h1>
         {{#if this.photos}}
         <img class="park-poster" alt="{{this.parkName}} Image" src="{{this.photos.[0].url}}">
         {{/if}}
-        {{!-- {{#if isLogin}} --}}
-        <button class="favorite-btn" onclick="toggleFavorite(this)" data-postid="1">
-            <i class="far fa-heart"></i>
-        </button>
-        {{!-- {{/if}} --}}
         <h2>Description</h2>
         <p class="description">{{this.description}}</p>
         <section class="info">
@@ -48,67 +48,54 @@
 {{!--                 </tr> --}}
                 {{#each this.reviews}}
                 <tr>
-                    <a class='post-link' href = '/review/{{this.reviewId}}'> {{this.title}} {{this.userName}} {{this.rating}} {{this.reviewDate}} </a>
-{{!--                     <td>{{this.rating}}</td> --}}
-{{!--                     <td>{{this.reviewDate}}</td> --}}
-{{!--                     <td>{{this.title}}</td> --}}
+                    <a class='post-link' href = "/reviews/review/{{this._id}}"> {{this.title}} {{this.userName}} {{this.rating}} stars {{this.reviewDate}}
+                     </a>
                 </tr>
                 {{/each}}
             </table>
             {{else}}
             <p>No reviews yet.</p>
             {{/if}}
-            <section class="posts">
-               <div class="posts-header">
-                  {{!-- {{#if isLogin}} --}}
-                     <button id="addPostButton" class="add-post-btn" onclick="openPostForm()">+ Post</button>
-                  {{!-- {{/if}} --}}
-               </div>
-            </section>
-                <div id="addPostModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <form action = "/addReview/{{this.parkId}}" id="postForm" method="POST">
-                            <h2>Add a Post</h2>
-                            <label for="title">Title:</label>
-                            <input type="text" id="title" name="title" required>
-                            <label for="content">Review:</label>
-                            <textarea id="content" name="content" required></textarea>
-                            <label for="photos">Upload Image:</label>
-                            <input type="file" id="photos" name="photos" accept="image/*">
-                            <label>Rating:</label>
-                            <input type="hidden" id="ratingValue" name="ratingValue" value="0">
-                            <div class="rating">
-                                <span class="star" onclick="setRating(1)">&#9733;</span>
-                                <span class="star" onclick="setRating(2)">&#9733;</span>
-                                <span class="star" onclick="setRating(3)">&#9733;</span>
-                                <span class="star" onclick="setRating(4)">&#9733;</span>
-                                <span class="star" onclick="setRating(5)">&#9733;</span>
-                            </div>
-                            <input type="hidden" id="userName" name="userName">
-                            <button type="submit" class="btn">Submit Post</button>
-                        </form>
-                    </div>
-                </div>
         </section>
     </article>
     {{/each}}
+    {{#if isLogin}}
+{{!--             <section class="posts"> --}}
+{{!--                <div class="posts-header"> --}}
+{{!--                    <button id="addPostButton" class="add-post-btn" onclick="openPostForm()">+ Post</button> --}}
+{{!--                </div> --}}
+{{!--             </section> --}}
+        <a href="/reviews/addReview/{{parkId}}">
+          <button>addPost</button>
+        </a>
+    {{/if}}
+{{!--                 <div id="addPostModal" class="modal"> --}}
+{{!--                     <div class="modal-content"> --}}
+{{!--                         <span class="close">&times;</span> --}}
+{{!--                         <form action = "/reviews/addReview/{{parkId}}" id="postForm" method="POST" enctype="multipart/form-data"> --}}
+{{!--                             <h2>Add a Post</h2> --}}
+{{!--                             <input type="hidden" id="userId" name="userId" value="{{userId}}"> --}}
+{{!--                             <input type="hidden" id="userName" name="userName" value="{{userName}}"> --}}
+{{!--                             <label for="title">Title:</label> --}}
+{{!--                             <input type="text" id="title" name="title"> --}}
+{{!--                             <label for="content">Review:</label> --}}
+{{!--                             <textarea id="content" name="content"></textarea> --}}
+{{!--                             <label for="photos">Upload Image:</label> --}}
+{{!--                             <input type="number" id="photos" name="photos" accept="image/*"> --}}
+{{!--                             <label>Rating:</label> --}}
+{{!--                             <input type="hidden" id="rating" name="rating" value="0"> --}}
+{{!--                             <div class="rating"> --}}
+{{!--                                 <span class="star" onclick="setRating(1)">&#9733;</span> --}}
+{{!--                                 <span class="star" onclick="setRating(2)">&#9733;</span> --}}
+{{!--                                 <span class="star" onclick="setRating(3)">&#9733;</span> --}}
+{{!--                                 <span class="star" onclick="setRating(4)">&#9733;</span> --}}
+{{!--                                 <span class="star" onclick="setRating(5)">&#9733;</span> --}}
+{{!--                             </div> --}}
+{{!--                             <div id="error_message" class="error" style="display:none;"></div> --}}
+{{!--                             <button type="submit" class="btn">Submit Post</button> --}}
+{{!--                         </form> --}}
+{{!--                     </div> --}}
+{{!--                 </div> --}}
     <a class="search-other" href="/">Search for Another Park</a>
 </main>
 <script src="/public/js/park.js"></script>
-<script>
-document.getElementById('postForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    var formData = new FormData(this);
-    fetch('/addReview/{{this.parkId}}', {
-        method: 'POST',
-        body: formData
-    }).then(response => response.json()).then(data => {
-        const table = document.querySelector('.my_coolratings_table');
-        const row = table.insertRow(-1);
-        const cell = row.insertCell(0);
-        cell.innerHTML = `<a class='post-link' href='/review/${data.reviewId}'>${data.title} ${data.userName} ${data.rating} ${data.reviewDate}</a>`;
-//         document.querySelector('.no-reviews').style.display = 'none';
-    }).catch(error => console.error('Error:', error));
-});
-</script>

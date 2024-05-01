@@ -1,12 +1,31 @@
-
+// Import the express router as shown in the lecture code
+// Note: please do not forget to export the router!
 import { Router } from 'express';
 import { reviewData, commentData } from "../data/index.js";
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureAdmin } from '../middleware.js'
 import validation from '../validation.js';
 import multer from 'multer';
+import * as path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    // Adjust the path to go up one directory level from routes to the project root
+    callback(null, path.join(__dirname, '../public/icon'));
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.originalname);
+  }
+});
+
 const upload = multer({ storage: storage });
+
+
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage: storage });
 
 const router = Router();
 
@@ -14,7 +33,7 @@ router.use(logRequests);
 
 router
   .route('/addReview/:parkObjectId')
-  .get(ensureLoggedIn, async (req, res) => {
+  .get(async (req, res) => {
     // const { userName, favoriteQuote, role, themePreference } =
     //   req.session.user;
     let parkId = req.params.parkObjectId;
@@ -32,17 +51,19 @@ router
       }
     }
   })
-  .post(upload.none(), async (req, res) => {
+  .post(upload.single('photos'), ensureLoggedIn, async (req, res) => {
     let parkId = req.params.parkObjectId;
     let reviewInfo = req.body;
-
+    let startIndex = req.file.path.indexOf('/public');
+    let webPath = req.file.path.substring(startIndex);
+    reviewInfo.photos = webPath;
     if (!reviewInfo || Object.keys(reviewInfo).length === 0) {
       return res
         .status(400)
         .json({ error: 'There are no fields in the request body' });
     }
 
-    let { userId, title, userName, content, photos, rating } = reviewInfo;
+    let { title, content, photos, rating } = reviewInfo;
 
     try {
       req.params.parkObjectId = validation.checkId(req.params.parkObjectId);
@@ -57,18 +78,24 @@ router
         errors: e.toString()
       });
     }
-
     try {
       const { reviewSubmittedCompleted } = await reviewData.createReview(
         req.params.parkObjectId,
-        userId,
+        req.session.user.userId,
         title,
-        userName,
+        req.session.user.userName,
         content,
         photos,
         rating
       );
 
+      // return res.status(201).json({
+      //     success: true,
+      //     message: 'Review added successfully',
+      //     data: {
+      //         userName:req.
+      //     }
+      // });
       res.render('reviewSubmitted', {
         documentTitle: 'Review Submitted',
         parkId: parkId
@@ -88,17 +115,44 @@ router
   .get(async (req, res) => {
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
+      // req.params.parkId = validation.checkId(req.params.parkId);
     } catch (e) {
       return res.status(500).json({ error: e });
     }
     try {
       const review = await reviewData.getReview(req.params.reviewId);
-      return res.json(review);
+      if (!req.session.user) {
+        res.render('review', {
+          title: review.title,
+          userName: review.userName,
+          content: review.content,
+          comment: review.comment,
+          reviewDate: review.reviewDate,
+          rating: review.rating,
+          photos: review.photos,
+          reviewId: req.params.reviewId,
+          isLogin: false,
+          parkId: req.params.parkId
+        })
+      } else {
+        res.render('review', {
+          title: review.title,
+          userName: review.userName,
+          content: review.content,
+          comment: review.comments,
+          reviewDate: review.reviewDate,
+          rating: review.rating,
+          photos: review.photos,
+          reviewId: req.params.reviewId,
+          isLogin: true
+          // parkId:req.params.parkId
+        })
+      }
     } catch (e) {
       return res.status(404).json({ error: e });
     }
   })
-  .patch(upload.none(), async (req, res) => {
+  .post(async (req, res) => {
     let updateObject = req.body;
     if (!updateObject || Object.keys(updateObject).length === 0) {
       return res
@@ -119,7 +173,6 @@ router
 
       if (rating)
         rating = validation.checkRating(rating, 'Rating');
-
     } catch (e) {
       return res.status(400).json({ error: e });
     }
@@ -135,15 +188,26 @@ router
     }
   })
   .delete(upload.none(), async (req, res) => {
+    // try {
+    //   req.params.reviewId = validation.checkId(req.params.reviewId);
+    // } catch (e) {
+    //   return res.status(400).json({error: e});
+    // }
+    //
+    // try {
+    //   let deletedReview = await reviewData.removeReview(req.params.reviewId);
+    //   return res.json(deletedReview);
+    // } catch (e) {
+    //   return res.status(404).send({error: e});
+    // }
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
       return res.status(400).json({ error: e });
     }
-
     try {
       let deletedReview = await reviewData.removeReview(req.params.reviewId);
-      return res.json(deletedReview);
+      return res.json({ success: true, message: 'Review deleted successfully', data: deletedReview });
     } catch (e) {
       return res.status(404).send({ error: e });
     }
@@ -151,7 +215,7 @@ router
 
 router
   .route('/review/:reviewId/addcomment')
-  .get(async (req, res) => {
+  .get(ensureLoggedIn, async (req, res) => {
     let reviewId = req.params.reviewId;
 
     try {
@@ -167,17 +231,17 @@ router
       }
     }
   })
-  .post(upload.none(), async (req, res) => {
-    let { userId, userName, content } = req.body;
+  .post(ensureLoggedIn, async (req, res) => {
+    let { content } = req.body;
 
-    if (!userId || !userName || !content) {
-      return res.status(400).json({ error: 'Missing one or more of the required fields: userId, userName, content.' });
-    }
+    // if (!userId || !userName || !content) {
+    //   return res.status(400).json({ error: 'Missing one or more of the required fields: userId, userName, content.' });
+    // }
 
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
-      userId = validation.checkId(userId);
-      userName = validation.checkString(userName, 'User Name');
+      // userId = validation.checkId(userId);
+      // userName = validation.checkString(userName, 'User Name');
       content = validation.checkString(content, 'Content');
     } catch (e) {
       return res.status(400).json({ error: e });
@@ -186,8 +250,8 @@ router
     try {
       const newComment = await commentData.createComment(
         req.params.reviewId,
-        userId,
-        userName,
+        req.session.user.userId,
+        req.session.user.userName,
         content
       );
       return res.status(201).json(newComment);
@@ -197,7 +261,7 @@ router
   });
 
 router
-  .route('/review/:reviewId/comment/:commentId')
+  .route(ensureLoggedIn, '/review/:reviewId/comment/:commentId')
   .get(async (req, res) => {
     let commentId = validation.checkId(req.params.commentId);
 

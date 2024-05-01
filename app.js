@@ -24,6 +24,20 @@ app.use(
     })
 );
 
+app.use((req, res, next) => {
+    // Retrieve user from session
+    const user = req.session.user;
+
+    // Check if user exists in the session to determine login status
+    const isLoggedIn = (user !== undefined);
+
+    // Make user and login status available in all views
+    res.locals.user = user;
+    res.locals.isLoggedIn = isLoggedIn;
+
+    next();
+});
+
 configRoutes(app);
 
 app.listen(3000, () => {

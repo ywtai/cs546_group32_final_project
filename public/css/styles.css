@@ -91,3 +91,8 @@ a {
     color: #6c757d !important;
     margin-top: 1px;
 }
+
+.user-info {
+    display: inline; /* Ensure links are on the same line */
+    float: right;
+}
