@@ -80,20 +80,19 @@ const exportedMethods = {
   async updateComment(commentId, updateObject) {
     commentId = validation.checkId(commentId);
     let {content} = updateObject;
-    const updateComment = {};
-    
+    const updateFields = {};
+
     if (content) {
       content = validation.checkString(content, 'Content');
-      updateReview["reviews.$.comments.$.content"] = content;
+      updateFields["reviews.0.comments.0.content"] = content;
     }
 
-    updateComment["reviews.$.comments.$.commentDate"] = validation.getFormatedDate(new Date());
+    updateFields["reviews.0.comments.0.commentDate"] = validation.getFormatedDate(new Date());
 
     const parkCollection = await parks();
     const updateCommentInfo = await parkCollection.updateOne(
 			{ "reviews.comments._id": new ObjectId(commentId) },
-			{ $set: updateFields },
-			{ returnDocument: 'after' }
+			{ $set: updateFields }
 		);
 
 		if (!updateCommentInfo || updateCommentInfo.matchedCount === 0) {

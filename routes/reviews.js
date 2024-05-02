@@ -120,29 +120,31 @@ router
   .route('/review/:reviewId')
   .get(async (req, res) => {
     try {
-      req.params.reviewId = validation.checkId(req.params.reviewId);
-    } catch (e) {
-      return res.status(500).json({ error: e });
-    }
-    try {
-      const review = await reviewData.getReview(req.params.reviewId);
-      const isAuthor = req.session.user && (req.session.user.userId === review.userId);
+      const reviewId = validation.checkId(req.params.reviewId);
+      const review = await reviewData.getReview(reviewId);
+      const comments = await commentData.getAllComments(reviewId);
+      const userId = req.session.user ? req.session.user.userId : null;
+
+      const commentsWithAuthCheck = comments.map(comment => ({
+        ...comment,
+        commentIsAuthor: comment.userId === userId
+      }));
       
       res.render('review', {
         title: review.title,
         userName: review.userName,
         content: review.content,
-        comment: review.comments,
+        comment: commentsWithAuthCheck,
         reviewDate: review.reviewDate,
         rating: review.rating,
         photos: review.photos,
         reviewId: req.params.reviewId,
-        isAuthor: isAuthor,
+        isAuthor: review.userId === userId,
         isLogin: !!req.session.user,
         parkId: req.params.parkId
       })     
     } catch (e) {
-      return res.status(404).json({ error: e });
+      res.redirect('/');
     }
   })
   .post(ensureLoggedIn, async (req, res) => {
@@ -203,7 +205,11 @@ router
         })
       }
     } catch (e) {
-      return res.status(404).json({ error: e });
+      res.json({
+        success: false,
+        message: 'Review edited failed',
+        redirectUrl: `/review/${req.params.reviewId}`
+      })
     }
   })
   .delete(ensureLoggedIn, upload.none(), async (req, res) => {
@@ -235,7 +241,7 @@ router
     try {
       reviewId = validation.checkId(reviewId, 'id parameter in URL');
       res.render('addComment', {
-        documentTitle: 'Add Review',
+        documentTitle: 'Add Comment',
         reviewId: reviewId
       });
     } catch (e) {
@@ -248,14 +254,8 @@ router
   .post(ensureLoggedIn, async (req, res) => {
     let { content } = req.body;
 
-    // if (!userId || !userName || !content) {
-    //   return res.status(400).json({ error: 'Missing one or more of the required fields: userId, userName, content.' });
-    // }
-
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
-      // userId = validation.checkId(userId);
-      // userName = validation.checkString(userName, 'User Name');
       content = validation.checkString(content, 'Content');
     } catch (e) {
       return res.status(400).json({ error: e });
@@ -268,14 +268,20 @@ router
         req.session.user.userName,
         content
       );
-      return res.status(201);
+      res.json({
+        success: true,
+        message: 'Comment added successfully'
+      })
     } catch (e) {
-      return res.status(500).json({ error: e });
+      res.json({
+        success: false,
+        message: 'Comment added fail'
+      })
     }
   });
 
 router
-  .route(ensureLoggedIn, '/review/:reviewId/comment/:commentId')
+  .route('/review/:reviewId/comment/:commentId')
   .get(async (req, res) => {
     let commentId = validation.checkId(req.params.commentId);
 
@@ -286,11 +292,14 @@ router
       return res.status(404).json({ error: 'Comment not found or could not be retrieved' });
     }
   })
-  .patch(upload.none(), async (req, res) => {
-    let commentId = validation.checkId(req.params.commentId);
+  .post(ensureLoggedIn, upload.none(), async (req, res) => {
+    const userId = req.session.user.userId;
     let updateObject = req.body;
     if (!updateObject || Object.keys(updateObject).length === 0) {
-      return res.status(400).json({ error: 'There are no fields in the request body' });
+      return res.status(400).json({ 
+        success: false, 
+        message: 'There are no fields in the request body'  
+      });
     }
 
     let { content } = updateObject;
@@ -298,29 +307,75 @@ router
     try {
       if (content)
         content = validation.checkString(content, 'Content');
+    } catch (e) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Content must be a non-empty string."  
+      });
+    }
 
+    try {
+      req.params.commentId = validation.checkId(req.params.commentId);
+      req.params.reviewId = validation.checkId(req.params.reviewId);      
+    } catch (e) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Fail to load comment.'  
+      });
+    }
+
+    try {
+      const comment = await commentData.getComment(req.params.commentId);
+      const isAuthor = req.session.user && (userId === comment.userId);
+      if (!isAuthor) {
+        return res.status(403).json({ 
+          success: false, 
+          message: "You do not have permission to edit this comment." 
+        });
+      }
+    } catch (e) {
+      return res.status(403).json({ 
+        success: false, 
+        message: "You do not have permission to edit this comment." 
+      });
+    }
+
+    try{
+      const updatedComment = await commentData.updateComment(
+        req.params.commentId,
+        updateObject
+      );
+      res.json({
+        success: true, 
+        message: 'Success to update comment.',
+        redirectUrl: `/review/${req.params.reviewId}`,
+        commentIsAuthor: true
+      })
+    } catch (e) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Fail to update comment.'  
+      });
+    }
+  })
+  .delete(ensureLoggedIn, upload.none(), async (req, res) => {
+    const userId = req.session.user.userId;
+    try {
+      req.params.commentId = validation.checkId(req.params.commentId);
+      req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
       return res.status(400).json({ error: e });
     }
-
+    
     try {
-      const updatedComment = await commentData.updateComment(
-        commentId,
-        updateObject
-      );
-      return res.json(updatedComment);
+      const comment = await commentData.getComment(req.params.commentId);
+      if (comment.userId !== userId) {
+          return res.status(403).json({ error: "You do not have permission to delete this comment." });
+      }
+      let deletedComment = await commentData.removeComment(req.params.commentId);
+      res.json({redirectUrl: '/review/' + req.params.reviewId});
     } catch (e) {
-      return res.status(404).json({ error: e });
-    }
-  })
-  .delete(upload.none(), async (req, res) => {
-    let commentId = validation.checkId(req.params.commentId);
-
-    try {
-      await commentData.removeComment(commentId);
-      return res.status(204).send();
-    } catch (e) {
-      return res.status(404).json({ error: e });
+      return res.status(404).send({ error: e });
     }
   })
 

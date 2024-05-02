@@ -35,22 +35,40 @@
         <section class="comments">
             <h3>Comments</h3>
             {{#if comment}}
-            {{#each comment}}
-            <div class="comment">
-                <p><strong>{{this.userName}}:</strong> {{this.content}}</p>
-            </div>
-            {{/each}}
+                {{#each comment}}
+                    <div class="comment" id="comment-{{this._id}}">
+                        <p><strong>{{this.userName}}:</strong> {{this.content}}</p>
+                        {{#if this.commentIsAuthor}}
+                            <form action="/review/{{../reviewId}}/comment/{{this._id}}" method="POST" id="editCommentForm" style="display: none;">
+                                <section class="info">
+                                    <dl>
+                                        <dt><label for="editCommentContent">Content:</label></dt>
+                                        <dd><textarea id="editCommentContent" name="editCommentContent" placeholder="Content"></textarea></dd>
+                                    </dl>
+                                </section>
+                                <div id="comment_error_message" class="error" style="display:none;"></div>
+                                <button id="editCommentSubmit" name="editCommentSubmit" type="button" data-review-id="{{reviewId}}" data-comment-id="{{this._id}}">Save Changes</button>
+                            </form>
+                            <button id="editComment" class="editComment">Edit</button>
+                            <button id="deleteComment" class="deleteComment" data-review-id="{{../reviewId}}" data-comment-id="{{this._id}}">Delete</button>
+                        {{/if}}
+                    </div>
+                {{/each}}
             {{/if}}
         </section>
+        {{#if isLogin}}
             <form action="/review/{{reviewId}}/addcomment" method="POST" id="addCommentForm">
                 <section class="info">
                     <dl>
-                        <dt>Content:</dt>
-                        <dd><textarea id="content" name="content" required></textarea></dd>
+                        <dt><label for="commentContent">Content:</label></dt>
+                        <dd><textarea id="commentContent" name="commentContent" required></textarea></dd>
                     </dl>
                 </section>
                 <div id="comment_error_message" class="error" style="display:none;"></div>
-                <button id="commentSubmit" name="commentSubmit" type="submit" class="commentSubmit-button">Submit Comment</button>
+                <button id="commentSubmit" name="commentSubmit" type="button" class="commentSubmit-button">Submit Comment</button>
             </form>
+        {{else}}
+            <p>You must be <a href="/auth/login">logged in</a> to add comments.</p>
+        {{/if}}
     </article>
 </main>
