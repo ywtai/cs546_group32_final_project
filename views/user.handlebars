@@ -1,40 +1,37 @@
-{{!--
-
-If the user is logged in , and 'GET /user' endpoint is called, you will render this view based on the specs.
-
---}}
-
-{{!-- <body>
-<link rel="stylesheet" href="/public/css/styles.css">
-</body>
-
-<h1 class="container">{{title}}</h1>
-<p class="phrase">Welcome {{userName}}, the time is now: {{currentTime}}.</p>
-<p class="content">Your bio: {{bio}}, Your favorite: {{favorite}}, your personalParkPassport{{personalParkPassport}}.</p>
-<div class="link">
-    <a href="/auth/logout">Log out</a>
-</div> --}}
-
 <!DOCTYPE html>
 <html lang="en">
 <body>
     <h1 class="container">{{title}}</h1>
     <p class="phrase">Welcome {{userName}}, the time is now: {{currentTime}}.</p>
-    <p class="content">Your bio: {{bio}}, Your personal Park Passport: {{personalParkPassport}}</p>
+    <p class="content">Your bio: {{bio}}</p>
     <div class="content">
-        <p>Your favorites:</p>
-        <ul id="favoritesList">
-            {{#each favorite}}
-            <li id="park-{{this}}">
-                <a href="http://localhost:3000/park/{{this}}">Park ID: {{this}}</a>
-                <button type="button" class="delete-btn" data-park-id="{{this}}" onclick="deleteFavorite('{{this}}')">Delete</button>
+        <p>Your Personal Park Passport:</p>
+        <ul id="passportList">
+            {{#each personalParkPassport}}
+            <li id="passport-{{parkId}}">
+                <a href="/park/{{parkId}}">{{parkName}}</a> 
+                <button type="button" class="delete-btn" onclick="deletePassportPark('{{parkId}}')">Delete</button>
             </li>
             {{/each}}
         </ul>
     </div>
+
+    <div class="content">
+        <p>Your favorites:</p>
+        <ul id="favoritesList">
+            {{#each favorite}}
+            <li id="park-{{parkId}}">
+                <a href="/park/{{parkId}}">{{parkName}}</a> 
+                <button type="button" class="delete-btn" onclick="deleteFavorite('{{parkId}}')">Delete</button>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    
     <div class="link">
         <a href="/auth/logout">Log out</a>
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
     function deleteFavorite(parkId) {
@@ -42,7 +39,7 @@ If the user is logged in , and 'GET /user' endpoint is called, you will render t
             url: '/auth/delete-favorite/' + parkId,
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ parkId: parkId }),
+            data: JSON.stringify({ parkId }),
             success: function(response) {
                 if(response.success) {
                     $('#park-' + parkId).remove();
@@ -55,11 +52,28 @@ If the user is logged in , and 'GET /user' endpoint is called, you will render t
             }
         });
     }
+
+    function deletePassportPark(parkId) {
+        $.ajax({
+            url: '/auth/delete-passport-park',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ parkId }),
+            success: function(response) {
+                if(response.success) {
+                    $('#passport-' + parkId).remove();
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error deleting park from passport.');
+            }
+        });
+    }
     </script>
 </body>
 </html>
-
-
 
 
 
