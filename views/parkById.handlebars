@@ -3,8 +3,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <main>
         {{#if isLogin}}
-            <button class="favorite-btn" id="far_btn"onclick="toggleFavorite(this)" data-postid="1" value="0">
-                <i class="far fa-heart"></i>
+            <button class="favorite-btn" id="fav_btn" onclick="toggleFavorite(this, '{{this.parkName}}')" data-postid="{{this.parkId}}">
+              <i class="far fa-heart"></i>
             </button>
         {{/if}}
     {{#each parkData}}
@@ -59,7 +59,7 @@
         </section>
     </article>
     {{/each}}
-    {{#if isLogin}}
+    {{!-- {{#if isLogin}} --}}
 {{!--             <section class="posts"> --}}
 {{!--                <div class="posts-header"> --}}
 {{!--                    <button id="addPostButton" class="add-post-btn" onclick="openPostForm()">+ Post</button> --}}
@@ -68,7 +68,7 @@
         <a href="/reviews/addReview/{{parkId}}">
           <button>addPost</button>
         </a>
-    {{/if}}
+    {{!-- {{/if}} --}}
 {{!--                 <div id="addPostModal" class="modal"> --}}
 {{!--                     <div class="modal-content"> --}}
 {{!--                         <span class="close">&times;</span> --}}
@@ -98,4 +98,33 @@
 {{!--                 </div> --}}
     <a class="search-other" href="/">Search for Another Park</a>
 </main>
-<script src="/public/js/park.js"></script>
+<script>
+  function toggleFavorite(element, parkName) {
+    var postId = element.getAttribute('data-postid');
+    var isFavorited = element.value === "1" ? true : false;
+
+    fetch(`/favorite/${postId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ favorite: !isFavorited, parkName: parkName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        if (data.favorited) {
+            element.innerHTML = '<i class="fas fa-heart"></i>'; // Filled heart icon
+            element.value = "1";
+        } else {
+            element.innerHTML = '<i class="far fa-heart"></i>'; // Empty heart icon
+            element.value = "0";
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+
+</script>

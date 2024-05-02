@@ -33,7 +33,7 @@ router.use(logRequests);
 
 router
   .route('/addReview/:parkObjectId')
-  .get(async (req, res) => {
+  .get(ensureLoggedIn, async (req, res) => {
     // const { userName, favoriteQuote, role, themePreference } =
     //   req.session.user;
     let parkId = req.params.parkObjectId;
@@ -51,17 +51,22 @@ router
       }
     }
   })
-  .post(upload.single('photos'), ensureLoggedIn, async (req, res) => {
+  .post(upload.array('photos', 5), ensureLoggedIn, async (req, res) => {
     let parkId = req.params.parkObjectId;
     let reviewInfo = req.body;
-    let startIndex = req.file.path.indexOf('/public');
-    let webPath = req.file.path.substring(startIndex);
-    reviewInfo.photos = webPath;
+
     if (!reviewInfo || Object.keys(reviewInfo).length === 0) {
       return res
         .status(400)
         .json({ error: 'There are no fields in the request body' });
     }
+
+    let photosPaths = req.files.map(file => {
+        let startIndex = file.path.indexOf('/public');
+        return file.path.substring(startIndex);
+    });
+    reviewInfo.photos = photosPaths;
+    
 
     let { title, content, photos, rating } = reviewInfo;
 
@@ -182,7 +187,7 @@ router
         req.params.reviewId,
         updateObject
       );
-      return res.json(updatedReview);
+      return res.status(201);
     } catch (e) {
       return res.status(404).send({ error: e });
     }
@@ -254,7 +259,7 @@ router
         req.session.user.userName,
         content
       );
-      return res.status(201).json(newComment);
+      return res.status(201);
     } catch (e) {
       return res.status(500).json({ error: e });
     }

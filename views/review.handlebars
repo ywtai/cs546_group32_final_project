@@ -11,11 +11,11 @@
             <p>{{reviewDate}}</p>
             <p>{{userName}}</p>
             <p>{{rating}} stars</p>
-{{!--             {{#if photos}} --}}
-{{!--             {{#each photos}} --}}
-                <img class="park-poster" src="{{photos}}">
-{{!--             {{/each}} --}}
-{{!--             {{/if}} --}}
+            {{#if photos}}
+            {{#each photos}}
+                <img class="park-poster" src="{{this}}">
+            {{/each}}
+            {{/if}}
             <div id="postDescription" class="description">
                 <p>{{content}}</p>
                 <form action="/reviews/review/{{reviewId}}" method="POST" id="editReviewForm">
