@@ -160,11 +160,6 @@ router.post('/delete-passport-park', ensureLoggedIn, async (req, res) => {
 });
 
 
-
-
-
-
-
 router.route('/error').get(async (req, res) => {
 
   res.render('error', { message: "" })
