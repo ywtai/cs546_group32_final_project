@@ -42,7 +42,7 @@
                             <form action="/review/{{../reviewId}}/comment/{{this._id}}" method="POST" id="editCommentForm" style="display: none;">
                                 <section class="info">
                                     <dl>
-                                        <dt><label for="editCommentContent">Content:</label></dt>
+                                        <dt><label for="editCommentContent">Edit Comment:</label></dt>
                                         <dd><textarea id="editCommentContent" name="editCommentContent" placeholder="Content"></textarea></dd>
                                     </dl>
                                 </section>
@@ -60,7 +60,7 @@
             <form action="/review/{{reviewId}}/addcomment" method="POST" id="addCommentForm">
                 <section class="info">
                     <dl>
-                        <dt><label for="commentContent">Content:</label></dt>
+                        <dt><label for="commentContent">Add a Comment:</label></dt>
                         <dd><textarea id="commentContent" name="commentContent" required></textarea></dd>
                     </dl>
                 </section>

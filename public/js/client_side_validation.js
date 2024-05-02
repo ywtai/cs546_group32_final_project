@@ -283,7 +283,7 @@ if (loginForm) {
   })
 }
 
-function validateReviewData(title, content, rating) {
+function validateReviewData(title, content, rating, photos) {
   let errors = [];
   if (!title || title.trim().length === 0) {
       errors.push("Title cannot be empty.");
@@ -318,8 +318,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const title = document.getElementById('title').value;
       const content = document.getElementById('content').value;
       const rating = document.getElementById('rating').value;
+      const photos = document.getElementById('photos').files;
+
+      console.log(photos)
   
-      const errors = validateReviewData(title, content, rating);
+      const errors = validateReviewData(title, content, rating, photos);
       if (errors.length > 0) {
         reviewErrorMessage.innerText = errors.join(" ");
         reviewErrorMessage.style.display = 'block';
@@ -331,10 +334,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
       this.disabled = true;
   
-      const formData = JSON.stringify({ title, content, rating });
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content', content);
+      formData.append('rating', rating);
+      Array.from(photos).forEach((file, index) => {
+        formData.append('photos', file);
+      });
+      console.log("formData "+ formData);
       fetch(reviewForm.action, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: formData
       })
       .then(response => response.json())
@@ -436,15 +445,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const commentForm = document.getElementById('addCommentForm');
   const commentSubmitButton = document.getElementById('commentSubmit');
   const commentErrorMessage = document.getElementById('comment_error_message');
-  const commentContentTextarea = document.getElementById('commentContent'); // Ensure this ID matches your textarea for comment content
-
-  function validateCommentData(content) {
-    let errors = [];
-    if (!content || content.trim().length === 0) {
-      errors.push("Comment cannot be empty.");
-    }
-    return errors;
-  }
+  const commentContentTextarea = document.getElementById('commentContent');
 
   if (commentSubmitButton) {
     commentSubmitButton.addEventListener('click', function(event) {
