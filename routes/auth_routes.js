@@ -95,6 +95,7 @@ router
         personalParkPassport: user.personalParkPassport,
         favorite: user.favorite,
         reviews: user.reviews,
+        likedReviews: user.likedReviews,
         comments: user.comments
       }
       redirectBasedOnRole(req, res);
@@ -120,6 +121,7 @@ router
     personalParkPassport: req.session.user.personalParkPassport,
     favorite: req.session.user.favorite,
     reviews: req.session.user.reviews,
+    likedReviews: req.session.user.likedReviews,
     comments: req.session.user.comments
   })
 });

@@ -46,6 +46,7 @@ export const registerUser = async (
     personalParkPassport: [],
     favorite: [],
     reviews: [],
+    likedReviews: [],
     comments: []
   };
 
@@ -91,6 +92,7 @@ export const loginUser = async (usernameOrEmail, password) => {
     personalParkPassport: userInfo.personalParkPassport,
     favorite: userInfo.favorite,
     reviews: userInfo.reviews,
+    likedReviews: userInfo.likedReviews,
     comments: userInfo.comments
   };
 };
