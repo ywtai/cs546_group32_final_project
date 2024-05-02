@@ -15,7 +15,13 @@ const __dirname = dirname(__filename);
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, path.join(__dirname, '../public/uploads'));
+    const uploadDir = path.join(__dirname, '../public/uploads');
+    
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    
+    callback(null, uploadDir);
   },
   filename: function (req, file, callback) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -24,6 +30,7 @@ const storage = multer.diskStorage({
     callback(null, newFilename);
   }
 });
+
 
 const upload = multer({
   storage: storage,
