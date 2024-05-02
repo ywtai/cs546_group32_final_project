@@ -1,4 +1,3 @@
-// Simulate a user login state
 let isLoggedIn = false;
 // import parks from "../data/parks.js";
 // const park = await parks.get()

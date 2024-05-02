@@ -320,140 +320,131 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+//add review
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOMContentLoaded event triggered");
+  const reviewForm = document.getElementById('addReviewForm');
+  const submitButton = document.getElementById('reviewSubmit');
 
+  
+  submitButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    if (this.disabled) return;
 
+    this.disabled = true;
 
-// const textAnalyzer = () => {
-//   const watcher = (elementID, error) => {
+    const formData = new FormData(reviewForm);
+    fetch(reviewForm.action, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        window.location.href = data.redirectUrl;
+      } else {
+        alert(data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while submitting the review.');
+      this.disabled = false;
+    });
+  });
+  
+});
 
-//     document.getElementById(elementID).addEventListener('focus', (e) => {
+//edit or delete review
+document.addEventListener('DOMContentLoaded', function () {
+  const editFormButton = document.getElementById('editForm');
+  const editForm = document.getElementById('editReviewForm');
+  if (editFormButton && editForm) {
+    editFormButton.addEventListener('click', function () {
+      editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
+    });
+  }
 
-//       let errors = document.querySelectorAll(`#${error}`);
-//       errors.forEach((e) => e.remove());
-//     });
-//   };
+  const editSubmitButton = document.getElementById('editReviewSubmit');
+  editSubmitButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    if (this.disabled) return;
 
-//   const errorTip = (element, text) => {
-//     let error = document.createElement('div');
-//     error.id = `error-${element.id}`;
-//     error.className = 'error';
-//     error.style.color = '#8B0000';
-//     error.style.fontSize = '12px';
-//     element.insertAdjacentElement('afterend', error);
-//     error.innerHTML = text;
+    this.disabled = true;
 
-//     watcher(element.id, error.id);
-//   };
+    const formData = {
+      title: document.getElementById('edit-title').value,
+      rating: document.getElementById('edit-rating').value,
+      content: document.getElementById('edit-content').value
+    };
+    fetch(editForm.action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        window.location.href = data.redirectUrl;
+      } else {
+        alert(data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while submitting the review.');
+      this.disabled = false;
+    });
+  });
 
-//   const checkString = (strVal, varName, conditions) => {
-//     let str = strVal.value;
-//     let a = 0;
-//     if (!str) {
-//       let text = `Error: You must provide ${varName}`;
-//       errorTip(strVal, text);
-//       a = a + 1;
-//     }
+  const deleteButton = document.getElementById('Delete');
+  if (deleteButton) {
+    deleteButton.addEventListener('click', function () {
+      const reviewId = this.getAttribute('data-review-id');
+      if (confirm('Confirm to Delete?')) {
+        fetch(`/review/${reviewId}`, { method: 'DELETE' })
+          .then(response => response.json())
+          .then(data => {
+            alert('Review deleted successfully');
+            if (data.redirectUrl) {
+              window.location.href = data.redirectUrl;
+            } else {
+              alert('Review deleted, but no redirect information received.');
+            }
+          })
+          .catch(error => console.error('Error:', error));
+    }
+    });
+  }
 
-//     if (typeof str !== 'string') {
-//       let text = `Error: ${varName} must be a string!`;
-//       errorTip(strVal, text);
-//       a = a + 1;
-//     }
+  
 
-//     str = str.trim();
-//     if (str.length === 0) {
-//       let text = `Error: ${varName} cannot be an empty string or string with just spaces`;
-//       errorTip(strVal, text);
-//       a = a + 1;
-//     }
+  const commentForm = document.getElementById('addCommentForm');
+  if (commentForm) {
+    commentForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      submitComment();
+    });
+  }
 
-//     if (conditions) {
-//       let key = Object.keys(conditions);
-//       let value = Object.values(conditions);
-//       key.map((item, index) => {
-//         if (item === 'max') {
-//           if (str.length > value[index]) {
-//             text = `Error: ${varName} must be less than ${value[index]} characters`;
-//             errorTip(strVal, text);
-//             a = a + 1;
-//           }
-//         }
-//         if (item === 'min') {
-//           if (str.length < value[index]) {
-//             text = `Error: ${varName} must be more than ${value[index]} characters`;
-//             errorTip(strVal, text);
-//             a = a + 1;
-//           }
-//         }
-//       });
-//     }
-//     if (a >= 1) {
-//       return false;
-//     }
-//     return true;
-//   };
+  
 
-//   const reviewSubmitValidation = (e, reviewSubmitButton) => {
-//     // let firstName = document.getElementById('firstName');
-//     // let lastName = document.getElementById('lastName');
-//     // let username = document.getElementById('username');
-//     // let password = document.getElementById('password');
-//     // let confirmPassword = document.getElementById('confirmPassword');
-//     // let favoriteQuote = document.getElementById('favoriteQuote');
-//     // let themePreference = document.getElementById('themePreference');
-//     // let role = document.getElementById('role');
+  function submitComment() {
+    const reviewId = deleteButton.getAttribute('data-review-id');
+    const content = document.getElementById('content').value;
 
-//     // checkString(firstName, 'firstName', { min: '2', max: '25' });
-//     // validateName(firstName, 'firstName');
-
-//     // checkString(lastName, 'lastName', { min: '2', max: '25' });
-//     // validateName(lastName, 'lastName');
-
-//     // checkString(username, 'username', { min: '5', max: '10' });
-//     // validateName(username, 'username');
-
-//     // checkString(password, 'password', { min: '8' });
-//     // checkString(confirmPassword, 'confirmPassword');
-//     // validatePassword(password, confirmPassword);
-
-//     // checkString(favoriteQuote, 'favoriteQuote', { min: '20', max: '255' });
-
-//     // checkSelection(themePreference, 'themePreference', ['light', 'dark']);
-//     // checkSelection(role, 'role', ['admin', 'user']);
-
-//     // let err = document.querySelectorAll('.error');
-//     // if (!err || err.length === 0) {
-//     // 	check = true;
-//     // } else {
-//     // 	check = false;
-//     // }
-
-//     console.log("btn validation");
-//     let check = true;
-
-//     if (check) {
-//       reviewSubmitButton.setAttribute('type', 'submit');
-//       console.log("submitted");
-//     } else {
-//       reviewSubmitButton.setAttribute('type', 'button');
-//     }
-//     return check;
-//   };
-
-//   let reviewSubmitButton = document.getElementById('reviewSubmit');
-//   if (reviewSubmitButton) {
-//     document.getElementById('reviewSubmit').addEventListener('click', (e) => {
-//       let errors = document.querySelectorAll('.error');
-//       if (errors) {
-//         errors.forEach((ele) => ele.remove());
-//       }
-//       // if (reviewSubmitValidation(e, reviewSubmitButton)) {
-//       //   e.target.form.submit();  // Submit the form if validation passes
-//       // } else {
-//       // 		console.log("Validation failed");
-//       // }
-//     });
-//   }
-// }
-
-// textAnalyzer();
+    fetch(`/review/${reviewId}/addcomment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert('Comment added successfully');
+      location.reload(); 
+    })
+    .catch(error => console.error('Error:', error));
+  }
+});

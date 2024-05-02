@@ -96,3 +96,9 @@ a {
     display: inline; /* Ensure links are on the same line */
     float: right;
 }
+
+.parkReviewImage {
+    max-width: 200px;
+    height: auto;
+    margin: 5px;
+}

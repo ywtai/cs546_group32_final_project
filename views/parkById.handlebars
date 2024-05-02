@@ -3,8 +3,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <main>
         {{#if isLogin}}
-            <button class="favorite-btn" id="fav_btn" onclick="toggleFavorite(this, '{{this.parkName}}')" data-postid="{{this.parkId}}">
-              <i class="far fa-heart"></i>
+            <button class="favorite-btn" id="far_btn"onclick="toggleFavorite(this, '{{this.parkName}}')" data-postid="{{this.parkId}}">
+                <i class="far fa-heart"></i>
+
             </button>
         {{/if}}
     {{#each parkData}}
@@ -48,7 +49,7 @@
 {{!--                 </tr> --}}
                 {{#each this.reviews}}
                 <tr>
-                    <a class='post-link' href = "/reviews/review/{{this._id}}"> {{this.title}} {{this.userName}} {{this.rating}} stars {{this.reviewDate}}
+                    <a class='post-link' href = "/review/{{this._id}}"> {{this.title}} {{this.userName}} {{this.rating}} stars {{this.reviewDate}}
                      </a>
                 </tr>
                 {{/each}}
@@ -65,14 +66,14 @@
 {{!--                    <button id="addPostButton" class="add-post-btn" onclick="openPostForm()">+ Post</button> --}}
 {{!--                </div> --}}
 {{!--             </section> --}}
-        <a href="/reviews/addReview/{{parkId}}">
+        <a href="/addReview/{{parkId}}">
           <button>addPost</button>
         </a>
     {{!-- {{/if}} --}}
 {{!--                 <div id="addPostModal" class="modal"> --}}
 {{!--                     <div class="modal-content"> --}}
 {{!--                         <span class="close">&times;</span> --}}
-{{!--                         <form action = "/reviews/addReview/{{parkId}}" id="postForm" method="POST" enctype="multipart/form-data"> --}}
+{{!--                         <form action = "/addReview/{{parkId}}" id="postForm" method="POST" enctype="multipart/form-data"> --}}
 {{!--                             <h2>Add a Post</h2> --}}
 {{!--                             <input type="hidden" id="userId" name="userId" value="{{userId}}"> --}}
 {{!--                             <input type="hidden" id="userName" name="userName" value="{{userName}}"> --}}
@@ -125,6 +126,4 @@
         console.error('Error:', error);
     });
 }
-
-
 </script>

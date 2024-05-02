@@ -8,24 +8,36 @@ import multer from 'multer';
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import fs from 'fs';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    // Adjust the path to go up one directory level from routes to the project root
-    callback(null, path.join(__dirname, '../public/icon'));
+    callback(null, path.join(__dirname, '../public/uploads'));
   },
   filename: function (req, file, callback) {
-    callback(null, file.originalname);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const extension = path.extname(file.originalname);
+    const newFilename = uniqueSuffix + extension;
+    callback(null, newFilename);
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png') {
+      return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+  }
+});
 
-
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage: storage });
+const maxFiles = 5;
+const uploadPhotos = upload.array('photos', maxFiles);
 
 const router = Router();
 
@@ -34,8 +46,6 @@ router.use(logRequests);
 router
   .route('/addReview/:parkObjectId')
   .get(ensureLoggedIn, async (req, res) => {
-    // const { userName, favoriteQuote, role, themePreference } =
-    //   req.session.user;
     let parkId = req.params.parkObjectId;
 
     try {
@@ -51,9 +61,14 @@ router
       }
     }
   })
-  .post(upload.array('photos', 5), ensureLoggedIn, async (req, res) => {
+  .post(uploadPhotos, ensureLoggedIn, async (req, res) => {
     let parkId = req.params.parkObjectId;
     let reviewInfo = req.body;
+
+    let photoPaths = [];
+    if (req.files) {
+        photoPaths = req.files.map(file => `/uploads/${file.filename}`);
+    }
 
     if (!reviewInfo || Object.keys(reviewInfo).length === 0) {
       return res
@@ -61,14 +76,7 @@ router
         .json({ error: 'There are no fields in the request body' });
     }
 
-    let photosPaths = req.files.map(file => {
-        let startIndex = file.path.indexOf('/public');
-        return file.path.substring(startIndex);
-    });
-    reviewInfo.photos = photosPaths;
-    
-
-    let { title, content, photos, rating } = reviewInfo;
+    let { title, content, rating } = reviewInfo;
 
     try {
       req.params.parkObjectId = validation.checkId(req.params.parkObjectId);
@@ -90,21 +98,14 @@ router
         title,
         req.session.user.userName,
         content,
-        photos,
+        photoPaths,
         rating
       );
-
-      // return res.status(201).json({
-      //     success: true,
-      //     message: 'Review added successfully',
-      //     data: {
-      //         userName:req.
-      //     }
-      // });
-      res.render('reviewSubmitted', {
-        documentTitle: 'Review Submitted',
-        parkId: parkId
-      });
+      res.json({
+        success: true,
+        message: 'Review added successfully',
+        redirectUrl: `/park/${parkId}`
+      })
     } catch (e) {
       return res.status(400).render('addReview', {
         documentTitle: 'Add Review',
@@ -120,44 +121,31 @@ router
   .get(async (req, res) => {
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
-      // req.params.parkId = validation.checkId(req.params.parkId);
     } catch (e) {
       return res.status(500).json({ error: e });
     }
     try {
       const review = await reviewData.getReview(req.params.reviewId);
-      if (!req.session.user) {
-        res.render('review', {
-          title: review.title,
-          userName: review.userName,
-          content: review.content,
-          comment: review.comment,
-          reviewDate: review.reviewDate,
-          rating: review.rating,
-          photos: review.photos,
-          reviewId: req.params.reviewId,
-          isLogin: false,
-          parkId: req.params.parkId
-        })
-      } else {
-        res.render('review', {
-          title: review.title,
-          userName: review.userName,
-          content: review.content,
-          comment: review.comments,
-          reviewDate: review.reviewDate,
-          rating: review.rating,
-          photos: review.photos,
-          reviewId: req.params.reviewId,
-          isLogin: true
-          // parkId:req.params.parkId
-        })
-      }
+      const isAuthor = req.session.user && (req.session.user.userId === review.userId);
+      
+      res.render('review', {
+        title: review.title,
+        userName: review.userName,
+        content: review.content,
+        comment: review.comments,
+        reviewDate: review.reviewDate,
+        rating: review.rating,
+        photos: review.photos,
+        reviewId: req.params.reviewId,
+        isAuthor: isAuthor,
+        isLogin: !!req.session.user,
+        parkId: req.params.parkId
+      })     
     } catch (e) {
       return res.status(404).json({ error: e });
     }
   })
-  .post(async (req, res) => {
+  .post(ensureLoggedIn, async (req, res) => {
     let updateObject = req.body;
     if (!updateObject || Object.keys(updateObject).length === 0) {
       return res
@@ -165,6 +153,7 @@ router
         .json({ error: 'There are no fields in the request body' });
     }
 
+    const userId = req.session.user.userId;
     let { title, content, rating } = updateObject;
 
     try {
@@ -183,36 +172,56 @@ router
     }
 
     try {
+      const review = await reviewData.getReview(req.params.reviewId);
+      if (review.userId !== userId) {
+          return res.status(403).json({ error: "You do not have permission to modify this review." });
+      }
+
       const updatedReview = await reviewData.updateReview(
         req.params.reviewId,
         updateObject
       );
-      return res.status(201);
     } catch (e) {
       return res.status(404).send({ error: e });
     }
+
+    try {
+      const review = await reviewData.getReview(req.params.reviewId);
+      const isAuthor = req.session.user && (req.session.user.userId === review.userId);
+      if (isAuthor) {
+        res.json({
+          success: true,
+          message: 'Review edited successfully',
+          redirectUrl: `/review/${req.params.reviewId}`
+        })
+      }
+      else {
+        res.json({
+          success: false,
+          message: 'Review edited failed',
+          redirectUrl: `/review/${req.params.reviewId}`
+        })
+      }
+    } catch (e) {
+      return res.status(404).json({ error: e });
+    }
   })
-  .delete(upload.none(), async (req, res) => {
-    // try {
-    //   req.params.reviewId = validation.checkId(req.params.reviewId);
-    // } catch (e) {
-    //   return res.status(400).json({error: e});
-    // }
-    //
-    // try {
-    //   let deletedReview = await reviewData.removeReview(req.params.reviewId);
-    //   return res.json(deletedReview);
-    // } catch (e) {
-    //   return res.status(404).send({error: e});
-    // }
+  .delete(ensureLoggedIn, upload.none(), async (req, res) => {
+    const userId = req.session.user.userId;
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
       return res.status(400).json({ error: e });
     }
+    
     try {
+      const review = await reviewData.getReview(req.params.reviewId);
+      if (review.userId !== userId) {
+          return res.status(403).json({ error: "You do not have permission to delete this review." });
+      }
       let deletedReview = await reviewData.removeReview(req.params.reviewId);
-      return res.json({ success: true, message: 'Review deleted successfully', data: deletedReview });
+      const parkId = deletedReview._id.toString();
+      res.json({redirectUrl: '/park/' + parkId});
     } catch (e) {
       return res.status(404).send({ error: e });
     }

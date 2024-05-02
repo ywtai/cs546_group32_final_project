@@ -1,124 +1,56 @@
-
-{{!-- <header class="site-header"> --}}
-{{!--     <div class="header-top"> --}}
-{{!--         <img src="/public/icon/Aurora.ico" alt="Aurora Icon" class="website-icon"> --}}
-{{!--         <span class="site-title">Aurora </span> --}}
-{{!--     </div> --}}
-{{!-- </header> --}}
 <main>
     <article class="post">
-            <h2>{{title}}</h2>
-            <p>{{reviewDate}}</p>
-            <p>{{userName}}</p>
-            <p>{{rating}} stars</p>
-            {{#if photos}}
+        <h2>{{title}}</h2>
+        <p>{{reviewDate}}</p>
+        <p>{{userName}}</p>
+        <p>{{rating}} stars</p>
+
+        {{#if photos}}  
             {{#each photos}}
-                <img class="park-poster" src="{{this}}">
+                <img class="parkReviewImage" src="/public{{this}}" alt="Photo of Park">
             {{/each}}
-            {{/if}}
-            <div id="postDescription" class="description">
-                <p>{{content}}</p>
-                <form action="/reviews/review/{{reviewId}}" method="POST" id="editReviewForm">
-                    <section class="info">
-                       <dl>
-                           <dt>title:</dt>
-                           <dd><input id="title" name="title"></input></dd>
-                           <dt>Rating:</dt>
-                           <dd><input type="number" id="rating" name="rating" min="1" max="5"></dd>
-                           <dt>Content:</dt>
-                           <dd><textarea id="content" name="content"></textarea></dd>
-                       </dl>
-                    </section>
-                    <div id="review_error_message" class="error" style="display:none;"></div>
-                    <button id="Edit" name="Edit" type="submit" >Edit</button>
-                </form>
-                    <button id="Delete" name="Delete" data-review-id="{{reviewId}}">Delete</button>
-            </div>
-            <section class="comments">
-                <h3>Comments</h3>
-                {{#if comment}}
-                {{#each comment}}
-                <div class="comment">
-                    <p><strong>{{this.userName}}:</strong> {{this.content}}</p>
-                </div>
-                {{/each}}
-                {{/if}}
-            </section>
-                <form action="/reviews/review/{{reviewId}}/addcomment" method="POST" id="addCommentForm">
+        {{/if}}
+
+        <div id="postDescription" class="description">
+            <p>{{content}}</p>
+            {{#if isAuthor}}
+                <form action="/review/{{reviewId}}" method="POST" id="editReviewForm" style="display: none;">
                     <section class="info">
                         <dl>
-                            <dt>Content:</dt>
-                            <dd><textarea id="content" name="content" required></textarea></dd>
+                            <dt><label for="edit-title">Title:</label></dt>
+                            <dd><input id="edit-title" name="edit-title" placeholder="Title"></dd>
+                            <dt><label for="edit-rating">Rating:</label></dt>
+                            <dd><input type="number" id="edit-rating" name="edit-rating" placeholder="Rating" min="1" max="5"></dd>
+                            <dt><label for="edit-content">Content:</label></dt>
+                            <dd><textarea id="edit-content" name="edit-content" placeholder="Content"></textarea></dd>
                         </dl>
                     </section>
-                    <div id="comment_error_message" class="error" style="display:none;"></div>
-                    <button id="commentSubmit" name="commentSubmit" type="submit" class="commentSubmit-button">Submit Comment</button>
+                    <div id="review_error_message" class="error" style="display:none;"></div>
+                    <button id="editReviewSubmit" name="editReviewSubmit" type="button">Save Changes</button>
                 </form>
+                    <button id="editForm" name="editForm" type="button">Edit</button>
+                    <button id="Delete" name="Delete" data-review-id="{{reviewId}}">Delete</button>
+            {{/if}}
+        </div>
+        <section class="comments">
+            <h3>Comments</h3>
+            {{#if comment}}
+            {{#each comment}}
+            <div class="comment">
+                <p><strong>{{this.userName}}:</strong> {{this.content}}</p>
+            </div>
+            {{/each}}
+            {{/if}}
+        </section>
+            <form action="/review/{{reviewId}}/addcomment" method="POST" id="addCommentForm">
+                <section class="info">
+                    <dl>
+                        <dt>Content:</dt>
+                        <dd><textarea id="content" name="content" required></textarea></dd>
+                    </dl>
+                </section>
+                <div id="comment_error_message" class="error" style="display:none;"></div>
+                <button id="commentSubmit" name="commentSubmit" type="submit" class="commentSubmit-button">Submit Comment</button>
+            </form>
     </article>
 </main>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const deleteButton = document.getElementById('Delete');
-    deleteButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        const reviewId = this.getAttribute('data-review-id');
-
-        fetch(`/reviews/review/${reviewId}`, {
-            method: 'DELETE',
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data) {
-                console.error('Error: failed to delete');
-            } else {
-                console.log('Success:', data);
-                alert('Review deleted successfully');
-//                 window.location.href = 'http://localhost:3000/park/${parkId}'; // Redirect or update UI as needed
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    });
-});
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     const commentForm = document.getElementById('addCommentForm');
-//     commentForm.addEventListener('submit', function(event) {
-//         event.preventDefault();
-//
-//         // Retrieve the content from the textarea
-//         const content = document.getElementById('content').value;
-//         const reviewId = this.action.split('/').pop();  // Extract the reviewId from the form's action URL
-//
-//         fetch(`/review/${reviewId}/addcomment`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ content: content })
-//         })
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.error) {
-//                 console.error('Error:', data.error);
-//                 // Optionally display error message to user
-//                 const errorMessage = document.getElementById('comment_error_message');
-//                 errorMessage.innerText = data.error;
-//                 errorMessage.style.display = 'block';
-//             } else {
-//                 console.log('Success:', data);
-//                 alert('Comment added successfully');
-//                 // Optionally clear the form or update the UI to show the new comment
-//                 commentForm.reset();
-//                 // Refresh or redirect, or update comment list dynamically
-//             }
-//         })
-//         .catch((error) => {
-//             console.error('Error:', error);
-//         });
-//     });
-// });
-</script>
-

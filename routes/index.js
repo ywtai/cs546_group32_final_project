@@ -3,9 +3,9 @@ import authRoutes from './auth_routes.js';
 import reviewsRoutes from "./reviews.js";
 // import postsRoutes from"./posts.js";
 const constructorMethod = (app) => {
-    app.use('/', parksRoutes);
+    app.use('/', parksRoutes, reviewsRoutes);
     // app.use('/parks', parksRoutes);
-    app.use('/reviews', reviewsRoutes);
+    // app.use('/reviews', reviewsRoutes);
     app.use('/auth', authRoutes);
     // app.use('/posts', postsRoutes);
 
