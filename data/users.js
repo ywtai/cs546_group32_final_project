@@ -148,7 +148,7 @@ export const addToReviews = async (userId, review) => {
   );
 
   if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
-    throw 'Update failed: No user found or passport not modified.';
+    throw 'Update failed: No user found or review not modified.';
   }
 
   return updateInfo.modifiedCount > 0;
@@ -179,7 +179,7 @@ export const deleteReviews = async (userId, parkId) => {
   );
 
   if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
-    throw 'Update failed: No user found or passport park not modified.';
+    throw 'Update failed: No user found or review not modified.';
   }
 
   return updateInfo.modifiedCount > 0;
