@@ -4,10 +4,10 @@ let errorDiv = document.getElementById('error')
 let userName = document.getElementById('userName')
 let email = document.getElementById('email')
 let password = document.getElementById('password')
-let loginpassword = document.getElementById('loginpassword')
+
 let confirmPassword = document.getElementById('confirmPassword')
 let dateOfBirth = document.getElementById('dateOfBirth')
-let usernameOrEmail = document.getElementById('usernameOrEmail')
+
 let bio = document.getElementById('bio')
 if (registerForm) {
 
@@ -39,18 +39,17 @@ if (registerForm) {
   })
 }
 
-var loginForm = document.getElementById('login-form')
-console.log(loginForm)
-
+let loginForm = document.getElementById('login-form')
+let loginpassword = document.getElementById('loginpassword')
+let usernameOrEmail = document.getElementById('usernameOrEmail')
 if (loginForm) {
-
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
     try {
-      helpers.checkIfValid(
+      console.log(helpers.checkIfValid(
         usernameOrEmail.value,
         loginpassword.value,
-      )
+      ))
       let validusernameOrEmail = helpers.checkuserNameorEmail(usernameOrEmail.value);
       let validloginpassword = helpers.checkPassword(loginpassword.value);
       errorDiv.hidden = true;
@@ -261,28 +260,28 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 
-var loginForm = document.getElementById('login-form')
-console.log(loginForm)
+// var loginForm = document.getElementById('login-form')
+// console.log(loginForm)
 
-if (loginForm) {
+// if (loginForm) {
 
-  loginForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    try {
-      helpers.checkIfValid(
-        usernameOrEmail.value,
-        loginpassword.value,
-      )
-      usernameOrEmail = helpers.checkuserNameorEmail(usernameOrEmail.value);
-      loginpassword = helpers.checkPassword(loginpassword.value);
-      errorDiv.hidden = true;
-      loginForm.submit();
-    } catch (e) {
-      errorDiv.hidden = false;
-      errorDiv.innerHTML = e;
-    }
-  })
-}
+//   loginForm.addEventListener('submit', (event) => {
+//     event.preventDefault();
+//     try {
+//       helpers.checkIfValid(
+//         usernameOrEmail.value,
+//         loginpassword.value,
+//       )
+//       usernameOrEmail = helpers.checkuserNameorEmail(usernameOrEmail.value);
+//       loginpassword = helpers.checkPassword(loginpassword.value);
+//       errorDiv.hidden = true;
+//       loginForm.submit();
+//     } catch (e) {
+//       errorDiv.hidden = false;
+//       errorDiv.innerHTML = e;
+//     }
+//   })
+// }
 
 //review
 const watcher = (elementID, error) => {
