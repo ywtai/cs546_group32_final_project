@@ -3,7 +3,7 @@
   {{errors}}
 </p>
 {{/if}}
-<main class='review-detail'>
+<div class='review-detail'>
     <article class="container">
         <h1>Submit Your Review</h1>
         <form action="/addReview/{{parkId}}" method="POST" id="addReviewForm" enctype="multipart/form-data">
@@ -23,4 +23,4 @@
         </form>
     </article>
     <a href="/park/{{parkId}}" class="col">Go Back To Park</a>
-</main>
+</div>

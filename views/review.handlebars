@@ -3,86 +3,86 @@
   {{errors}}
 </p>
 {{/if}}
-<main>
-    <article class="post">
-        <h2>{{title}}</h2>
-        <p>{{reviewDate}}</p>
-        <p>{{userName}}</p>
-        <p>{{rating}} stars</p>
+<article class="post">
+    <h2>{{title}}</h2>
+    <p>{{reviewDate}}</p>
+    <p>{{userName}}</p>
+    <p>{{rating}} stars</p>
 
-        {{#if photos}}  
-            {{#each photos}}
-                <img class="parkReviewImage" alt="Photo of Park" onerror="this.onerror=null;this.src='/public/icon/no-image.png';" src="/public{{this}}">
+    {{#if photos}}  
+        {{#each photos}}
+            <img class="parkReviewImage" alt="Photo of Park" onerror="this.onerror=null;this.src='/public/icon/no-image.png';" src="/public{{this}}">
+        {{/each}}
+    {{/if}}
+
+    <button class="like-btn" data-postid="{{reviewId}}" data-favorited="0">
+    {{#if favorite}}
+        <i class="fas fa-heart"></i> <!-- Favorited icon -->
+    {{else}}
+        <i class="far fa-heart"></i> <!-- Unfavorited icon -->
+    {{/if}}
+    </button>
+
+    <div id="postDescription" class="description">
+        <p>{{content}}</p>
+        {{#if isAuthor}}
+            <form action="/review/{{reviewId}}" method="POST" id="editReviewForm" style="display: none;">
+                <div class="review-info">
+                    <h3>Edit Review</h3>
+                    <dl>
+                        <dt><label for="edit-title">Title:</label></dt>
+                        <dd><input id="edit-title" name="edit-title" placeholder="Title"></dd>
+                        <dt><label for="edit-rating">Rating:</label></dt>
+                        <dd><input type="number" id="edit-rating" name="edit-rating" placeholder="Rating" min="1" max="5"></dd>
+                        <dt><label for="edit-content">Content:</label></dt>
+                        <dd><textarea id="edit-content" name="edit-content" placeholder="Content"></textarea></dd>
+                    </dl>
+                </div>
+                <button type="button" id="editReviewSubmit" name="editReviewSubmit" >Save Changes</button>
+            </form>
+            <button id="editForm" name="editForm" type="button">Edit</button>
+            <button id="Delete" name="Delete" data-review-id="{{reviewId}}">Delete</button>
+        {{/if}}
+    </div>
+    <div class="comments">
+        <h3>Comments</h3>
+        {{#if comment}}
+            {{#each comment}}
+                <div class="comment" id="comment-{{this._id}}">
+                    <p><strong>{{this.userName}}:</strong> {{this.content}}</p>
+                    {{#if this.commentIsAuthor}}
+                        <form action="/review/{{../reviewId}}/comment/{{this._id}}" method="POST" id="editCommentForm_{{@index}}" style="display: none;">
+                            <div class="edit-comment-info">
+                                <h3>Edit Comment</h3>
+                                <dl>
+                                    <dt><label for="editCommentContent_{{@index}}">Edit Comment:</label></dt>
+                                    <dd><textarea id="editCommentContent_{{@index}}" name="content" placeholder="Content" data-index-id="{{@index}}"></textarea></dd>
+                                </dl>
+                            </div>
+                            <button id="editCommentSubmit_{{@index}}" name="editCommentSubmit" type="button" data-index-id="{{@index}}" data-review-id="{{reviewId}}" data-comment-id="{{this._id}}">Save Changes</button>
+                        </form>
+                        <button id="editComment_{{@index}}" class="editComment" data-index-id="{{@index}}">Edit</button>
+                        <button id="deleteComment_{{@index}}" class="deleteComment" data-index-id="{{@index}}" data-review-id="{{../reviewId}}" data-comment-id="{{this._id}}">Delete</button>
+                    {{/if}}
+                </div>
             {{/each}}
         {{/if}}
-
-        <button class="like-btn" data-postid="{{reviewId}}" data-favorited="0">
-        {{#if favorite}}
-          <i class="fas fa-heart"></i> <!-- Favorited icon -->
-        {{else}}
-          <i class="far fa-heart"></i> <!-- Unfavorited icon -->
-        {{/if}}
-        </button>
-
-        <div id="postDescription" class="description">
-            <p>{{content}}</p>
-            {{#if isAuthor}}
-                <form action="/review/{{reviewId}}" method="POST" id="editReviewForm" style="display: none;">
-                    <section class="info">
-                        <dl>
-                            <dt><label for="edit-title">Title:</label></dt>
-                            <dd><input id="edit-title" name="edit-title" placeholder="Title"></dd>
-                            <dt><label for="edit-rating">Rating:</label></dt>
-                            <dd><input type="number" id="edit-rating" name="edit-rating" placeholder="Rating" min="1" max="5"></dd>
-                            <dt><label for="edit-content">Content:</label></dt>
-                            <dd><textarea id="edit-content" name="edit-content" placeholder="Content"></textarea></dd>
-                        </dl>
-                    </section>
-                    <button type="button" id="editReviewSubmit" name="editReviewSubmit" >Save Changes</button>
-                </form>
-                <button id="editForm" name="editForm" type="button">Edit</button>
-                <button id="Delete" name="Delete" data-review-id="{{reviewId}}">Delete</button>
-            {{/if}}
-        </div>
-        <section class="comments">
-            <h3>Comments</h3>
-            {{#if comment}}
-                {{#each comment}}
-                    <div class="comment" id="comment-{{this._id}}">
-                        <p><strong>{{this.userName}}:</strong> {{this.content}}</p>
-                        {{#if this.commentIsAuthor}}
-                            <form action="/review/{{../reviewId}}/comment/{{this._id}}" method="POST" id="editCommentForm_{{@index}}" style="display: none;">
-                                <section class="info">
-                                    <dl>
-                                        <dt><label for="editCommentContent_{{@index}}">Edit Comment:</label></dt>
-                                        <dd><textarea id="editCommentContent_{{@index}}" name="content" placeholder="Content" data-index-id="{{@index}}"></textarea></dd>
-                                    </dl>
-                                </section>
-                                <button id="editCommentSubmit_{{@index}}" name="editCommentSubmit" type="button" data-index-id="{{@index}}" data-review-id="{{reviewId}}" data-comment-id="{{this._id}}">Save Changes</button>
-                            </form>
-                            <button id="editComment_{{@index}}" class="editComment" data-index-id="{{@index}}">Edit</button>
-                            <button id="deleteComment_{{@index}}" class="deleteComment" data-index-id="{{@index}}" data-review-id="{{../reviewId}}" data-comment-id="{{this._id}}">Delete</button>
-                        {{/if}}
-                    </div>
-                {{/each}}
-            {{/if}}
-        </section>
-        {{#if isLogin}}
-            <form action="/review/{{reviewId}}/addcomment" method="POST" id="addCommentForm">
-                <section class="info">
-                    <dl>
-                        <dt><label for="commentContent">Add a Comment:</label></dt>
-                        <dd><textarea id="commentContent" name="commentContent" required></textarea></dd>
-                    </dl>
-                </section>
-                <button id="commentSubmit" name="commentSubmit" type="button" class="commentSubmit-button">Submit Comment</button>
-            </form>
-        {{else}}
-            <p>You must be <a href="/auth/login">logged in</a> to add comments.</p>
-        {{/if}}
-    </article>
-    <a href="/park/{{parkId}}" class="col">Go Back To Park</a>
-</main>
+    </div>
+    {{#if isLogin}}
+        <form action="/review/{{reviewId}}/addcomment" method="POST" id="addCommentForm">
+            <div class="comment-info">
+                <dl>
+                    <dt><label for="commentContent">Add a Comment:</label></dt>
+                    <dd><textarea id="commentContent" name="commentContent" required></textarea></dd>
+                </dl>
+            </div>
+            <button id="commentSubmit" name="commentSubmit" type="button" class="commentSubmit-button">Submit Comment</button>
+        </form>
+    {{else}}
+        <p>You must be <a href="/auth/login">logged in</a> to add comments.</p>
+    {{/if}}
+</article>
+<a href="/park/{{parkId}}" class="col">Go Back To Park</a>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

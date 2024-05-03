@@ -1,111 +1,69 @@
-<title>Park Page</title>
 {{!-- <link rel="stylesheet" href="/public/css/park.css"> --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<main>
-  <button class="favorite-btn" data-postid="{{parkId}}" data-favorited="0" data-parkname="{{parkName}}">
-        {{#if favorite}}
-          <i class="fas fa-heart"></i> <!-- Favorited icon -->
-        {{else}}
-          <i class="far fa-heart"></i> <!-- Unfavorited icon -->
-      {{/if}}
-      </button>
-    <button class="addpassport" data-parkname="{{parkName}}" data-postid="{{parkId}}">
-        addtopassport
-    </button>
-    {{#each parkData}}
-      
-    <article class="container">
-        <h1>{{this.parkName}}</h1>
-        {{#if this.photos}}
-        <img class="park-poster" alt="{{this.parkName}} Image" src="{{this.photos.[0].url}}">
-        {{/if}}
-        <h2>Description</h2>
-        <p class="description">{{this.description}}</p>
-        <section class="info">
-            <h3>Park Info</h3>
-            <dl>
-                <dt>Park Code:</dt>
-                <dd>{{this.parkCode}}</dd>
-                <dt>Average Rating:</dt>
-                <dd>{{this.averageRating}}</dd>
-                <dt>Location:</dt>
-                <dd>{{this.state}}</dd>
-                <dt>Address:</dt>
-                <!-- Assuming address structure -->
-                <dd>{{this.address.[0].line1}}, {{this.address.[0].city}}</dd>
-                <dt>Operating Times:</dt>
-                <!-- Assuming operating time structure -->
-                <dd>{{this.operatingTime.[0].description}}</dd>
-                <dt>Activities:</dt>
-                <dd>
-                    {{#each this.activities}}
-                    {{this.name}}{{#unless @last}}, {{/unless}}
-                    {{/each}}
-                </dd>
-            </dl>
-        </section>
-        <section class="ratings">
-            <h4 class="rating">User Post</h4>
-            {{#if this.reviews}}
-            <table class="my_coolratings_table">
-{{!--                 <tr> --}}
-{{!--                     <th>User</th> --}}
-{{!--                     <th>Rating</th> --}}
-{{!--                     <th>Date</th> --}}
-{{!--                     <th>Review</th> --}}
-{{!--                 </tr> --}}
-                {{#each this.reviews}}
-                <tr>
-                    <a class='post-link' href = "/review/{{this._id}}"> {{this.title}} {{this.userName}} {{this.rating}} stars {{this.reviewDate}}
-                     </a>
-                </tr>
+
+<button class="favorite-btn" data-postid="{{parkId}}" data-favorited="0" data-parkname="{{parkName}}">
+    {{#if favorite}}
+        <i class="fas fa-heart"></i> <!-- Favorited icon -->
+    {{else}}
+        <i class="far fa-heart"></i> <!-- Unfavorited icon -->
+    {{/if}}
+</button>
+<button class="addpassport" data-parkname="{{parkName}}" data-postid="{{parkId}}">
+    add to passport
+</button>
+{{#each parkData}}
+    
+<article class="container">
+    <h1>{{this.parkName}}</h1>
+    {{#if this.photos}}
+    <img class="park-poster" alt="{{this.parkName}} Image" src="{{this.photos.[0].url}}">
+    {{/if}}
+    <h2>Description</h2>
+    <p class="description">{{this.description}}</p>
+    <section class="info">
+        <h3>Park Info</h3>
+        <dl>
+            <dt>Park Code:</dt>
+            <dd>{{this.parkCode}}</dd>
+            <dt>Average Rating:</dt>
+            <dd>{{this.averageRating}}</dd>
+            <dt>Location:</dt>
+            <dd>{{this.state}}</dd>
+            <dt>Address:</dt>
+            <dd>{{this.address.[0].line1}}, {{this.address.[0].city}}</dd>
+            <dt>Operating Times:</dt>
+            <dd>{{this.operatingTime.[0].description}}</dd>
+            <dt>Activities:</dt>
+            <dd>
+                {{#each this.activities}}
+                {{this.name}}{{#unless @last}}, {{/unless}}
                 {{/each}}
-            </table>
-            {{else}}
-            <p>No reviews yet.</p>
-            {{/if}}
-        </section>
-    </article>
-    {{/each}}
-    {{!-- {{#if isLogin}} --}}
-{{!--             <section class="posts"> --}}
-{{!--                <div class="posts-header"> --}}
-{{!--                    <button id="addPostButton" class="add-post-btn" onclick="openPostForm()">+ Post</button> --}}
-{{!--                </div> --}}
-{{!--             </section> --}}
-        <a href="/addReview/{{parkId}}">
-          <button>addPost</button>
-        </a>
-    {{!-- {{/if}} --}}
-{{!--                 <div id="addPostModal" class="modal"> --}}
-{{!--                     <div class="modal-content"> --}}
-{{!--                         <span class="close">&times;</span> --}}
-{{!--                         <form action = "/addReview/{{parkId}}" id="postForm" method="POST" enctype="multipart/form-data"> --}}
-{{!--                             <h2>Add a Post</h2> --}}
-{{!--                             <input type="hidden" id="userId" name="userId" value="{{userId}}"> --}}
-{{!--                             <input type="hidden" id="userName" name="userName" value="{{userName}}"> --}}
-{{!--                             <label for="title">Title:</label> --}}
-{{!--                             <input type="text" id="title" name="title"> --}}
-{{!--                             <label for="content">Review:</label> --}}
-{{!--                             <textarea id="content" name="content"></textarea> --}}
-{{!--                             <label for="photos">Upload Image:</label> --}}
-{{!--                             <input type="number" id="photos" name="photos" accept="image/*"> --}}
-{{!--                             <label>Rating:</label> --}}
-{{!--                             <input type="hidden" id="rating" name="rating" value="0"> --}}
-{{!--                             <div class="rating"> --}}
-{{!--                                 <span class="star" onclick="setRating(1)">&#9733;</span> --}}
-{{!--                                 <span class="star" onclick="setRating(2)">&#9733;</span> --}}
-{{!--                                 <span class="star" onclick="setRating(3)">&#9733;</span> --}}
-{{!--                                 <span class="star" onclick="setRating(4)">&#9733;</span> --}}
-{{!--                                 <span class="star" onclick="setRating(5)">&#9733;</span> --}}
-{{!--                             </div> --}}
-{{!--                             <div id="error_message" class="error" style="display:none;"></div> --}}
-{{!--                             <button type="submit" class="btn">Submit Post</button> --}}
-{{!--                         </form> --}}
-{{!--                     </div> --}}
-{{!--                 </div> --}}
-    <a class="search-other" href="/">Search for Another Park</a>
-</main>
+            </dd>
+        </dl>
+    </section>
+    <section class="ratings">
+        <h4 class="rating">User Reviews</h4>
+        {{#if this.reviews}}
+        <div class="my_coolratings_table">
+            {{#each this.reviews}}
+                <a class='reviewLink' href = "/review/{{this._id}}">{{this.title}}</a><br>
+                {{!-- <a class='reviewLink' href = "/review/{{this.userId}}">{{this.userName}}</a> --}}
+                <p>User : {{this.userName}}</p>
+                <p>Review Date : {{this.reviewDate}}</p>
+                <p>Rating : {{this.rating}} stars</p>
+                <p>Content :</p>
+                <p>{{this.content}}</p>
+            {{/each}}
+        </div>
+        {{else}}
+        <p>No reviews yet.</p>
+        {{/if}}
+    </section>
+</article>
+{{/each}}
+<a class="addReviewBtn" href="/addReview/{{parkId}}">Add a Review</a><br>
+<a class="search-other" href="/">Search for Another Park</a>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const favoriteButtons = document.querySelectorAll('.favorite-btn');

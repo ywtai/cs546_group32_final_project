@@ -5,6 +5,12 @@ import exphbs from 'express-handlebars';
 import session from 'express-session';
 import {fileURLToPath} from "url";
 import {dirname} from "path";
+import rateLimit from 'express-rate-limit';
+
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.engine("handlebars", exphbs.engine({defaultLayout: "main"}));
 app.set("view engine", "handlebars");
+app.use(limiter);
 
 app.use(
     session({
