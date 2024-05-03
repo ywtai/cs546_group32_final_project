@@ -86,7 +86,6 @@ const exportedMethods = {
 
     if (content) {
       content = validation.checkString(content, 'Content');
-      console.log(content);
       updateFields["reviews.$[].comments.$[c].content"] = content;
     }
 
@@ -106,8 +105,6 @@ const exportedMethods = {
     if (!updatedComment) {
         throw new Error(`Error: Failed to retrieve the updated comment for comment id ${commentId}`);
     }
-
-    console.log(updatedComment);
 
     return updatedComment;
   },

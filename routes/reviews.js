@@ -109,16 +109,13 @@ router
         photoPaths,
         rating
       );
+
       const pushInfo =  {
         reviewId: reviewId,
         title: title
       }
       const addInfo = await addToReviews(req.session.user.userId, pushInfo);
-      res.json({
-        success: true,
-        message: 'Review added successfully',
-        redirectUrl: `/park/${parkId}`
-      })
+      res.redirect(`/park/${parkId}`);
     } catch (e) {
       return res.status(400).render('addReview', {
         documentTitle: 'Add Review',
@@ -158,19 +155,21 @@ router
         commentIndex: 0
       })     
     } catch (e) {
-      res.redirect('/');
+      res.status().redirect('/');
     }
   })
   .post(ensureLoggedIn, async (req, res) => {
-    let updateObject = req.body;
-    if (!updateObject || Object.keys(updateObject).length === 0) {
+    let reqObject = req.body;
+    if (!reqObject || Object.keys(reqObject).length === 0) {
       return res
         .status(400)
         .json({ error: 'There are no fields in the request body' });
     }
     const userId = req.session.user.userId;
-    let { title, content, rating } = updateObject;
     
+    let title = reqObject['edit-title'];
+    let content = reqObject['edit-content'];
+    let rating = reqObject['edit-rating'];
 
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
@@ -187,13 +186,18 @@ router
       return res.status(400).json({ error: e });
     }
 
+    let updateObject = {
+      'title': title,
+      'content': content,
+      'rating': rating
+    }
+
     try {
       
       const review = await reviewData.getReview(req.params.reviewId);
       if (review.userId !== userId) {
           return res.status(403).json({ error: "You do not have permission to modify this review." });
       }
-
       const updatedReview = await reviewData.updateReview(
         req.params.reviewId,
         updateObject
@@ -207,11 +211,7 @@ router
       const review = await reviewData.getReview(req.params.reviewId);
       const isAuthor = req.session.user && (req.session.user.userId === review.userId);
       if (isAuthor) {
-        res.json({
-          success: true,
-          message: 'Review edited successfully',
-          redirectUrl: `/review/${req.params.reviewId}`
-        })
+        res.redirect(`/review/${req.params.reviewId}`);
       }
       else {
         res.json({
@@ -269,7 +269,9 @@ router
     }
   })
   .post(ensureLoggedIn, async (req, res) => {
-    let { content } = req.body;
+    let reqObj = req.body;
+
+    let content = reqObj['commentContent'];
 
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
@@ -285,10 +287,7 @@ router
         req.session.user.userName,
         content
       );
-      res.json({
-        success: true,
-        message: 'Comment added successfully'
-      })
+      res.redirect(`/review/${req.params.reviewId}`);
     } catch (e) {
       res.json({
         success: false,
@@ -320,7 +319,6 @@ router
     }
 
     let { content } = updateObject;
-
     try {
       if (content)
         content = validation.checkString(content, 'Content');
@@ -362,12 +360,13 @@ router
         req.params.commentId,
         updateObject
       );
-      res.json({
-        success: true, 
-        message: 'Success to update comment.',
-        redirectUrl: `/review/${req.params.reviewId}`,
-        commentIsAuthor: true
-      })
+      res.redirect(`/review/${req.params.reviewId}`);
+      // res.json({
+      //   success: true, 
+      //   message: 'Success to update comment.',
+      //   redirectUrl: `/review/${req.params.reviewId}`,
+      //   commentIsAuthor: true
+      // })
     } catch (e) {
       return res.status(400).json({ 
         success: false, 

@@ -34,10 +34,10 @@
                         </dl>
                     </section>
                     <div id="review_error_message" class="error" style="display:none;"></div>
-                    <button id="editReviewSubmit" name="editReviewSubmit" type="button">Save Changes</button>
+                    <button type="button" id="editReviewSubmit" name="editReviewSubmit" >Save Changes</button>
                 </form>
-                    <button id="editForm" name="editForm" type="button">Edit</button>
-                    <button id="Delete" name="Delete" data-review-id="{{reviewId}}">Delete</button>
+                <button id="editForm" name="editForm" type="button">Edit</button>
+                <button id="Delete" name="Delete" data-review-id="{{reviewId}}">Delete</button>
             {{/if}}
         </div>
         <section class="comments">
@@ -51,7 +51,7 @@
                                 <section class="info">
                                     <dl>
                                         <dt><label for="editCommentContent_{{@index}}">Edit Comment:</label></dt>
-                                        <dd><textarea id="editCommentContent_{{@index}}" name="editCommentContent_{{@index}}" placeholder="Content" data-index-id="{{@index}}"></textarea></dd>
+                                        <dd><textarea id="editCommentContent_{{@index}}" name="content" placeholder="Content" data-index-id="{{@index}}"></textarea></dd>
                                     </dl>
                                 </section>
                                 <div id="comment_error_message_{{@index}}" class="error" style="display:none;" data-index-id="{{@index}}"></div>

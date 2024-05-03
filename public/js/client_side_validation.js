@@ -309,62 +309,26 @@ function validateCommentData(content) {
 
 //add review
 document.addEventListener('DOMContentLoaded', function() {
-  const reviewForm = document.getElementById('addReviewForm');
   const submitButton = document.getElementById('reviewSubmit');
   const reviewErrorMessage = document.getElementById('addreview_error_message');
   
   if (submitButton) {
     submitButton.addEventListener('click', function(event) {
-      event.preventDefault();
       const title = document.getElementById('title').value;
       const content = document.getElementById('content').value;
       const rating = document.getElementById('rating').value;
       const photos = document.getElementById('photos').files;
-<<<<<<< HEAD
-=======
-      
-
->>>>>>> ce4b25f (add favorite addpassport review to userdb)
   
       const errors = validateReviewData(title, content, rating, photos);
       if (errors.length > 0) {
         reviewErrorMessage.innerText = errors.join(" ");
         reviewErrorMessage.style.display = 'block';
-        this.disabled = false;
         return;
       }
-      
-      if (this.disabled) return;
+
+      submitButton.setAttribute('type', 'submit');
   
-      this.disabled = true;
-  
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('content', content);
-      formData.append('rating', rating);
-      Array.from(photos).forEach((file, index) => {
-        formData.append('photos', file);
-      });
-      fetch(reviewForm.action, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert(data.message);
-          window.location.href = data.redirectUrl;
-        } else {
-          alert(data.error);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while submitting the review.');
-        reviewErrorMessage.innerText = 'An error occurred while submitting the review.';
-        reviewErrorMessage.style.display = 'block';
-        this.disabled = false;
-      });
+      return;
     });
   }
 });
@@ -383,9 +347,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const editSubmitButton = document.getElementById('editReviewSubmit');
   if (editSubmitButton) {
     editSubmitButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      if (this.disabled) return;
-      this.disabled = true;
   
       const title = document.getElementById('edit-title').value;
       const content = document.getElementById('edit-content').value;
@@ -395,32 +356,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (errors.length > 0) {
         reviewErrorMessage.innerText = errors.join(" ");
         reviewErrorMessage.style.display = 'block';
-        this.disabled = false;
         return;
       }
+
+      editSubmitButton.setAttribute('type', 'submit');
   
-      const formData = { title, content, rating };      
-      fetch(editForm.action, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert(data.message);
-          window.location.href = data.redirectUrl;
-        } else {
-          alert(data.error);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while submitting the review.');
-        reviewErrorMessage.innerText = 'An error occurred while submitting the review.';
-        reviewErrorMessage.style.display = 'block';
-        this.disabled = false;
-      });
+      return;
     });
   }
 
@@ -440,20 +381,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           })
           .catch(error => console.error('Error:', error));
-    }
+      }
     });
   }
 
   //add comment
-  const commentForm = document.getElementById('addCommentForm');
   const commentSubmitButton = document.getElementById('commentSubmit');
   const commentErrorMessage = document.getElementById('comment_error_message');
-  const commentContentTextarea = document.getElementById('commentContent');
 
   if (commentSubmitButton) {
     commentSubmitButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      const content = commentContentTextarea.value;
+      const content = document.getElementById('commentContent').value;
 
       const errors = validateCommentData(content);
       if (errors.length > 0) {
@@ -462,33 +400,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      this.disabled = true;
-
-      const formData = JSON.stringify({ content });
-      fetch(commentForm.action, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert(data.message);
-          window.location.reload();
-        } else {
-          alert(data.error);
-          commentErrorMessage.innerText = data.error;
-          commentErrorMessage.style.display = 'block';
-          this.disabled = false;
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while submitting the comment.');
-        commentErrorMessage.innerText = 'An error occurred while submitting the comment.';
-        commentErrorMessage.style.display = 'block';
-        this.disabled = false;
-      });
+      commentSubmitButton.setAttribute('type', 'submit');
+  
+      return;
     });
   }
 
@@ -510,12 +424,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const editCommentSubmitButtons = document.querySelectorAll('[name="editCommentSubmit"]');
   editCommentSubmitButtons.forEach((item) => { 
     item.addEventListener('click', function(event) {
-      event.preventDefault();
       const commentIndex = item.getAttribute("data-index-id");
-      const editCommentForm = document.getElementById(`editCommentForm_${commentIndex}`);
       const CommentErrorMessage = document.getElementById(`comment_error_message_${commentIndex}`);
-      if (item.disabled) return;
-      item.disabled = true;
   
       const content = document.getElementById(`editCommentContent_${commentIndex}`).value;
 
@@ -523,31 +433,13 @@ document.addEventListener('DOMContentLoaded', function () {
       if (errors.length > 0) {
         CommentErrorMessage.innerText = errors.join(" ");
         CommentErrorMessage.style.display = 'block';
-        item.disabled = false;
+        // item.disabled = false;
         return;
       }
-      const formData = new FormData();
-      formData.set('content', content);
-      fetch(editCommentForm.action, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert(data.message);
-          window.location.href = data.redirectUrl;
-        } else {
-          alert(data.error);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while submitting the comment.');
-        CommentErrorMessage.innerText = 'An error occurred while submitting the comment.';
-        CommentErrorMessage.style.display = 'block';
-        this.disabled = false;
-      });
+
+      item.setAttribute('type', 'submit');
+  
+      return;
     });
   })
 
@@ -573,25 +465,4 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   })
-
-  // if (deleteCommentButton) {
-  //   deleteCommentButton.addEventListener('click', function () {
-  //     const reviewId = this.getAttribute('data-review-id');
-  //     const commentId = this.getAttribute('data-comment-id');
-  //     if (confirm('Confirm to Delete?')) {
-  //       fetch(`/review/${reviewId}/comment/${commentId}`, { method: 'DELETE' })
-  //         .then(response => response.json())
-  //         .then(data => {
-  //           alert('Comment deleted successfully');
-  //           if (data.redirectUrl) {
-  //             window.location.href = data.redirectUrl;
-  //           } else {
-  //             alert('Comment deleted, but no redirect information received.');
-  //           }
-  //         })
-  //         .catch(error => console.error('Error:', error));
-  //   }
-  //   });
-  // }
-
 });
