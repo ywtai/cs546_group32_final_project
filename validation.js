@@ -101,8 +101,23 @@ const exportedMethods = {
     checkPhotoExist(photos) {
       if (photos) {
         for (let i = 0; i < photos.length; i++) {
-          const fullPath = path.join(__dirname, '../public', photos[i]);
+          const fullPath = path.join(__dirname, 'public', photos[i]);
+
+          fs.access(fullPath, fs.constants.F_OK, (err) => {
+            if (err) {
+              console.error('File does not exist:', fullPath);
+              console.error(err);
+            } else {
+              fs.chmod(fullPath, 0o644, (err) => {
+                if (err) {
+                  console.error('Error setting permissions:', err);
+                }
+              });
+            }
+          });
+
           if (!fs.existsSync(fullPath)) {
+            console.log("No Image!");
             photos[i] = '/icon/no-image.png';
           }
         }
