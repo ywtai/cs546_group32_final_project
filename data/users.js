@@ -46,6 +46,7 @@ export const registerUser = async (
     personalParkPassport: [],
     favorite: [],
     reviews: [],
+    likedReviews: [],
     comments: []
   };
 
@@ -91,6 +92,7 @@ export const loginUser = async (usernameOrEmail, password) => {
     personalParkPassport: userInfo.personalParkPassport,
     favorite: userInfo.favorite,
     reviews: userInfo.reviews,
+    likedReviews: userInfo.likedReviews,
     comments: userInfo.comments
   };
 };
@@ -148,7 +150,7 @@ export const addToReviews = async (userId, review) => {
   );
 
   if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
-    throw 'Update failed: No user found or passport not modified.';
+    throw 'Update failed: No user found or review not modified.';
   }
 
   return updateInfo.modifiedCount > 0;
@@ -179,7 +181,7 @@ export const deleteReviews = async (userId, parkId) => {
   );
 
   if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
-    throw 'Update failed: No user found or passport park not modified.';
+    throw 'Update failed: No user found or review not modified.';
   }
 
   return updateInfo.modifiedCount > 0;
