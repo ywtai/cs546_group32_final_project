@@ -3,7 +3,7 @@ import Router from "express";
 const router = Router();
 import helpers from '../helpers.js';
 import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
-import { logRequests, redirectBasedOnRole, ensureLoggedIn } from '../middleware.js'
+import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
 
 router.use(logRequests);
 
@@ -64,7 +64,7 @@ router
 
 router
   .route('/login')
-  .get(async (req, res) => {
+  .get(ensureNotLoggedIn, async (req, res) => {
     res.render('login', { title: 'Login' });
   })
   .post(async (req, res) => {

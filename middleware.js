@@ -34,4 +34,12 @@ function ensureAdmin(req, res, next) {
       }
 }
 
-export { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureAdmin };
+function ensureNotLoggedIn(req, res, next) {
+  if (req.session.user) {
+      res.redirect('/auth/user');
+  } else {
+      next();
+  }
+}
+
+export { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn, ensureAdmin};
