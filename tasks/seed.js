@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {dbConnection, closeConnection} from '../config/mongoConnection.js';
 import parks from '../data/parks.js';
-
+import {registerUser} from '../data/users.js';
 const db = await dbConnection();
 await db.dropDatabase();
 
@@ -47,7 +47,26 @@ const saveParksFromApi = async () => {
 		// console.log(createdPark);
 	}	
 	return;
-}
+} 
+
+const user1 = await registerUser(
+  "Jacky",
+  "jacky@gmail.com",
+  "10/04/1998",
+  "Hi, I'm Jacky",
+  "Z697097c!");
+const user2 = await registerUser(
+  "Johnny",
+  "johnny@gmail.com",
+  "10/04/1998",
+  "Hi, I'm Johnny",
+  "John12345!");
+const user3 = await registerUser( 
+  "Jessica",
+  "jessica@gmail.com",
+  "10/04/1998",
+  "Hi, I'm Jessica",
+  "Jessica12345!");
 
 await saveParksFromApi();
 console.log('Done seeding database');

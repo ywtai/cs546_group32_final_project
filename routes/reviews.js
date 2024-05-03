@@ -127,7 +127,7 @@ router
 
       const pushInfo =  {
         reviewId: reviewId,
-        title: title
+        parkId: req.params.parkObjectId
       }
       const addInfo = await addToReviews(req.session.user.userId, pushInfo);
       if (reviewSubmittedCompleted)
