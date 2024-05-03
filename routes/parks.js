@@ -226,16 +226,16 @@ router.post('/passport/add/:id', ensureLoggedIn, async (req, res) => {
         parkName: parkName
     }
 
-    try {
-        user = await getUserById(userId)
-        if (user.personalParkPassport.some(obj => obj.parkId === parkId)) {
-        res.json({ added: false, message: "Park already exists." })
-        } else {
-        const addedToPassport = await addToPassport(userId, park);
-        res.json({ added: true, message: "Park added to passport successfully." });
-        }
-    } catch (error) {
-            res.status(500).json({ error: error.message});
+  try {
+    const user = await getUserById(userId)
+    if (user.personalParkPassport.some(obj => obj.parkId === parkId)) {
+      res.json({ added: false, message: "Park already exists." })
+    } else {
+      const addedToPassport = await addToPassport(userId, park);
+      res.json({ added: true, message: "Park added to passport successfully." });
+    }
+  } catch (error) {
+        res.status(500).json({ error: error.message});
     }
 });
 

@@ -9,7 +9,7 @@ import * as path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from 'fs';
-import { addToReviews, deleteReviews} from '../data/users.js';
+import { addToReviews, deleteReviews, addToComments, deleteComments, getUserById, addToLiked, deleteLiked} from '../data/users.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -156,21 +156,41 @@ router
         ...comment,
         commentIsAuthor: comment.userId === userId
       }));
-      
-      res.render('review', {
-        title: review.title,
-        userName: review.userName,
-        content: review.content,
-        comment: commentsWithAuthCheck,
-        reviewDate: review.reviewDate,
-        rating: review.rating,
-        photos: review.photos,
-        reviewId: req.params.reviewId,
-        isAuthor: review.userId === userId,
-        isLogin: !!req.session.user,
-        parkId: parkId,
-        commentIndex: 0
-      })     
+      if (!req.session.user) {
+        res.render('review', {
+          title: review.title,
+          userName: review.userName,
+          content: review.content,
+          comment: commentsWithAuthCheck,
+          reviewDate: review.reviewDate,
+          rating: review.rating,
+          photos: review.photos,
+          reviewId: req.params.reviewId,
+          isAuthor: review.userId === userId,
+          isLogin: !!req.session.user,
+          parkId: req.params.parkId,
+          commentIndex: 0,
+          favorite: false
+        })
+      } else {
+        const user = await getUserById(req.session.user.userId)
+        const favorite = user.likedReviews.some(obj => obj === reviewId);
+        res.render('review', {
+          title: review.title,
+          userName: review.userName,
+          content: review.content,
+          comment: commentsWithAuthCheck,
+          reviewDate: review.reviewDate,
+          rating: review.rating,
+          photos: review.photos,
+          reviewId: req.params.reviewId,
+          isAuthor: review.userId === userId,
+          isLogin: !!req.session.user,
+          parkId: req.params.parkId,
+          commentIndex: 0,
+          favorite: favorite
+        })
+      }   
     } catch (e) {
       res.status(404).render('error', { message: 'Page not Found' });
     }
@@ -289,12 +309,19 @@ router
     }
 
     try {
+      
       const newComment = await commentData.createComment(
         req.params.reviewId,
         req.session.user.userId,
         req.session.user.userName,
         content
       );
+
+      const commentTouser = {
+        commentId: newComment.commentId,
+        content: content
+      }
+      const addInfo = await addToComments(req.session.user.userId, commentTouser)
       res.redirect(`/review/${req.params.reviewId}`);
     } catch (e) {
       res.status(500).render('error', { message: 'Internal Server Error' });
@@ -374,11 +401,52 @@ router
         });
       }
       let deletedComment = await commentData.removeComment(req.params.commentId);
+      const deleteinfo = await deleteComments(req.session.user.userId, req.params.commentId)
       res.json({redirectUrl: '/review/' + req.params.reviewId});
     } catch (e) {
       res.status(500).render('error', { message: 'Internal Server Error' });
     }
   })
+
+router
+  .route('/like/:reviewId')
+  .post(ensureLoggedIn, async (req, res) => {
+    const favorite = req.body.favorite;
+    req.session.user.userId = validation.checkId(req.session.user.userId);
+    req.params.reviewId = validation.checkId(req.params.reviewId);
+    try {
+      if (favorite) {
+        const addtoLiked = await addToLiked(req.session.user.userId, req.params.reviewId)
+        res.json({ favorited: favorite, message: "Favorite status updated successfully" });
+      } else {
+        const updatedUser = await deleteLiked(req.session.user.userId, req.params.reviewId);
+        res.json({ favorited: favorite, message: "Favorite status updated successfully" });
+      }
+        
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+router
+  .route('/like/:reviewId')
+  .post(ensureLoggedIn, async (req, res) => {
+    const favorite = req.body.favorite;
+    req.session.user.userId = validation.checkId(req.session.user.userId);
+    req.params.reviewId = validation.checkId(req.params.reviewId);
+    try {
+      if (favorite) {
+        const addtoLiked = await addToLiked(req.session.user.userId, req.params.reviewId)
+        res.json({ favorited: favorite, message: "Favorite status updated successfully" });
+      } else {
+        const updatedUser = await deleteLiked(req.session.user.userId, req.params.reviewId);
+        res.json({ favorited: favorite, message: "Favorite status updated successfully" });
+      }
+        
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
 
 
 export default router;

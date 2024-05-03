@@ -97,6 +97,35 @@ export const loginUser = async (usernameOrEmail, password) => {
   };
 };
 
+export const addToLiked = async (userId, reviewId) => {
+  const userCollection = await users();
+
+  const updateInfo = await userCollection.updateOne(
+    { _id: new ObjectId(userId) }, 
+    { $push: { likedReviews: {reviewId}} } 
+  );
+
+  if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
+    throw 'Update failed: No user found or Liked reviews not modified.';
+  }
+
+  return updateInfo.modifiedCount > 0;
+};
+
+export const deleteLiked = async (userId, reviewId) => {
+  const userCollection = await users();
+ 
+  const updateInfo = await userCollection.updateOne(
+    { _id: new ObjectId(userId) }, // Convert to ObjectId
+    { $pull: { likedReviews: {reviewId} } } 
+  );
+  
+  if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+    throw 'Update failed: No user found or Liked reviews not modified.';
+
+  return updateInfo.modifiedCount > 0;
+};
+
 export const addToFavorites = async (userId, park) => {
   const userCollection = await users();
 

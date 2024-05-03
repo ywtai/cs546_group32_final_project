@@ -36,7 +36,10 @@ const exportedMethods = {
     if (!insertInfo)
         throw 'Error: Could not add comment';
 
-    return {commentSubmittedCompleted: true};
+    return {
+      commentSubmittedCompleted: true,
+      commentId: newComment._id.toString()
+    };
   },
 
   async getAllComments(reviewId) {
