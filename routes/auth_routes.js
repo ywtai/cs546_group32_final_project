@@ -101,8 +101,8 @@ router
       redirectBasedOnRole(req, res);
     } catch (e) {
 
-      res.redirect('/auth/login');
-      // return res.status(500).render('error', {title: "Error", message: e.message});
+      //res.redirect('/auth/login');
+      return res.status(500).render('login', {title: "Login", error: e.message});
     }
   });
 
