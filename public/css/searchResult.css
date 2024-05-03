@@ -97,7 +97,7 @@ a:hover {
     overflow: hidden; 
 }
 .searchResultImage {
-    width: 95%; /* Ensures the image takes up the full container width */
+    width: 95%;
     height: auto;
     display: block;
 }

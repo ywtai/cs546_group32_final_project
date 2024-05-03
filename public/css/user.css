@@ -1,8 +1,7 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f0ece2;
     margin: 0;
-    padding: 20px;
 }
 
 .container, .content, .link {
@@ -14,7 +13,8 @@ body {
 }
 
 h1.container {
-    color: #333;
+    background-color: #c7b198;
+    color: white;
     font-size: 24px;
     text-align: center;
 }
