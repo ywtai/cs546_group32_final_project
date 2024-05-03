@@ -22,8 +22,9 @@ const exportedMethods = {
       throw `Error: There are object missing for creating the comment.`;
 
     reviewId = validation.checkId(reviewId);
+    userId = validation.checkId(userId);
     userName = validation.checkString(userName, 'User Name');
-    content = validation.checkString(content, 'Content');
+    content = validation.checkString(content, 'Content', { min: '2', max: '200' });
 
     const parkCollection = await parks();
     const insertInfo = await parkCollection.findOneAndUpdate(
@@ -85,7 +86,7 @@ const exportedMethods = {
     const parkCollection = await parks();
 
     if (content) {
-      content = validation.checkString(content, 'Content');
+      content = validation.checkString(content, 'Content', { min: '2', max: '200' });
       updateFields["reviews.$[].comments.$[c].content"] = content;
     }
 

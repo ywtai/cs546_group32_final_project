@@ -30,9 +30,11 @@ const exportedMethods = {
       throw `Error: There are object missing for creating the review.`;
 
     parkObjectId = validation.checkId(parkObjectId);
-    title = validation.checkString(title, 'Title');
+    userId = validation.checkId(userId);
+    title = validation.checkString(title, 'Title', { min: '2', max: '20' });
     userName = validation.checkString(userName, 'User Name');
-    content = validation.checkString(content, 'Content');
+    content = validation.checkString(content, 'Content', { min: '2', max: '200' });
+    photos = validation.checkPhotos(photos);
     rating = validation.checkRating(rating, 'Rating');
 
     const parkCollection = await parks();
@@ -99,11 +101,11 @@ const exportedMethods = {
     const updateReview = {};
     
     if (title) {
-      title = validation.checkString(title, 'Title');
+      title = validation.checkString(title, 'Title', { min: '2', max: '20' });
       updateReview["reviews.$.title"] = title;
     }
     if (content) {
-      content = validation.checkString(content, 'Content');
+      content = validation.checkString(content, 'Content', { min: '2', max: '200' });
       updateReview["reviews.$.content"] = content;
     }
     if (rating) {

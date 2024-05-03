@@ -12,12 +12,29 @@ const exportedMethods = {
       return id;
     },
   
-    checkString(strVal, varName, maxLen = 200) {
+    checkString(strVal, varName, conditions) {
       if (!strVal) throw `Error: You must supply a ${varName}!`;
       if (typeof strVal !== 'string') throw `Error: ${varName} must be a string!`;
       strVal = strVal.trim();
       if (strVal.length === 0)
         throw `Error: ${varName} cannot be an empty string or string with just spaces`;
+
+      if (conditions) {
+        let key = Object.keys(conditions);
+        let value = Object.values(conditions);
+        key.map((item, index) => {
+          if (item === 'max') {
+            if (strVal.length > value[index]) {
+              throw `Error: ${varName} must be less than ${value[index]} characters`;
+            }
+          }
+          if (item === 'min') {
+            if (strVal.length < value[index]) {
+              throw `Error: ${varName} must be more than ${value[index]} characters`;
+            }
+          }
+        });
+      }
       
       return strVal;
     },
@@ -58,6 +75,20 @@ const exportedMethods = {
       // let averageRating = (totalRating / reviews.length).toFixed(1);
       let averageRating = totalRating / reviews.length;
       return averageRating;
+    },
+
+    checkPhotos(photos) {
+      if (!Array.isArray(photos)) {
+        throw 'Error: photos must be an array';
+      }
+
+      photos.forEach(photo => {
+        if (typeof photo !== 'string' || !/^\/uploads\/[\w-]+\.(jpg|jpeg|png)$/.test(photo)) {
+          throw 'Error: Invalid photo path or format. Must be a valid path with jpg, jpeg, or png extension';
+        }
+      });
+
+      return photos;
     }
   };
   
