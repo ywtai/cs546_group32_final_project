@@ -90,7 +90,8 @@ const exportedMethods = {
       }
 
       photos.forEach(photo => {
-        if (typeof photo !== 'string' || !/^\/uploads\/[\w-]+\.(jpg|jpeg|png)$/.test(photo)) {
+        let lowerCasePhoto = photo.toLowerCase();
+        if (typeof lowerCasePhoto !== 'string' || !/^\/uploads\/[\w-]+\.(jpg|jpeg|png)$/.test(lowerCasePhoto)) {
           throw 'Error: Invalid photo path or format. Must be a valid path with jpg, jpeg, or png extension';
         }
       });

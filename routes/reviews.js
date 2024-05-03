@@ -37,7 +37,8 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: function (req, file, cb) {
-    if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/png') {
+    let lowercasedMimetype = file.mimetype.toLowerCase();
+    if (lowercasedMimetype !== 'image/jpeg' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/png') {
       return cb(new Error('Invalid file type. Please upload a JPG, JPEG, PNG'), false);
     }
     cb(null, true);

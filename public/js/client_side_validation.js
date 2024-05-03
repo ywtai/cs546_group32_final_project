@@ -368,7 +368,7 @@ const checkRating = (element) => {
 
 const checkPhotos = (element) => {
   const photos = element.files;
-  const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'application/pdf'];
+  const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/JPG', 'image/JPEG', 'image/PNG'];
 
   if (photos) {
     if (photos.length > 5) {
