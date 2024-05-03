@@ -58,9 +58,6 @@ dl dd {
     font-size: 1.2rem;
 }
 
-
-
-
 .addReviewBtn, .search-other {
     display: block;
     text-align: center;
@@ -93,6 +90,13 @@ dl dd {
     button {
         width: 100%;
     }
+}
+
+.parkReviewImage {
+    width: 20%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 15px;
 }
 
 /* .favorite-btn {
