@@ -108,9 +108,8 @@ router
 
 
   router.get('/user', ensureLoggedIn, async(req, res) => {
-    const user = await getUserById(req.session.user.userId); // Assuming getUserById is defined
+    const user = await getUserById(req.session.user.userId); 
 
-    // Update session data
     req.session.user.favorite = user.favorite;
     req.session.user.personalParkPassport = user.personalParkPassport;
     req.session.user.reviews = user.reviews;
