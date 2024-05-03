@@ -65,14 +65,10 @@ router
     let parkId = req.params.parkObjectId;
     let reviewInfo = req.body;
 
-    console.log(req.body);
     let photoPaths = [];
     if (req.files) {
       photoPaths = req.files.map(file => `/uploads/${file.filename}`);
-      console.log(req.files);
     }
-
-    console.log(photoPaths)
 
     if (!reviewInfo || Object.keys(reviewInfo).length === 0) {
       return res
@@ -145,7 +141,8 @@ router
         reviewId: req.params.reviewId,
         isAuthor: review.userId === userId,
         isLogin: !!req.session.user,
-        parkId: req.params.parkId
+        parkId: req.params.parkId,
+        commentIndex: 0
       })     
     } catch (e) {
       res.redirect('/');

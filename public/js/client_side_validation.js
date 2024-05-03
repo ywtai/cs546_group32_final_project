@@ -319,8 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const content = document.getElementById('content').value;
       const rating = document.getElementById('rating').value;
       const photos = document.getElementById('photos').files;
-
-      console.log(photos)
   
       const errors = validateReviewData(title, content, rating, photos);
       if (errors.length > 0) {
@@ -341,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function() {
       Array.from(photos).forEach((file, index) => {
         formData.append('photos', file);
       });
-      console.log("formData "+ formData);
       fetch(reviewForm.action, {
         method: 'POST',
         body: formData
@@ -396,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
   
-      const formData = { title, content, rating };
+      const formData = { title, content, rating };      
       fetch(editForm.action, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -490,36 +487,43 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   //edit/delete comment
-  const editCommentButton = document.getElementById('editComment');
-  const editCommentForm = document.getElementById('editCommentForm');
-  const CommentErrorMessage = document.getElementById('comment_error_message');
-  if (editCommentButton && editCommentForm) {
-    editCommentButton.addEventListener('click', function () {
-      editCommentForm.style.display = editCommentForm.style.display === 'none' ? 'block' : 'none';
-    });
-  }
+  const editCommentButtons = document.querySelectorAll('.editComment')
 
-  const editCommentSubmitButton = document.getElementById('editCommentSubmit');
-  if (editCommentSubmitButton) {
-    editCommentSubmitButton.addEventListener('click', function(event) {
+  editCommentButtons.forEach((item) => { 
+    item.addEventListener('click', function(event) {
       event.preventDefault();
-      if (this.disabled) return;
-      this.disabled = true;
+      const commentIndex = item.getAttribute("data-index-id");
+      const editCommentForm = document.getElementById(`editCommentForm_${commentIndex}`);
+
+      if (editCommentForm) {
+        editCommentForm.style.display = editCommentForm.style.display === 'none' ? 'block' : 'none';
+      }
+    });
+  })
+
+  const editCommentSubmitButtons = document.querySelectorAll('[name="editCommentSubmit"]');
+  editCommentSubmitButtons.forEach((item) => { 
+    item.addEventListener('click', function(event) {
+      event.preventDefault();
+      const commentIndex = item.getAttribute("data-index-id");
+      const editCommentForm = document.getElementById(`editCommentForm_${commentIndex}`);
+      const CommentErrorMessage = document.getElementById(`comment_error_message_${commentIndex}`);
+      if (item.disabled) return;
+      item.disabled = true;
   
-      const content = document.getElementById('editCommentContent').value;
+      const content = document.getElementById(`editCommentContent_${commentIndex}`).value;
 
       const errors = validateCommentData(content);
       if (errors.length > 0) {
         CommentErrorMessage.innerText = errors.join(" ");
         CommentErrorMessage.style.display = 'block';
-        this.disabled = false;
+        item.disabled = false;
         return;
       }
-  
-      const formData = JSON.stringify({ content });
+      const formData = new FormData();
+      formData.set('content', content);
       fetch(editCommentForm.action, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: formData
       })
       .then(response => response.json())
@@ -539,13 +543,15 @@ document.addEventListener('DOMContentLoaded', function () {
         this.disabled = false;
       });
     });
-  }
+  })
 
-  const deleteCommentButton = document.getElementById('deleteComment');
-  if (deleteCommentButton) {
-    deleteCommentButton.addEventListener('click', function () {
-      const reviewId = this.getAttribute('data-review-id');
-      const commentId = this.getAttribute('data-comment-id');
+  const deleteCommentButtons = document.querySelectorAll('.deleteComment')
+
+  deleteCommentButtons.forEach((item) => { 
+    item.addEventListener('click', function(event) {
+      event.preventDefault();
+      const reviewId = item.getAttribute('data-review-id');
+      const commentId = item.getAttribute('data-comment-id');
       if (confirm('Confirm to Delete?')) {
         fetch(`/review/${reviewId}/comment/${commentId}`, { method: 'DELETE' })
           .then(response => response.json())
@@ -558,8 +564,28 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           })
           .catch(error => console.error('Error:', error));
-    }
+      }
     });
-  }
+  })
+
+  // if (deleteCommentButton) {
+  //   deleteCommentButton.addEventListener('click', function () {
+  //     const reviewId = this.getAttribute('data-review-id');
+  //     const commentId = this.getAttribute('data-comment-id');
+  //     if (confirm('Confirm to Delete?')) {
+  //       fetch(`/review/${reviewId}/comment/${commentId}`, { method: 'DELETE' })
+  //         .then(response => response.json())
+  //         .then(data => {
+  //           alert('Comment deleted successfully');
+  //           if (data.redirectUrl) {
+  //             window.location.href = data.redirectUrl;
+  //           } else {
+  //             alert('Comment deleted, but no redirect information received.');
+  //           }
+  //         })
+  //         .catch(error => console.error('Error:', error));
+  //   }
+  //   });
+  // }
 
 });

@@ -82,19 +82,22 @@ const exportedMethods = {
     let {content} = updateObject;
     const updateFields = {};
 
+    const parkCollection = await parks();
+
     if (content) {
       content = validation.checkString(content, 'Content');
-      updateFields["reviews.0.comments.0.content"] = content;
+      console.log(content);
+      updateFields["reviews.$[].comments.$[c].content"] = content;
     }
 
-    updateFields["reviews.0.comments.0.commentDate"] = validation.getFormatedDate(new Date());
+    updateFields["reviews.$[].comments.$[c].commentDate"] = validation.getFormatedDate(new Date());
 
-    const parkCollection = await parks();
     const updateCommentInfo = await parkCollection.updateOne(
-			{ "reviews.comments._id": new ObjectId(commentId) },
-			{ $set: updateFields }
-		);
-
+      { "reviews.comments._id": new ObjectId(commentId) },
+      { $set: updateFields },
+      {arrayFilters : [{"c._id": new ObjectId(commentId)}]}
+    );
+    
 		if (!updateCommentInfo || updateCommentInfo.matchedCount === 0) {
 			throw new Error(`Error: Update failed, could not find a comment with id of ${commentId}`);
 		}
@@ -103,6 +106,8 @@ const exportedMethods = {
     if (!updatedComment) {
         throw new Error(`Error: Failed to retrieve the updated comment for comment id ${commentId}`);
     }
+
+    console.log(updatedComment);
 
     return updatedComment;
   },
