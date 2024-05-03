@@ -2,7 +2,7 @@
 import Router from "express";
 const router = Router();
 import helpers from '../helpers.js';
-import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport} from "../data/users.js";
+import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
 import { logRequests, redirectBasedOnRole, ensureLoggedIn } from '../middleware.js'
 
 router.use(logRequests);
@@ -107,7 +107,14 @@ router
   });
 
 
-  router.get('/user', ensureLoggedIn, (req, res) => {
+  router.get('/user', ensureLoggedIn, async(req, res) => {
+    const user = await getUserById(req.session.user.userId); // Assuming getUserById is defined
+
+    // Update session data
+    req.session.user.favorite = user.favorite;
+    req.session.user.personalParkPassport = user.personalParkPassport;
+    req.session.user.reviews = user.reviews;
+    req.session.user.likedReviews = user.likedReviews;
 
   res.render('user', {
 
@@ -132,6 +139,7 @@ router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
   try {
     const result = await deleteFavorite(userId, parkId);
     if (result) {
+      req.session.user.favorite = req.session.user.favorite.filter(id => id !== parkId);
       res.json({ success: true });
     } else {
       res.json({ success: false, message: "Failed to delete favorite" });
