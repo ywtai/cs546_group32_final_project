@@ -172,12 +172,42 @@ export const deleteParkFromPassport = async (userId, parkId) => {
   return updateInfo.modifiedCount > 0;
 };
 
-export const deleteReviews = async (userId, parkId) => {
+export const deleteReviews = async (userId, reviewId) => {
   const userCollection = await users();
 
   const updateInfo = await userCollection.updateOne(
     { _id: new ObjectId(userId) }, 
-    { $pull: { reviews: { parkId } } } 
+    { $pull: { reviews: { reviewId } } } 
+  );
+
+  if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
+    throw 'Update failed: No user found or review not modified.';
+  }
+
+  return updateInfo.modifiedCount > 0;
+};
+
+export const addToComments = async (userId, comment) => {
+  const userCollection = await users();
+
+  const updateInfo = await userCollection.updateOne(
+    { _id: new ObjectId(userId) }, 
+    { $push: { comments: comment } } 
+  );
+
+  if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
+    throw 'Update failed: No user found or favorite not modified.';
+  }
+
+  return updateInfo.modifiedCount > 0;
+};
+
+export const deleteComments = async (userId, commentId) => {
+  const userCollection = await users();
+
+  const updateInfo = await userCollection.updateOne(
+    { _id: new ObjectId(userId) }, 
+    { $pull: { comments: { commentId } } } 
   );
 
   if (!updateInfo.matchedCount || !updateInfo.modifiedCount) {
