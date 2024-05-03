@@ -1,5 +1,11 @@
-{{!-- <link rel="stylesheet" href="/public/css/park.css"> --}}
+<title>Park Page</title>
+<link rel="stylesheet" href="/public/css/park.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<main>
+        {{#if isLogin}}
+            <button class="favorite-btn" id="far_btn"onclick="toggleFavorite(this, '{{this.parkName}}')" data-postid="{{this.parkId}}">
+                <i class="far fa-heart"></i>
 
 <button class="favorite-btn" data-postid="{{parkId}}" data-favorited="0" data-parkname="{{parkName}}">
     {{#if favorite}}

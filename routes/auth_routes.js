@@ -117,7 +117,6 @@ router
 
   res.render('user', {
 
-    title: "user",
     currentTime: new Date().toUTCString(),
     userId: req.session.user.userId,
     userName: req.session.user.userName,

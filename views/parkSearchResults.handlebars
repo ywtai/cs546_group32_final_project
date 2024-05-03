@@ -4,15 +4,16 @@
 <link rel="stylesheet" href="/public/css/styles.css">
     <article class="parks-found">
         <h1 class="title">Parks Found</h1>
-        <ul>
-            {{#each parks}}
-                    <li>
-                        <a href="/park/{{this._id}}"><h2>{{this.parkName}}</h2></a>
-                        <img class="searchResultImage" src="{{this.photos.[0].url}}" alt="{{this.parkName}} Poster">
-                        <p>{{this.description}}</p>
-                    </li>
-            {{/each}}
-        </ul>
+            <ul>
+                {{#each parks}}
+                        <li>
+                            <a href="/park/{{this._id}}"><h3>{{this.parkName}}</h3>
+                            <img class="searchResultImage" src="{{this.photos.[0].url}}" alt="{{this.parkName}} Poster">
+                            {{!-- <p>{{this.description}}</p> --}}
+                            </a>
+                        </li>
+                {{/each}}
+            </ul>
     </article>
     <nav>
         <div class="pagination">

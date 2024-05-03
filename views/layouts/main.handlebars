@@ -16,9 +16,9 @@
             <div class="user-info">
             {{#if isLoggedIn}}
                 <a href="/auth/user">{{user.userName}}</a>
-                <a href="/auth/logout"> Log Out</a>
+                <a href="/auth/logout"> Log out</a>
             {{else}}
-                <a href="/auth/login">Log In</a>
+                <a href="/auth/login">Log in</a>
             {{/if}}
             </div>
         </nav>
@@ -27,8 +27,8 @@
     <main>
         {{{body}}}
     </main>
-    <script src="/public/js/client_side_validation.js"></script>
-    <footer class="footer">
+    <script type='text/javascript' src="/public/js/client_side_validation.js"></script>
+    <footer>
         <p>National Park Reviews</p>
         <p>&copy; Aurora</p>
     </footer>

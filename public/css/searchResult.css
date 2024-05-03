@@ -1,11 +1,46 @@
-.searchResultImage {
-    width: 150px;
-    height: 150px;
-    border: 3px solid #ddd;
+.main-content {
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
     border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 2em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.parks-found ul {
+    list-style: none;
+    padding: 0;
+}
+
+.parks-found li {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.parks-found h2 {
+    margin: 10px 0;
+}
+
+.searchResultImage {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.parks-found p {
+    color: #666;
 }
 
 .pagination {
+    text-align: center;
+    padding: 20px 0;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -14,18 +49,55 @@
 }
 
 .pagination a {
-    color: black;
-    padding: 8px 16px;
-    text-decoration: none;
-}
-  
-.pagination a.active {
-    background-color: #007bff;
+    margin: 0 5px;
+    padding: 5px 10px;
+    background: #c7b198;
     color: white;
+    text-decoration: none;
+    border-radius: 5px;
 }
-  
-.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.pagination a.active {
+    background: #cd8a1f;
+}
+
+.pagination a:hover {
+    background: #b4a08a;
+}
 
 a {
-    text-decoration: none; 
+    display: block;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+    /* margin-top: 20px; */
+}
+
+a:hover {
+    color: #596e79;
+}
+
+.parks-found a, img, p{
+    margin: 10px;
+}
+
+.parks-found ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.parks-found li {
+    flex: 1 1 45%; 
+    margin: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden; 
+}
+.searchResultImage {
+    width: 95%; /* Ensures the image takes up the full container width */
+    height: auto;
+    display: block;
 }

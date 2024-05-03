@@ -3,6 +3,8 @@
 
 <body>
     <link rel="stylesheet" href="/public/css/styles.css">
+    <link rel="stylesheet" href="/public/css/login.css">
+
     <div id="error" class="error" hidden>I'm an error. I will change through Client-Side JS</div>
 <div>
     <h1 class="login">{{title}}</h1>
@@ -23,16 +25,16 @@
         <input type="password" name="confirmPassword" id="confirmPassword" value = {{confirmPassword}}>
 
         <br>
-        <label for="dob">Date of Birth:</label>
+        <lable for="dob">Date of Birth:</lable>
         <input type="text" name="dateOfBirth" id="dateOfBirth" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" required value = {{dateOfBirth}}>
 
         <br>
         <lable for="bio">Enter your bio:</lable>
         <input type="text" name="bio" id="bio" value = {{bio}}>
 
-         <button type="submit">Register</button>
+        <input type="submit" value="Register">
     </form>
-    <a href="/auth/login">"Already have an account? Click here to log-in"</a>
+    <a class="login-a" href="/auth/login">Already have an account? Click here to log-in!</a>
     <script src="/public/js/client_side_validation.js"></script>
 </div>
 
