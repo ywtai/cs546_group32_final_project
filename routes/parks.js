@@ -162,7 +162,6 @@ router.route('/park/:id')
 
             if (parkDetail) {
                 //show the park detail page
-                console.log(parkDetail);
                 if (!req.session.user) {
                     res.render('parkById', {
                     parkId: parkId,

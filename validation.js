@@ -1,5 +1,12 @@
 //You can add and export any helper functions you want here. If you aren't using any, then you can just leave this file as is.
 import { ObjectId } from 'mongodb';
+import * as path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const exportedMethods = {
     checkId(id) {
@@ -77,7 +84,7 @@ const exportedMethods = {
       return averageRating;
     },
 
-    checkPhotos(photos) {
+    checkPhotosPath(photos) {
       if (!Array.isArray(photos)) {
         throw 'Error: photos must be an array';
       }
@@ -88,6 +95,19 @@ const exportedMethods = {
         }
       });
 
+      return photos;
+    },
+
+    checkPhotoExist(photos) {
+      if (photos) {
+        for (let i = 0; i < photos.length; i++) {
+          const fullPath = path.join(__dirname, '../public', photos[i]);
+          if (!fs.existsSync(fullPath)) {
+            photos[i] = '/icon/no-image.png';
+          }
+        }
+      }
+      
       return photos;
     }
   };

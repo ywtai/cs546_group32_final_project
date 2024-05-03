@@ -34,7 +34,7 @@ const exportedMethods = {
     title = validation.checkString(title, 'Title', { min: '2', max: '20' });
     userName = validation.checkString(userName, 'User Name');
     content = validation.checkString(content, 'Content', { min: '2', max: '200' });
-    photos = validation.checkPhotos(photos);
+    photos = validation.checkPhotosPath(photos);
     rating = validation.checkRating(rating, 'Rating');
 
     const parkCollection = await parks();

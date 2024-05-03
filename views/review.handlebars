@@ -12,7 +12,7 @@
 
         {{#if photos}}  
             {{#each photos}}
-                <img class="parkReviewImage" src="/public{{this}}" alt="Photo of Park">
+                <img class="parkReviewImage" alt="Photo of Park" onerror="this.onerror=null;this.src='/public/icon/no-image.png';" src="/public{{this}}">
             {{/each}}
         {{/if}}
 

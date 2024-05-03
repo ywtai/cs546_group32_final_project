@@ -106,8 +106,8 @@ router
 
     try {
       req.params.parkObjectId = validation.checkId(req.params.parkObjectId);
-      title = validation.checkString(title, 'Title');
-      content = validation.checkString(content, 'Content');
+      title = validation.checkString(title, 'Title', { min: '2', max: '20' });
+      content = validation.checkString(content, 'Content', { min: '2', max: '200' });
       rating = validation.checkRating(rating, 'Rating');
     } catch (e) {
       return res.status(400).render('error', {
@@ -146,8 +146,14 @@ router
 router
   .route('/review/:reviewId')
   .get(async (req, res) => {
+    let reviewId = req.params.reviewId
     try {
-      const reviewId = validation.checkId(req.params.reviewId);
+      reviewId = validation.checkId(req.params.reviewId);
+    } catch (e) {
+      res.status(404).render('error', { message: 'Page not Found' });
+    }
+
+    try {
       const {parkId, review} = await reviewData.getReview(reviewId);
       const comments = await commentData.getAllComments(reviewId);
       const userId = req.session.user ? req.session.user.userId : null;
@@ -156,6 +162,9 @@ router
         ...comment,
         commentIsAuthor: comment.userId === userId
       }));
+
+      let photos = validation.checkPhotoExist(review.photos);
+
       if (!req.session.user) {
         res.render('review', {
           title: review.title,
@@ -164,13 +173,16 @@ router
           comment: commentsWithAuthCheck,
           reviewDate: review.reviewDate,
           rating: review.rating,
-          photos: review.photos,
+          photos: photos,
           reviewId: req.params.reviewId,
           isAuthor: review.userId === userId,
           isLogin: !!req.session.user,
-          parkId: req.params.parkId,
+          parkId: parkId,
           commentIndex: 0,
-          favorite: false
+          favorite: false,
+          helpers: {
+            checkImage: validation.checkImage
+          }
         })
       } else {
         const user = await getUserById(req.session.user.userId)
@@ -182,13 +194,16 @@ router
           comment: commentsWithAuthCheck,
           reviewDate: review.reviewDate,
           rating: review.rating,
-          photos: review.photos,
+          photos: photos,
           reviewId: req.params.reviewId,
           isAuthor: review.userId === userId,
           isLogin: !!req.session.user,
-          parkId: req.params.parkId,
+          parkId: parkId,
           commentIndex: 0,
-          favorite: favorite
+          favorite: favorite,
+          helpers: {
+            checkImage: validation.checkImage
+          }
         })
       }   
     } catch (e) {
@@ -212,10 +227,10 @@ router
       req.params.reviewId = validation.checkId(req.params.reviewId);
 
       if (title)
-        title = validation.checkString(title, 'Title');
+        title = validation.checkString(title, 'Title', { min: '2', max: '20' });
 
       if (content)
-        content = validation.checkString(content, 'Content');
+        content = validation.checkString(content, 'Content', { min: '2', max: '200' });
 
       if (rating)
         rating = validation.checkRating(rating, 'Rating');
@@ -301,7 +316,7 @@ router
     }
 
     try {
-      content = validation.checkString(content, 'Content');
+      content = validation.checkString(content, 'Content', { min: '2', max: '200' });
     } catch(e) {
       return res.status(400).render('error', {
         message: e.toString()
@@ -342,7 +357,7 @@ router
     let { content } = updateObject;
     try {
       if (content)
-        content = validation.checkString(content, 'Content');
+        content = validation.checkString(content, 'Content', { min: '2', max: '200' });
     } catch (e) {
       return res.status(400).render('error', {
         message: e.toString()
