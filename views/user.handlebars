@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <link rel="stylesheet" href="/public/css/styles.css">
+    <title>{{title}}</title>
+</head>
 <body>
     <h1 class="container">{{title}}</h1>
     <p class="phrase">Welcome {{userName}}, the time is now: {{currentTime}}.</p>
     <p class="content">Your bio: {{bio}}</p>
+
+    <!-- Personal Park Passport Section -->
     <div class="content">
         <p>Your Personal Park Passport:</p>
         <ul id="passportList">
@@ -16,8 +22,9 @@
         </ul>
     </div>
 
+    <!-- Favorites Section -->
     <div class="content">
-        <p>Your favorites:</p>
+        <p>Your Favorites:</p>
         <ul id="favoritesList">
             {{#each favorite}}
             <li id="park-{{parkId}}">
@@ -27,7 +34,19 @@
             {{/each}}
         </ul>
     </div>
-    
+
+    <!-- Reviews Section -->
+    <div class="content">
+        <p>Your Reviews:</p>
+        <ul id="reviewsList">
+            {{#each reviews}}
+            <li id="review-{{reviewId}}">
+                <a href="/review/{{reviewId}}">{{title}}</a>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+
     <div class="link">
         <a href="/auth/logout">Log out</a>
     </div>
@@ -36,7 +55,7 @@
     <script>
     function deleteFavorite(parkId) {
         $.ajax({
-            url: '/auth/delete-favorite/' + parkId,
+            url: '/auth/delete-favorite',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ parkId }),
@@ -74,7 +93,6 @@
     </script>
 </body>
 </html>
-
 
 
 
