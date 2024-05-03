@@ -1,611 +1,114 @@
-
-.header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Ensures left, middle, and right sections are spaced out */
-    padding: 10px 20px;
-}
-
-.logo-and-title {
-    display: flex;
-    align-items: center;
-}
-
-.website-icon, .site-title {
-    margin-right: 10px; /* Spacing between logo and title */
-}
-
-.search-container {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.login-btn {
-    right: 10px; /* Positions the button on the far right of the screen */
-    top: 10px;
-    margin-left: auto; /* Pushes the login button to the right */
-}
-/* Reset some default styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-}
-
-/*header {*/
-/*    background-image: url('3C86137D-1DD8-B71B-0B978BACD7EBAEF1.jpg'); !* Replace with the path to your image *!*/
-/*    background-size: cover; !* Cover the entire area of the header *!*/
-/*    background-position: center; !* Center the background image *!*/
-/*    height: 300px; !* Set the height you want for your header *!*/
-/*    width: 100%; !* Ensure the header spans the width of the page *!*/
-/*    background-color: #005500;*/
-/*    color: white;*/
-/*    text-align: center;*/
-/*    padding: 20px;*/
-/*    background-size: cover;*/
-/*    background-position: center;*/
-/*    position: relative;*/
-/*}*/
-
-.site-header {
-    background: #333; /* Dark background for the top part of the header */
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header-top .website-icon {
-    height: 30px; /* Adjust as needed */
-}
-
-.site-title {
-    font-size: 2.0em;
-    margin-left: 10px; /* Space from the icon */
-}
-
-.login-btn, .search-toggle, .menu-toggle {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
-/* Adjust margin and padding as needed */
-.login-btn i, .search-toggle i, .menu-toggle i {
-    margin-right: 10px;
-}
-
-.header-bottom {
-    background: rgba(0,0,0,0.01); /* Translucent overlay */
-    text-align: center;
-    padding: 10px;
-}
-
-.header-bottom .park-name {
-    font-size: 1.5em;
-    color: white;
-}
-
-.park-image img {
-    width: 100%;
-    display: block; /* Ensures no margin or padding around image */
-    height: 400px; /* Maintain aspect ratio */
-}
-
-
-review {
-    background-color: #005500;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    height: 200px;
-}
-
-/*nav#navbar {*/
-/*    background-color: #333;*/
-/*    color: white;*/
-/*    overflow: auto;*/
-/*}*/
-
-/*nav#navbar ul {*/
-/*    list-style-type: none;*/
-/*    padding: 0;*/
-/*}*/
-
-/*nav#navbar ul li {*/
-/*    float: left;*/
-/*}*/
-
-/*nav#navbar ul li a {*/
-/*    display: block;*/
-/*    padding: 10px 20px;*/
-/*    color: white;*/
-/*    text-decoration: none;*/
-/*    transition: background 0.3s ease;*/
-/*}*/
-
-/*nav#navbar ul li a:hover,*/
-/*nav#navbar ul li a.active {*/
-/*    background-color: #555;*/
-/*}*/
-
-main {
-    /* padding: 20px; */
-}
-
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-}
-
-.card {
-    flex: 1 1 300px;
-    padding: 100px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    background-color: #fff;
-    margin: 20px;
-    text-align: left;
-    min-height: 200px;
-    margin: 0 auto; /* Center cards if using fixed width */
-    box-sizing: border-box;
-}
-
-.card-image {
-    width: 100px; /* Set the desired width for your images */
-    height: auto;
-    margin-bottom: 15px; /* Space between the image and the title */
-}
-
-
-.btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: #45a049;
-}
-
-.more-info {
-    padding: 10px 0;
-}
-
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
-}
-
-.login-container {
-    float: right;
-    padding: 10px 20px;
-}
-
-.user-greeting {
-    color: white;
-}
-
-.user-greeting #logoutButton {
-    background-color: #f44336;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-
-.comments-container {
-    margin-top: 10px;
-    background-color: #eee;
-    padding: 10px;
-}
-
-button {
-    margin: 5px;
-}
-
-.load-more {
-    display: none; /* Hidden by default, shown with JavaScript */
-}
-
-/* Style for posts list and comments */
-.posts-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ccc;
-}
-
-.posts-list {
-    padding: 20px;
-}
-.post-link {
-    display: block;
-    background: #f8f8f8;
-    margin: 10px 0;
-    padding: 15px;
-    text-decoration: none;
-    color: black;
-    border: 1px solid #ccc;
-}
-.post-link:hover {
-    background: #e9e9e9;
-}
-
-.add-post-btn {
-    position: fixed;  /* Fixed position relative to the viewport */
-    right: 20px;      /* 20 pixels from the right edge */
-    bottom: 20px;     /* 20 pixels from the bottom */
-    background-color: #4CAF50; /* A pleasant green */
-    color: white;     /* White text for visibility */
-    border: none;     /* No border */
-    border-radius: 50%; /* Fully rounded edges to form a circle */
-    width: 60px;      /* Diameter of the circle */
-    height: 60px;     /* Diameter of the circle */
-    text-align: center; /* Ensure the icon is centered */
-    line-height: 60px; /* Vertically align the text/icon in the middle */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Subtle shadow for 3D effect */
-    cursor: pointer;  /* Indicates that the element is clickable */
-    z-index: 1000;    /* Ensure it's above other elements */
-    font-size: 24px;  /* Size of the icon */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-}
-
-.add-post-btn:hover {
-    background-color: #369636; /* Slightly darker shade on hover */
-}
-
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
+.container {
+    margin-bottom: 20px;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    width: 50%;
-}
-footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #333;
-    color: white;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for form elements */
-input[type="text"],
-textarea,
-input[type="file"] {
+h1, h2, h3, h4 {
+    color: #333;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+h2, h3, h4 {
+    margin-bottom: 8px;
+}
+
+.park-poster {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
+    height: auto;
     border-radius: 4px;
-    box-sizing: border-box;
+    margin-bottom: 15px;
 }
 
-input[type="file"] {
-    background-color: #f8f8f8;
-    padding: 8px;
+.description, .info, .ratings {
+    margin-bottom: 10px;
 }
 
-button.btn {
-    background-color: #4CAF50;
+dl dt {
+    font-weight: bold;
+}
+
+dl dd {
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.addpassport  {
+    padding: 10px 15px;
+    font-size: 16px;
     color: white;
-    padding: 12px 20px;
+    background-color: #c7b198;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    margin-top: 10px;
 }
 
-button.btn:hover {
-    background-color: #45a049;
+.addpassport:hover {
+    background-color: #cd8a1f;
 }
 
-/* Close button specific style */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px; /* Large size for easy click */
-    cursor: pointer; /* Cursor to indicate clickable */
+.favorite-btn i, .addpassport {
+    font-size: 1.2rem;
 }
 
-.close:hover {
-    color: #777; /* Darker grey on hover for interaction feedback */
+
+
+
+.addReviewBtn, .search-other {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px 0;
+    background-color: #c7b198;
+    color: white;
+    border-radius: 4px;
 }
 
-/* Rating Stars Enhancement */
-.rating .star {
-    cursor: pointer;
-    font-size: 30px; /* Larger stars for easier interaction */
-    color: #ccc; /* Lighter grey for non-selected stars */
-    margin-right: 5px; /* Space between stars */
+.addReviewBtn:hover, .search-other:hover {
+    background-color: #cd8a1f;
 }
 
-.rating .star:hover,
-.rating .star.selected {
-    color: #ffcd3c; /* Gold color for emphasis on selection and hover */
+.my_coolratings_table a {
+    display: block;
+    margin-bottom: 5px;
+    color: #007bff;
 }
 
-.favorite-btn {
+.reviewLink {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .container, main {
+        padding: 10px;
+    }
+    button {
+        width: 100%;
+    }
+}
+
+/* .favorite-btn {
     background: none;
     border: none;
     cursor: pointer;
-    color: #ccc; /* Light grey for non-favorited */
-    font-size: 24px; /* Large size for visibility */
+    color: #ccc; 
+    font-size: 24px;
     transition: color 0.3s ease; /
 }
 
 .favorite-btn:hover,
 .favorite-btn:focus {
-    color: #ff6666; /* Light red on hover/focus */
+    color: #ff6666; 
 }
 
 .favorite-btn.favorited i {
-    color: #ff0000; /* Bright red when favorited */
-}
-
-
-.login-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-}
-
-.login-btn i {
-    margin-right: 8px;
-}
-
-.login-btn:hover {
-    background-color: #005500;
-}
-
-/* Search Bar Styles */
-
-.search-bar label {
-    position: absolute;
-    left: 15px;
-    top: -15px; /* Adjust as needed */
-    background-color: rgba(0,0,0,0.01);
-    color: white;
-    padding: 0 5px;
-    font-size: 14px;
-}
-
-.search-bar-container {
-    display: flex;
-    align-items: center;
-    background-color: rgba(0,0,0,0.01); /* Or any color that matches your theme */
-    padding: 10px;
-}
-
-.search-icon-container {
-    margin-right: 10px;
-    color: white; /* Adjust color as needed */
-}
-
-.find-park {
-    margin-right: 20px;
-    color: white; /* Adjust color as needed */
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fff; /* White background or any other color you prefer */
-    padding: 10px 0;
-}
-
-.search-item {
-    position: relative;
-    margin: 0 15px; /* Adjust spacing as needed */
-}
-
-.search-label {
-    font-size: 1rem;
-    color: #333; /* Label color */
-    margin-bottom: 5px;
-    display: block;
-}
-
-.search-dropdown {
-    appearance: none; /* Remove default dropdown styling */
-    -webkit-appearance: none; /* Remove default styling for Safari */
-    -moz-appearance: none; /* Remove default styling for Firefox */
-    background: rgba(0, 0, 0, 0); /* Transparent background */
-    color: #333; /* Dropdown text color */
-    padding: 5px 10px; /* Dropdown padding */
-    font-size: 1rem;
-    margin: 5px 0;
-}
-
-/* Custom arrow */
-.search-dropdown {
-    background-image: url('dropdown-arrow.svg'); /* Custom arrow image */
-    background-position: calc(100% - 10px) center; /* Position arrow on the right, centered vertically */
-    background-repeat: no-repeat;
-    background-size: 12px; /* Size of custom arrow */
-}
-
-.search-or {
-    padding: 0 15px;
-    color: #aaaaaa; /* 'Or' text color */
-    font-size: 1rem;
-}
-
-/* Adjust the padding to ensure the dropdowns have the same height as the 'or' text */
-.search-dropdown {
-    padding: 8px 32px 8px 8px; /* Larger right padding to account for the background arrow image */
-}
-
-.park-description {
-    padding: 20px;
-    background-color: #f8f8f8; /* A light gray background */
-    margin: 10px auto;
-    max-width: 1000px; /* Or any other max-width that fits your design */
-    border-radius: 8px; /* Softened corners */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* A subtle shadow for depth */
-}
-
-.post-link {
-    display: block; /* Ensures each link is on a new line */
-    margin-top: 10px; /* Adds space between entries */
-    padding: 5px; /* Optional padding for better readability */
-    border-bottom: 1px solid #ccc; /* Optional separator for clarity */
-}
-.post-link:hover {
-    text-decoration: underline; /* Underline on hover for better interaction */
-}
-
-.posts-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #f3f3f3;
-}
-
-.user-posts-container {
-    margin-top: 20px;
-}
-.description {
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.description p {
-    margin: 0;
-    padding-bottom: 10px;
-}
-
-.comments {
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-.comment {
-    padding: 5px;
-    border-bottom: 1px solid #eee;
-}
-
-.comment:last-child {
-    border-bottom: none;
-}
-
-.comment p {
-    margin: 5px 0;
-}
-
-#addCommentForm textarea {
-    width: 100%;
-    margin-top: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#addCommentForm button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-#addCommentForm button:hover {
-    background-color: #45a049;
-}
-
-.edit-btn, .delete-btn, .save-btn, .cancel-btn {
-    background-color: #4CAF50; /* Green background */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-top: 5px;
-    transition: background 0.3s ease;
-}
-
-.edit-btn:hover, .delete-btn:hover, .save-btn:hover, .cancel-btn:hover {
-    background-color: #45a049; /* Darker green on hover */
-}
-
-#editModal {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    position: fixed; /* Or 'absolute' depending on layout needs */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust based on exact centering */
-    display: none; /* Hidden by default */
-    z-index: 1000; /* Ensure it's above other content */
-}
-
-.description, .comments {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.delete-post-form {
-    margin-top: 20px;
-}
-
-.park-poster {
-    width: 50%;
-    height: auto;
-}
+    color: #ff0000; 
+} */
