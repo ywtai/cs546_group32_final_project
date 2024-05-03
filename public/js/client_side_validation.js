@@ -1,3 +1,4 @@
+
 let registerForm = document.getElementById('registration-form');
 let errorDiv = document.getElementById('error')
 let userName = document.getElementById('userName')
@@ -319,6 +320,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const content = document.getElementById('content').value;
       const rating = document.getElementById('rating').value;
       const photos = document.getElementById('photos').files;
+<<<<<<< HEAD
+=======
+      
+
+>>>>>>> ce4b25f (add favorite addpassport review to userdb)
   
       const errors = validateReviewData(title, content, rating, photos);
       if (errors.length > 0) {

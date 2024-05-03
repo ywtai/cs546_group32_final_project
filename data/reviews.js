@@ -47,7 +47,10 @@ const exportedMethods = {
     if (!insertInfo)
         throw 'Error: Could not add review';
 
-    return {reviewSubmittedCompleted: true};
+    return {
+      reviewSubmittedCompleted: true,
+      reviewId : newReview._id.toString()
+    };
   },
 
   async getAllReviews(parkObjectId) {

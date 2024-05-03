@@ -128,7 +128,6 @@ export const deleteFavorite = async (userId, parkId) => {
 
 export const addToPassport = async (userId, park) => {
   const userCollection = await users();
-
   const updateInfo = await userCollection.updateOne(
     { _id: new ObjectId(userId) }, 
     { $push: { personalParkPassport: park } } 

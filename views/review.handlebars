@@ -11,6 +11,14 @@
             {{/each}}
         {{/if}}
 
+        {{!-- <button class="like-btn" data-postid="{{parkId}}" data-favorited="0" data-parkname="{{parkName}}">
+        {{#if favorite}}
+          <i class="fas fa-heart"></i> <!-- Favorited icon -->
+        {{else}}
+          <i class="far fa-heart"></i> <!-- Unfavorited icon -->
+        {{/if}}
+        </button> --}}
+
         <div id="postDescription" class="description">
             <p>{{content}}</p>
             {{#if isAuthor}}

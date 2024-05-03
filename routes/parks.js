@@ -3,9 +3,12 @@ import * as express from 'express';
 import { searchByState, searchByActivity, searchByName, searchTop5 } from '../data/searchPark.js';
 import { parksData } from "../data/index.js";
 import validation from "../validation.js";
+import {ensureLoggedIn, logRequests} from '../middleware.js'
+import {addToFavorites, deleteFavorite, addToPassport, getUserById} from '../data/users.js';
 
 
 const router = express.Router();
+router.use(logRequests);
 
 router.route('/').get(async (req, res) => {
     //code here for GET will render the home handlebars file
@@ -153,28 +156,82 @@ router.route('/park/:id')
             parkId = validation.checkId(parkId, 'id parameter in URL');
             const allData = [];
 
-            const parkDetail = await parksData.getParkById(parkId);
+          const parkDetail = await parksData.getParkById(parkId);
+          const parkName = parkDetail.parkName;
             allData.push(parkDetail);
 
             //show the park detail page
-            if (!req.session.user) {
+          if (!req.session.user) {
+            res.render('parkById', {
+              parkId: parkId,
+              parkData: allData,
+              parkName: parkName,
+              isLogin: false,
+              favorite: false
+            });
+          } else {
+            const user = await getUserById(req.session.user.userId)
+            const favorite = user.favorite.some(obj => obj.parkId === parkId);
                 res.render('parkById', {
                     parkId: parkId,
                     parkData: allData,
-                    isLogin: false
-                });
-            } else {
-                res.render('parkById', {
-                    parkId: parkId,
-                    parkData: allData,
+                    parkName: parkName,
                     isLogin: true,
                     userId: req.session.user.userId,
-                    userName: req.session.user.userName
+                    userName: req.session.user.userName,
+                    favorite : favorite
                 });
             }
         } catch (e) {
-            res.status(500).json({ error: e });
+            res.status(500).json({ error: e.message??e });
         }
     });
+
+router.route('/favorite/:id')
+    .post(ensureLoggedIn, async (req, res) => {
+    
+      const { parkId, parkName, favorite } = { ...req.params, ...req.body };
+
+      const park = {
+        parkId: parkId,
+        parkName: parkName,
+      }
+
+      try {
+        if (favorite) {
+          const updatedUser = await addToFavorites(req.session.user.userId, park);
+          res.json({ favorited: favorite, message: "Favorite status updated successfully" });
+        } else {
+          const updatedUser = await deleteFavorite(req.session.user.userId, parkId);
+          res.json({ favorited: favorite, message: "Favorite status updated successfully" });
+        }
+        
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+    });
+
+router.post('/passport/add/:id', ensureLoggedIn, async (req, res) => {
+    const parkName = req.body.parkName;
+    const userId = req.session.user.userId; 
+    const parkId = req.params.id
+
+    const park = {
+        parkId: parkId,
+        parkName: parkName
+      }
+
+  try {
+    user = await getUserById(userId)
+    if (user.personalParkPassport.some(obj => obj.parkId === parkId)) {
+      res.json({ added: false, message: "Park already exists." })
+    } else {
+      const addedToPassport = await addToPassport(userId, park);
+      res.json({ added: true, message: "Park added to passport successfully." });
+    }
+  } catch (error) {
+        res.status(500).json({ error: error.message});
+    }
+});
 
 export default router;

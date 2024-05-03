@@ -9,6 +9,7 @@ import * as path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from 'fs';
+import { addToReviews, deleteReviews} from '../data/users.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -99,7 +100,7 @@ router
       });
     }
     try {
-      const { reviewSubmittedCompleted } = await reviewData.createReview(
+      const { reviewSubmittedCompleted , reviewId} = await reviewData.createReview(
         req.params.parkObjectId,
         req.session.user.userId,
         title,
@@ -108,6 +109,11 @@ router
         photoPaths,
         rating
       );
+      const pushInfo =  {
+        reviewId: reviewId,
+        title: title
+      }
+      const addInfo = await addToReviews(req.session.user.userId, pushInfo);
       res.json({
         success: true,
         message: 'Review added successfully',
@@ -162,9 +168,9 @@ router
         .status(400)
         .json({ error: 'There are no fields in the request body' });
     }
-
     const userId = req.session.user.userId;
     let { title, content, rating } = updateObject;
+    
 
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
@@ -182,6 +188,7 @@ router
     }
 
     try {
+      
       const review = await reviewData.getReview(req.params.reviewId);
       if (review.userId !== userId) {
           return res.status(403).json({ error: "You do not have permission to modify this review." });
@@ -190,7 +197,8 @@ router
       const updatedReview = await reviewData.updateReview(
         req.params.reviewId,
         updateObject
-      );
+      )
+    
     } catch (e) {
       return res.status(404).send({ error: e });
     }
@@ -223,7 +231,7 @@ router
   .delete(ensureLoggedIn, upload.none(), async (req, res) => {
     const userId = req.session.user.userId;
     try {
-      req.params.reviewId = validation.checkId(req.params.reviewId);
+      req.params.reviewId = validation.checkId(req.params.reviewId)
     } catch (e) {
       return res.status(400).json({ error: e });
     }
@@ -234,6 +242,7 @@ router
           return res.status(403).json({ error: "You do not have permission to delete this review." });
       }
       let deletedReview = await reviewData.removeReview(req.params.reviewId);
+      let deleteInfo = await deleteReviews(userId, req.params.reviewId);
       const parkId = deletedReview._id.toString();
       res.json({redirectUrl: '/park/' + parkId});
     } catch (e) {
