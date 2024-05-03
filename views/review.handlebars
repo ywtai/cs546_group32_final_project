@@ -33,7 +33,6 @@
                             <dd><textarea id="edit-content" name="edit-content" placeholder="Content"></textarea></dd>
                         </dl>
                     </section>
-                    <div id="review_error_message" class="error" style="display:none;"></div>
                     <button type="button" id="editReviewSubmit" name="editReviewSubmit" >Save Changes</button>
                 </form>
                 <button id="editForm" name="editForm" type="button">Edit</button>
@@ -54,7 +53,6 @@
                                         <dd><textarea id="editCommentContent_{{@index}}" name="content" placeholder="Content" data-index-id="{{@index}}"></textarea></dd>
                                     </dl>
                                 </section>
-                                <div id="comment_error_message_{{@index}}" class="error" style="display:none;" data-index-id="{{@index}}"></div>
                                 <button id="editCommentSubmit_{{@index}}" name="editCommentSubmit" type="button" data-index-id="{{@index}}" data-review-id="{{reviewId}}" data-comment-id="{{this._id}}">Save Changes</button>
                             </form>
                             <button id="editComment_{{@index}}" class="editComment" data-index-id="{{@index}}">Edit</button>
@@ -72,7 +70,6 @@
                         <dd><textarea id="commentContent" name="commentContent" required></textarea></dd>
                     </dl>
                 </section>
-                <div id="comment_error_message" class="error" style="display:none;"></div>
                 <button id="commentSubmit" name="commentSubmit" type="button" class="commentSubmit-button">Submit Comment</button>
             </form>
         {{else}}

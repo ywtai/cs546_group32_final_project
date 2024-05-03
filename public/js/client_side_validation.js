@@ -284,27 +284,207 @@ if (loginForm) {
   })
 }
 
-function validateReviewData(title, content, rating, photos) {
-  let errors = [];
-  if (!title || title.trim().length === 0) {
-      errors.push("Title cannot be empty.");
+//review
+const watcher = (elementID, error) => {
+
+  document.getElementById(elementID).addEventListener('focus', (e) => {
+
+    let errors = document.querySelectorAll(`#${error}`);
+    errors.forEach((e) => e.remove());
+  });
+};
+
+const errorTip = (element, text) => {
+  let error = document.createElement('div');
+  error.id = `error-${element.id}`;
+  error.className = 'error';
+  error.style.color = '#8B0000';
+  error.style.fontSize = '14px';
+  element.insertAdjacentElement('afterend', error);
+  error.innerHTML = text;
+
+  watcher(element.id, error.id);
+};
+
+const checkString = (strVal, varName, conditions) => {
+  let str = strVal.value;
+  let hasError = false;
+  if (!str) {
+    let text = `Error: You must provide ${varName}`;
+    errorTip(strVal, text);
+    hasError = true;
   }
-  if (!content || content.trim().length === 0) {
-      errors.push("Content cannot be empty.");
+
+  if (typeof str !== 'string') {
+    let text = `Error: ${varName} must be a string!`;
+    errorTip(strVal, text);
+    hasError = true;
   }
-  rating = parseInt(rating, 10);
+
+  str = str.trim();
+  if (str.length === 0) {
+    let text = `Error: ${varName} cannot be an empty string or string with just spaces`;
+    errorTip(strVal, text);
+    hasError = true;
+  }
+
+  if (conditions) {
+    let key = Object.keys(conditions);
+    let value = Object.values(conditions);
+    key.map((item, index) => {
+      if (item === 'max') {
+        if (str.length > value[index]) {
+          text = `Error: ${varName} must be less than ${value[index]} characters`;
+          errorTip(strVal, text);
+          hasError = true;
+        }
+      }
+      if (item === 'min') {
+        if (str.length < value[index]) {
+          text = `Error: ${varName} must be more than ${value[index]} characters`;
+          errorTip(strVal, text);
+          hasError = true;
+        }
+      }
+    });
+  }
+  if (hasError) {
+    return false;
+  }
+  return true;
+};
+
+const checkRating = (element) => {
+  const rating = parseInt(element.value, 10);
   if (isNaN(rating) || rating < 1 || rating > 5) {
-      errors.push("Rating must be a number between 1 and 5.");
+    errorTip(element, "Rating must be a number between 1 and 5.");
+    return false;
   }
-  return errors;
+  if (rating % 1 !== 0) {
+      errorTip(element, "Rating must be an integer.");
+      return false;
+  }
+  return true;
 }
 
-function validateCommentData(content) {
-  let errors = [];
-  if (!content || content.trim().length === 0) {
-      errors.push("Comment cannot be empty.");
+const checkPhotos = (element) => {
+  const photos = element.files;
+  console.log(photos);
+  const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'application/pdf'];
+
+  if (photos) {
+    if (photos.length > 5) {
+      errorTip(element, "Please select less than 5 files.");
+      return false;
+    }
+    for (let i = 0; i < photos.length; i++) {
+      let photo = photos.item(i);
+      if (!allowedTypes.includes(photo.type)) {
+        errorTip(element, "Invalid file type. Please upload a JPG, JPEG, PNG");
+        return false;
+     }
+
+     const photoSize = Math.round((photo.size / 1024));
+     if (photoSize > 5120) {
+      errorTip(element, "Photo too big, please select photos less than 5MB.");
+        return false;
+     } else if (photoSize < 1) {
+      errorTip(element, "Photo too small, please select photos more than 1KB.");
+        return false;
+     }
+    }
   }
-  return errors;
+  return true;
+}
+
+const validateReviewData = (e, submitButton) => {
+  const title = document.getElementById('title');
+  const content = document.getElementById('content');
+  const rating = document.getElementById('rating');
+  const photos = document.getElementById('photos');
+
+  checkString(title, 'title', { min: '2', max: '20' });
+  checkString(content, 'content', { min: '2', max: '200' });
+  checkRating(rating);
+  checkPhotos(photos);
+
+  let err = document.querySelectorAll('.error');
+  if (!err || err.length === 0) {
+    check = true;
+  } else {
+    check = false;
+  }
+
+  if (check) {
+    submitButton.setAttribute('type', 'submit');
+  } else {
+    submitButton.setAttribute('type', 'button');
+  }
+  return;
+}
+
+const validateEditReviewData = (e, submitButton) => {
+  const title = document.getElementById('edit-title');
+  const content = document.getElementById('edit-content');
+  const rating = document.getElementById('edit-rating');
+
+  checkString(title, 'title', { min: '2', max: '20' });
+  checkString(content, 'content', { min: '2', max: '200' });
+  checkRating(rating);
+
+  let err = document.querySelectorAll('.error');
+  if (!err || err.length === 0) {
+    check = true;
+  } else {
+    check = false;
+  }
+
+  if (check) {
+    submitButton.setAttribute('type', 'submit');
+  } else {
+    submitButton.setAttribute('type', 'button');
+  }
+  return;
+}
+
+const validateCommentData = (e, submitButton) => {
+  const content = document.getElementById('commentContent');
+
+  checkString(content, 'content', { min: '2', max: '200' });
+
+  let err = document.querySelectorAll('.error');
+  if (!err || err.length === 0) {
+    check = true;
+  } else {
+    check = false;
+  }
+
+  if (check) {
+    submitButton.setAttribute('type', 'submit');
+  } else {
+    submitButton.setAttribute('type', 'button');
+  }
+  return;
+}
+
+const validateEditCommentData = (e, submitButton, commentIndex) => {
+  const content = document.getElementById(`editCommentContent_${commentIndex}`);
+
+  checkString(content, 'content', { min: '2', max: '200' });
+
+  let err = document.querySelectorAll('.error');
+  if (!err || err.length === 0) {
+    check = true;
+  } else {
+    check = false;
+  }
+
+  if (check) {
+    submitButton.setAttribute('type', 'submit');
+  } else {
+    submitButton.setAttribute('type', 'button');
+  }
+  return;
 }
 
 //add review
@@ -314,21 +494,11 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (submitButton) {
     submitButton.addEventListener('click', function(event) {
-      const title = document.getElementById('title').value;
-      const content = document.getElementById('content').value;
-      const rating = document.getElementById('rating').value;
-      const photos = document.getElementById('photos').files;
-  
-      const errors = validateReviewData(title, content, rating, photos);
-      if (errors.length > 0) {
-        reviewErrorMessage.innerText = errors.join(" ");
-        reviewErrorMessage.style.display = 'block';
-        return;
-      }
-
-      submitButton.setAttribute('type', 'submit');
-  
-      return;
+      let errors = document.querySelectorAll('.error');
+			if (errors) {
+				errors.forEach((ele) => ele.remove());
+			}
+			validateReviewData(event, submitButton);
     });
   }
 });
@@ -347,21 +517,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const editSubmitButton = document.getElementById('editReviewSubmit');
   if (editSubmitButton) {
     editSubmitButton.addEventListener('click', function(event) {
-  
-      const title = document.getElementById('edit-title').value;
-      const content = document.getElementById('edit-content').value;
-      const rating = document.getElementById('edit-rating').value;
-      
-      const errors = validateReviewData(title, content, rating);
-      if (errors.length > 0) {
-        reviewErrorMessage.innerText = errors.join(" ");
-        reviewErrorMessage.style.display = 'block';
-        return;
-      }
-
-      editSubmitButton.setAttribute('type', 'submit');
-  
-      return;
+      let errors = document.querySelectorAll('.error');
+			if (errors) {
+				errors.forEach((ele) => ele.remove());
+			}
+			validateEditReviewData(event, editSubmitButton);
     });
   }
 
@@ -387,22 +547,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //add comment
   const commentSubmitButton = document.getElementById('commentSubmit');
-  const commentErrorMessage = document.getElementById('comment_error_message');
 
   if (commentSubmitButton) {
     commentSubmitButton.addEventListener('click', function(event) {
-      const content = document.getElementById('commentContent').value;
-
-      const errors = validateCommentData(content);
-      if (errors.length > 0) {
-        commentErrorMessage.innerText = errors.join(" ");
-        commentErrorMessage.style.display = 'block';
-        return;
-      }
-
-      commentSubmitButton.setAttribute('type', 'submit');
-  
-      return;
+      let errors = document.querySelectorAll('.error');
+			if (errors) {
+				errors.forEach((ele) => ele.remove());
+			}
+			validateCommentData(event, commentSubmitButton);
     });
   }
 
@@ -425,21 +577,11 @@ document.addEventListener('DOMContentLoaded', function () {
   editCommentSubmitButtons.forEach((item) => { 
     item.addEventListener('click', function(event) {
       const commentIndex = item.getAttribute("data-index-id");
-      const CommentErrorMessage = document.getElementById(`comment_error_message_${commentIndex}`);
-  
-      const content = document.getElementById(`editCommentContent_${commentIndex}`).value;
-
-      const errors = validateCommentData(content);
-      if (errors.length > 0) {
-        CommentErrorMessage.innerText = errors.join(" ");
-        CommentErrorMessage.style.display = 'block';
-        // item.disabled = false;
-        return;
-      }
-
-      item.setAttribute('type', 'submit');
-  
-      return;
+      let errors = document.querySelectorAll('.error');
+			if (errors) {
+				errors.forEach((ele) => ele.remove());
+			}
+			validateEditCommentData(event, item, commentIndex);
     });
   })
 
