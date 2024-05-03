@@ -1,7 +1,7 @@
 // Import the express router as shown in the lecture code
 // Note: please do not forget to export the router!
 import { Router } from 'express';
-import { reviewData, commentData } from "../data/index.js";
+import { parksData, reviewData, commentData } from "../data/index.js";
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureAdmin } from '../middleware.js'
 import validation from '../validation.js';
 import multer from 'multer';
@@ -37,12 +37,28 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: function (req, file, cb) {
-    if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png') {
-      return cb(new Error('Only image files are allowed!'), false);
+    if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/png') {
+      return cb(new Error('Invalid file type. Please upload a JPG, JPEG, PNG'), false);
     }
     cb(null, true);
   }
 });
+
+const checkMinPhotoSize = (req, res, next) => {
+  const minFileSize = 1024;
+
+  if (req.files) {
+    for (let file of req.files) {
+      if (file.size < minFileSize) {
+        return res.status(400).res.render('addReview', {
+          hasErrors: true,
+          errors: "Photo too small, please select photos more than 1KB."
+        });
+      }
+    }
+  }
+  next();
+};
 
 const maxFiles = 5;
 const uploadPhotos = upload.array('photos', maxFiles);
@@ -58,18 +74,20 @@ router
 
     try {
       parkId = validation.checkId(parkId, 'id parameter in URL');
-      res.render('addReview', {
-        documentTitle: 'Add Review',
-        parkId: parkId
-      });
-    } catch (e) {
-      res.status(500).json({ error: e.message });
-      if (!res.headersSent) {
-        res.status(500).send("Error processing your request.");
+      const parkDetail = await parksData.getParkById(parkId);
+      if (parkDetail) {
+        res.render('addReview', {
+          documentTitle: 'Add Review',
+          parkId: parkId
+        });
+      } else {
+        res.status(404).render('error', { message: 'Page not Found' });
       }
+    } catch (e) {
+      res.status(404).render('error', { message: 'Page not Found' });
     }
   })
-  .post(uploadPhotos, ensureLoggedIn, async (req, res) => {
+  .post(uploadPhotos, checkMinPhotoSize, ensureLoggedIn, async (req, res) => {
     let parkId = req.params.parkObjectId;
     let reviewInfo = req.body;
 
@@ -79,9 +97,9 @@ router
     }
 
     if (!reviewInfo || Object.keys(reviewInfo).length === 0) {
-      return res
-        .status(400)
-        .json({ error: 'There are no fields in the request body' });
+      return res.status(400).render('error', {
+        message: 'There are no fields in the request body'
+      });
     }
 
     let { title, content, rating } = reviewInfo;
@@ -92,15 +110,12 @@ router
       content = validation.checkString(content, 'Content');
       rating = validation.checkRating(rating, 'Rating');
     } catch (e) {
-      return res.status(400).render('addReview', {
-        documentTitle: 'Add Review',
-        parkId: parkId,
-        hasErrors: true,
-        errors: e.toString()
+      return res.status(400).render('error', {
+        message: e.toString()
       });
     }
     try {
-      const { reviewSubmittedCompleted , reviewId} = await reviewData.createReview(
+      const { reviewSubmittedCompleted, reviewId} = await reviewData.createReview(
         req.params.parkObjectId,
         req.session.user.userId,
         title,
@@ -115,10 +130,12 @@ router
         title: title
       }
       const addInfo = await addToReviews(req.session.user.userId, pushInfo);
-      res.redirect(`/park/${parkId}`);
+      if (reviewSubmittedCompleted)
+        res.redirect(`/park/${parkId}`);
+      else 
+        res.status(500).render('error', { message: 'Internal Server Error' });
     } catch (e) {
       return res.status(400).render('addReview', {
-        documentTitle: 'Add Review',
         parkId: parkId,
         hasErrors: true,
         errors: e.toString()
@@ -131,7 +148,7 @@ router
   .get(async (req, res) => {
     try {
       const reviewId = validation.checkId(req.params.reviewId);
-      const review = await reviewData.getReview(reviewId);
+      const {parkId, review} = await reviewData.getReview(reviewId);
       const comments = await commentData.getAllComments(reviewId);
       const userId = req.session.user ? req.session.user.userId : null;
 
@@ -151,19 +168,19 @@ router
         reviewId: req.params.reviewId,
         isAuthor: review.userId === userId,
         isLogin: !!req.session.user,
-        parkId: req.params.parkId,
+        parkId: parkId,
         commentIndex: 0
       })     
     } catch (e) {
-      res.status().redirect('/');
+      res.status(404).render('error', { message: 'Page not Found' });
     }
   })
   .post(ensureLoggedIn, async (req, res) => {
     let reqObject = req.body;
     if (!reqObject || Object.keys(reqObject).length === 0) {
-      return res
-        .status(400)
-        .json({ error: 'There are no fields in the request body' });
+      return res.status(400).render('error', {
+        message: 'There are no fields in the request body'
+      });
     }
     const userId = req.session.user.userId;
     
@@ -183,7 +200,9 @@ router
       if (rating)
         rating = validation.checkRating(rating, 'Rating');
     } catch (e) {
-      return res.status(400).json({ error: e });
+      return res.status(400).render('error', {
+        message: e.toString()
+      });
     }
 
     let updateObject = {
@@ -193,39 +212,35 @@ router
     }
 
     try {
-      
-      const review = await reviewData.getReview(req.params.reviewId);
+      const {parkId, review} = await reviewData.getReview(req.params.reviewId);
       if (review.userId !== userId) {
-          return res.status(403).json({ error: "You do not have permission to modify this review." });
+        return res.status(403).render('error', {
+          message: "You do not have permission to edit this review."
+        });
       }
       const updatedReview = await reviewData.updateReview(
         req.params.reviewId,
         updateObject
       )
-    
     } catch (e) {
-      return res.status(404).send({ error: e });
+      res.status(500).render('error', { message: 'Internal Server Error' });
     }
 
     try {
-      const review = await reviewData.getReview(req.params.reviewId);
+      const {parkId, review} = await reviewData.getReview(req.params.reviewId);
       const isAuthor = req.session.user && (req.session.user.userId === review.userId);
       if (isAuthor) {
         res.redirect(`/review/${req.params.reviewId}`);
       }
       else {
-        res.json({
-          success: false,
-          message: 'Review edited failed',
-          redirectUrl: `/review/${req.params.reviewId}`
-        })
+        return res.status(400).render('error', {
+          message: "Review edited failed"
+        });
       }
     } catch (e) {
-      res.json({
-        success: false,
-        message: 'Review edited failed',
-        redirectUrl: `/review/${req.params.reviewId}`
-      })
+      return res.status(400).render('error', {
+        message: "Review edited failed"
+      });
     }
   })
   .delete(ensureLoggedIn, upload.none(), async (req, res) => {
@@ -233,41 +248,27 @@ router
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId)
     } catch (e) {
-      return res.status(400).json({ error: e });
+      res.status(404).render('error', { message: 'Page not Found' });
     }
     
     try {
-      const review = await reviewData.getReview(req.params.reviewId);
+      let {parkId, review} = await reviewData.getReview(req.params.reviewId);
       if (review.userId !== userId) {
-          return res.status(403).json({ error: "You do not have permission to delete this review." });
+        return res.status(403).render('error', {
+          message: "You do not have permission to delete this review."
+        });
       }
       let deletedReview = await reviewData.removeReview(req.params.reviewId);
       let deleteInfo = await deleteReviews(userId, req.params.reviewId);
-      const parkId = deletedReview._id.toString();
+      parkId = deletedReview._id.toString();
       res.json({redirectUrl: '/park/' + parkId});
     } catch (e) {
-      return res.status(404).send({ error: e });
+      res.status(500).render('error', { message: 'Internal Server Error' });
     }
   });
 
 router
   .route('/review/:reviewId/addcomment')
-  .get(ensureLoggedIn, async (req, res) => {
-    let reviewId = req.params.reviewId;
-
-    try {
-      reviewId = validation.checkId(reviewId, 'id parameter in URL');
-      res.render('addComment', {
-        documentTitle: 'Add Comment',
-        reviewId: reviewId
-      });
-    } catch (e) {
-      res.status(500).json({ error: e.message });
-      if (!res.headersSent) {
-        res.status(500).send("Error processing your request.");
-      }
-    }
-  })
   .post(ensureLoggedIn, async (req, res) => {
     let reqObj = req.body;
 
@@ -275,9 +276,16 @@ router
 
     try {
       req.params.reviewId = validation.checkId(req.params.reviewId);
-      content = validation.checkString(content, 'Content');
     } catch (e) {
-      return res.status(400).json({ error: e });
+      res.status(404).render('error', { message: 'Page not Found' });
+    }
+
+    try {
+      content = validation.checkString(content, 'Content');
+    } catch(e) {
+      return res.status(400).render('error', {
+        message: e.toString()
+      });
     }
 
     try {
@@ -289,32 +297,18 @@ router
       );
       res.redirect(`/review/${req.params.reviewId}`);
     } catch (e) {
-      res.json({
-        success: false,
-        message: 'Comment added fail'
-      })
+      res.status(500).render('error', { message: 'Internal Server Error' });
     }
   });
 
 router
   .route('/review/:reviewId/comment/:commentId')
-  .get(async (req, res) => {
-    let commentId = validation.checkId(req.params.commentId);
-
-    try {
-      const comment = await commentData.getComment(commentId);
-      return res.json(comment);
-    } catch (e) {
-      return res.status(404).json({ error: 'Comment not found or could not be retrieved' });
-    }
-  })
   .post(ensureLoggedIn, upload.none(), async (req, res) => {
     const userId = req.session.user.userId;
     let updateObject = req.body;
     if (!updateObject || Object.keys(updateObject).length === 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'There are no fields in the request body'  
+      return res.status(400).render('error', {
+        message: 'There are no fields in the request body'
       });
     }
 
@@ -323,9 +317,8 @@ router
       if (content)
         content = validation.checkString(content, 'Content');
     } catch (e) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Content must be a non-empty string."  
+      return res.status(400).render('error', {
+        message: e.toString()
       });
     }
 
@@ -333,9 +326,8 @@ router
       req.params.commentId = validation.checkId(req.params.commentId);
       req.params.reviewId = validation.checkId(req.params.reviewId);      
     } catch (e) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Fail to load comment.'  
+      return res.status(400).render('error', {
+        message: e.toString()
       });
     }
 
@@ -343,15 +335,13 @@ router
       const comment = await commentData.getComment(req.params.commentId);
       const isAuthor = req.session.user && (userId === comment.userId);
       if (!isAuthor) {
-        return res.status(403).json({ 
-          success: false, 
+        return res.status(403).render('error', {
           message: "You do not have permission to edit this comment." 
         });
       }
     } catch (e) {
-      return res.status(403).json({ 
-        success: false, 
-        message: "You do not have permission to edit this comment." 
+      return res.status(403).render('error', {
+        message: e.toString()
       });
     }
 
@@ -361,17 +351,8 @@ router
         updateObject
       );
       res.redirect(`/review/${req.params.reviewId}`);
-      // res.json({
-      //   success: true, 
-      //   message: 'Success to update comment.',
-      //   redirectUrl: `/review/${req.params.reviewId}`,
-      //   commentIsAuthor: true
-      // })
     } catch (e) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Fail to update comment.'  
-      });
+      res.status(500).render('error', { message: 'Internal Server Error' });
     }
   })
   .delete(ensureLoggedIn, upload.none(), async (req, res) => {
@@ -380,18 +361,22 @@ router
       req.params.commentId = validation.checkId(req.params.commentId);
       req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
-      return res.status(400).json({ error: e });
+      return res.status(400).render('error', {
+        message: e.toString()
+      });
     }
     
     try {
       const comment = await commentData.getComment(req.params.commentId);
       if (comment.userId !== userId) {
-          return res.status(403).json({ error: "You do not have permission to delete this comment." });
+        return res.status(403).render('error', {
+          message: "You do not have permission to delete this comment." 
+        });
       }
       let deletedComment = await commentData.removeComment(req.params.commentId);
       res.json({redirectUrl: '/review/' + req.params.reviewId});
     } catch (e) {
-      return res.status(404).send({ error: e });
+      res.status(500).render('error', { message: 'Internal Server Error' });
     }
   })
 

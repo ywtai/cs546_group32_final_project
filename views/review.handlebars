@@ -1,3 +1,8 @@
+{{#if hasErrors}}
+<p class=" not-found">
+  {{errors}}
+</p>
+{{/if}}
 <main>
     <article class="post">
         <h2>{{title}}</h2>
@@ -76,4 +81,5 @@
             <p>You must be <a href="/auth/login">logged in</a> to add comments.</p>
         {{/if}}
     </article>
+    <a href="/park/{{parkId}}" class="col">Go Back To Park</a>
 </main>

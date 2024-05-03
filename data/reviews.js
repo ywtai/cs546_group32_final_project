@@ -80,9 +80,17 @@ const exportedMethods = {
 
     if (reviewInfo === null) throw `Error: no review exists with id: "${reviewId}"`;
 
+    const parkId = await parkCollection.findOne(
+      {"reviews._id": new ObjectId(reviewId)},
+      {projection: {_id: 1}}
+    )
+
     const review = reviewInfo.reviews[0];
 
-    return review;
+    return {
+      parkId: parkId._id.toString(), 
+      review: review
+    };
   },
 
   async updateReview(reviewId, updateObject) {
