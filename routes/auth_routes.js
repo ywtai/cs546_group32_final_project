@@ -4,6 +4,7 @@ const router = Router();
 import helpers from '../helpers.js';
 import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
+import { parksData, reviewData } from "../data/index.js";
 
 router.use(logRequests);
 
@@ -115,6 +116,12 @@ router
     req.session.user.reviews = user.reviews;
     req.session.user.likedReviews = user.likedReviews;
 
+    let reviews = req.session.user.reviews;
+    for (let i=0; i<reviews.length; i++) {
+      let newReview = (await reviewData.getReview(reviews[i].reviewId)).review;
+      reviews[i]['photo'] = newReview.photos?.[0] ?? '';
+    }
+
   res.render('user', {
 
     currentTime: new Date().toUTCString(),
@@ -125,7 +132,7 @@ router
     bio: req.session.user.bio,
     personalParkPassport: req.session.user.personalParkPassport,
     favorite: req.session.user.favorite,
-    reviews: req.session.user.reviews,
+    reviews: reviews,
     likedReviews: req.session.user.likedReviews,
     comments: req.session.user.comments
   })
