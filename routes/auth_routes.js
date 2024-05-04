@@ -55,7 +55,6 @@ router
         dateOfBirth,
         bio,
         password);
-
       if (user.insertedUser) {
         res.redirect('/auth/login')
       }
@@ -74,7 +73,7 @@ router
     try {
       helpers.checkIfValid(usernameOrEmail, password)
     } catch (e) {
-      return res.status(400).render('error', { title: "Error", message: e });
+      return res.status(400).render('login', { title: "Login", message: e });
     }
 
     try {
@@ -83,7 +82,7 @@ router
 
 
     } catch (e) {
-      return res.status(400).render('error', { title: "Error", message: e });
+      return res.status(400).render('login', {title: "Login", message: e });
     }
 
     try {
@@ -102,35 +101,9 @@ router
       }
       redirectBasedOnRole(req, res);
     } catch (e) {
-      return res.status(500).render('login', {title: "Login", error: e.message});
+      return res.status(500).render('login', {title: "Login", error: e});
     }
   });
-
-
-//   router.get('/user', ensureLoggedIn, async(req, res) => {
-//     const user = await getUserById(req.session.user.userId); 
-//     const park = await getParkById(req.session)
-
-//     req.session.user.favorite = user.favorite;
-//     req.session.user.personalParkPassport = user.personalParkPassport;
-//     req.session.user.reviews = user.reviews;
-//     req.session.user.likedReviews = user.likedReviews;
-
-//   res.render('user', {
-
-//     currentTime: new Date().toUTCString(),
-//     userId: req.session.user.userId,
-//     userName: req.session.user.userName,
-//     email: req.session.user.email,
-//     dateOfBirth: req.session.user.dateOfBirth,
-//     bio: req.session.user.bio,
-//     personalParkPassport: req.session.user.personalParkPassport,
-//     favorite: req.session.user.favorite,
-//     reviews: req.session.user.reviews,
-//     likedReviews: req.session.user.likedReviews,
-//     comments: req.session.user.comments
-//   })
-// });
 
 router.get('/user', ensureLoggedIn, async(req, res) => {
   try {

@@ -13,8 +13,10 @@
         <input type="submit" value="Login">
     </form>
     <div id="error" class="error" hidden>I'm an error. I will change through Client-Side JS</div>
-    {{#if message}}
-        <p> {{this.message}}</p>
+    {{#if error}}
+        <div id="error" class="error">{{error}}</div>
+    {{else}}
+        <div id="error" class="error" hidden></div>
     {{/if}}
     <a class="login-a" href="/auth/register">Click here to register!</a>
     <script src="../public/js/client_side_validation.js"></script>
