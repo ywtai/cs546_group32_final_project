@@ -51,8 +51,7 @@ const exportedMethods = {
       if (isNaN(rating)) throw `Error: rating is not a number`;
       if (rating < 1 || rating > 5) throw `Error: rating should be between 1 to 5`;
       if (rating % 1 !== 0) {
-        if (rating.toString().split(".")[1].length > 1)
-          throw `Error: decimal of rating are more than 1`;
+        throw `Error: rating should be integer`;
       }
       
       return rating;

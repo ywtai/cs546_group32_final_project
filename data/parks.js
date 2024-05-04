@@ -37,9 +37,6 @@ const exportedMethods = {
 		parkName = validation.checkString(parkName, "Park Name");
 		state = validation.checkString(state, "State");
 		description = validation.checkString(description, "Description");
-		// photos = validation.checkArray(photos, "Photos");
-		// activities = validation.checkArray(activities, "Activities");
-		// address = validation.checkArray(address, "Address");
     
     const parkCollection = await parks();
     const insertInfo = await parkCollection.insertOne(newPark);
