@@ -62,7 +62,7 @@ router.route('/searchparks')
             }
 
             if (parkList.length === 0) {
-                res.status(404).render('error', { error: `We're sorry, but no results were found.` });
+                res.status(404).render('error', { message: `We're sorry, but no results were found.` });
             } else {
                 const totalPages = Math.ceil(totalParks / pageSize);
                 const hasPreviousPage = page > 1;
@@ -142,7 +142,7 @@ router.route('/searchparks')
             }
         } catch (e) {
             console.error(e);
-            res.status(500).render('error', { error: 'Internal Server Error. Please try again later.' });
+            res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' });
         }
     })
     .post(async (req, res) => {
