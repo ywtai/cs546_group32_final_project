@@ -12,7 +12,7 @@
         <p class="review-username">{{userName}}</p>
     </div>
     {{#if photos}} 
-        <div class="slideshow-container">
+        <div id="hasSlides" class="slideshow-container">
             {{#each photos}}
             <div class="mySlides fade">
                 <img class="parkReviewImage" alt="Photo of Park" onerror="this.onerror=null;this.src='/public/icon/no-image.png';" src="/public{{this}}">
