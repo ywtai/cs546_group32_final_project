@@ -246,7 +246,6 @@ dl dd {
     border-radius: 8px;
     background-color: #f0ece2;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: inline-grid;
 }
 
 .comment {
@@ -255,7 +254,6 @@ dl dd {
     border-radius: 8px;
     background-color: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: inline-grid;
 }
 
 .comment-content {
@@ -273,11 +271,10 @@ dl dd {
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: inline-grid;
 }
 
 .commentSubmit-btn, .go-back, .editComment, .editCommentSubmit, .deleteComment, 
-#editReviewSubmit, #editForm, #Delete, .editCommentSubmit{
+#editReviewSubmit, #editForm, #Delete, .editCommentSubmit, .addReview-button{
     display: block;
     text-align: center;
     margin-top: 20px;
@@ -291,12 +288,12 @@ dl dd {
 }
 
 .commentSubmit-btn:hover, .go-back:hover, .editComment:hover, .editCommentSubmit:hover, .deleteComment:hover, 
-#editReviewSubmit:hover, #editForm:hover, #Delete:hover, .editCommentSubmit:hover {
+#editReviewSubmit:hover, #editForm:hover, #Delete:hover, .editCommentSubmit:hover, .addReview-button:hover{
     background-color: #cd8a1f;
 }
 
 .commentSubmit-btn, .editComment, .editCommentSubmit, .deleteComment, 
-#editReviewSubmit, #editForm, #Delete {
+#editReviewSubmit, #editForm, #Delete, .addReview-button {
     max-width: 150px;
     width: 100%;
     margin-left: 10px;

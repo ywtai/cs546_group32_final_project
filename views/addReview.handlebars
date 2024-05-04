@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/public/css/park.css">
+<link rel="stylesheet" href="/public/css/review.css">
 {{#if hasErrors}}
 <p class="not-found">
   {{errors}}
@@ -7,7 +7,7 @@
 <div class='review-detail'>
     <article class="container">
         <h1>Submit Your Review</h1>
-        <form action="/addReview/{{parkId}}" method="POST" id="addReviewForm" enctype="multipart/form-data">
+        <form aclass="edit-review-container" ction="/addReview/{{parkId}}" method="POST" id="addReviewForm" enctype="multipart/form-data">
             <section class="info">
                 <dl>
                     <dt><label for="title">Title:</label></dt>
@@ -23,5 +23,5 @@
             <button id="reviewSubmit" name="reviewSubmit" type="button" class="addReview-button">Submit Review</button>
         </form>
     </article>
-    <a href="/park/{{parkId}}" class="col">Go Back To Park</a>
+    <a href="/park/{{parkId}}" class="go-back">Go Back To Park</a>
 </div>
