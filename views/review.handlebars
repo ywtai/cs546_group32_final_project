@@ -1,20 +1,32 @@
-<link rel="stylesheet" href="/public/css/park.css">
+<link rel="stylesheet" href="/public/css/review.css">
 {{#if hasErrors}}
 <p class=" not-found">
   {{errors}}
 </p>
 {{/if}}
-<article class="post">
-    <h2>{{title}}</h2>
-    <p>{{reviewDate}}</p>
-    <p>{{userName}}</p>
-    <p>{{rating}} stars</p>
 
-    {{#if photos}}  
-        {{#each photos}}
-            <img class="parkReviewImage" alt="Photo of Park" onerror="this.onerror=null;this.src='/public/icon/no-image.png';" src="/public{{this}}">
-        {{/each}}
+<article class="container">
+    <h1>{{title}}</h1>
+    <div class="username-container">
+        <img class="user-icon" alt="user" src="/public/icon/user.png">
+        <p class="review-username">{{userName}}</p>
+    </div>
+    {{#if photos}} 
+        <div class="slideshow-container">
+            {{#each photos}}
+            <div class="mySlides fade">
+                <img class="parkReviewImage" alt="Photo of Park" onerror="this.onerror=null;this.src='/public/icon/no-image.png';" src="/public{{this}}">
+            </div>
+            {{/each}}
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
     {{/if}}
+    <p class="review-content">{{content}}</p>
+    <div class="date-rating">
+        <p class="date">Review Date : {{reviewDate}}</p>
+        <p class="rating">{{rating}} stars</p>
+    </div>
 
     {{#if isLiked}}
         <button class="like-btn" data-postid="{{reviewId}}" data-liked="1">
@@ -29,9 +41,8 @@
     {{/if}}
 
     <div id="postDescription" class="description">
-        <p>{{content}}</p>
         {{#if isAuthor}}
-            <form action="/review/{{reviewId}}" method="POST" id="editReviewForm" style="display: none;">
+            <form class="edit-review-container" action="/review/{{reviewId}}" method="POST" id="editReviewForm" style="display: none;">
                 <div class="review-info">
                     <h3>Edit Review</h3>
                     <dl>
@@ -45,8 +56,10 @@
                 </div>
                 <button type="button" id="editReviewSubmit" name="editReviewSubmit" >Save Changes</button>
             </form>
-            <button id="editForm" name="editForm" type="button">Edit</button>
-            <button id="Delete" name="Delete" data-review-id="{{reviewId}}">Delete</button>
+            <div class="edit-delete-container">
+                <button id="editForm" name="editForm" type="button">Edit</button>
+                <button id="Delete" name="Delete" data-review-id="{{reviewId}}">Delete</button>
+            </div>
         {{/if}}
     </div>
     <div class="comments">
@@ -54,37 +67,41 @@
         {{#if comment}}
             {{#each comment}}
                 <div class="comment" id="comment-{{this._id}}">
-                    <p><strong>{{this.userName}}:</strong> {{this.content}}</p>
+                    <div class="username-container">
+                        <img class="user-icon" alt="user" src="/public/icon/user.png">
+                        <p class="review-username"><strong>{{this.userName}}:</strong></p>
+                    </div>
+                        <p class="comment-content">{{this.content}}</p>
                     {{#if this.commentIsAuthor}}
-                        <form action="/review/{{../reviewId}}/comment/{{this._id}}" method="POST" id="editCommentForm_{{@index}}" style="display: none;">
-                            <div class="edit-comment-info">
-                                <h3>Edit Comment</h3>
+                        <form class="edit-comment-info" action="/review/{{../reviewId}}/comment/{{this._id}}" method="POST" id="editCommentForm_{{@index}}" style="display: none;">
                                 <dl>
                                     <dt><label for="editCommentContent_{{@index}}">Edit Comment:</label></dt>
                                     <dd><textarea id="editCommentContent_{{@index}}" name="content" placeholder="Content" data-index-id="{{@index}}"></textarea></dd>
                                 </dl>
-                            </div>
-                            <button id="editCommentSubmit_{{@index}}" name="editCommentSubmit" type="button" data-index-id="{{@index}}" data-review-id="{{reviewId}}" data-comment-id="{{this._id}}">Save Changes</button>
+                            <button id="editCommentSubmit_{{@index}}" name="editCommentSubmit" class="editCommentSubmit" type="button" data-index-id="{{@index}}" data-review-id="{{reviewId}}" data-comment-id="{{this._id}}">Save Changes</button>
                         </form>
-                        <button id="editComment_{{@index}}" class="editComment" data-index-id="{{@index}}">Edit</button>
-                        <button id="deleteComment_{{@index}}" class="deleteComment" data-index-id="{{@index}}" data-review-id="{{../reviewId}}" data-comment-id="{{this._id}}">Delete</button>
+                        <div class="edit-delete-container">
+                            <button id="editComment_{{@index}}" class="editComment" data-index-id="{{@index}}">Edit</button>
+                            <button id="deleteComment_{{@index}}" class="deleteComment" data-index-id="{{@index}}" data-review-id="{{../reviewId}}" data-comment-id="{{this._id}}">Delete</button>
+                        </div>
                     {{/if}}
                 </div>
             {{/each}}
         {{/if}}
-    </div>
-    {{#if isLogin}}
-        <form action="/review/{{reviewId}}/addcomment" method="POST" id="addCommentForm">
+        {{#if isLogin}}
+        <form class="addcomment-form" action="/review/{{reviewId}}/addcomment" method="POST" id="addCommentForm">
             <div class="comment-info">
                 <dl>
-                    <dt><label for="commentContent">Add a Comment:</label></dt>
+                    <dt><label for="commentContent" class="add-comment">Add a Comment:</label></dt>
                     <dd><textarea id="commentContent" name="commentContent" required></textarea></dd>
                 </dl>
             </div>
-            <button id="commentSubmit" name="commentSubmit" type="button" class="commentSubmit-button">Submit Comment</button>
+            <button id="commentSubmit" name="commentSubmit" type="button" class="commentSubmit-btn">Submit Comment</button>
         </form>
     {{else}}
-        <p>You must be <a href="/auth/login">logged in</a> to add comments.</p>
+        <p class="login-comment">You must be <a href="/auth/login">logged in</a> to add comments.</p>
     {{/if}}
+    </div>
+    
 </article>
-<a href="/park/{{parkId}}" class="col">Go Back To Park</a>
+<a href="/park/{{parkId}}" class="go-back">Go Back To Park</a>

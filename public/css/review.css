@@ -1,0 +1,376 @@
+.container {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3, h4 {
+    color: #333;
+}
+
+h1 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h2, h3, h4 {
+    margin-bottom: 8px;
+}
+
+h2 {
+    font-size: 25px;
+}
+
+dl {
+    margin-left: 5px;
+}
+
+dl dt {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+dl dd {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.heart {
+    width: 25px;
+    height: auto;
+    vertical-align: middle;
+}
+
+.username-container{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+.user-icon {
+    width: 45px;
+}
+
+.review-username {
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.review-content {
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.date-rating {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding-left: 10px;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.rating {
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.search-other {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px 0;
+    background-color: #c7b198;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.search-other:hover {
+    background-color: #cd8a1f;
+}
+
+.ratings {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f0ece2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: inline-grid;
+}
+
+.review-table {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.review-element {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 10px 20px 10px;
+    position: relative;
+    min-width: 200px;
+    min-height:200px;
+    justify-content: center;
+}
+
+.review-content {
+    padding-top: 10px;
+    color: black;
+    font-size: 15;
+    display: flex;
+}
+
+.review-title {
+    position: absolute;
+    bottom: 32px;
+    left: 20px;
+    margin: 0;
+    color: #183657;
+}
+
+.review-user {
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    margin: 0;
+    color: black;
+}
+
+@media (max-width: 768px) {
+    .container, main {
+        padding: 10px;
+    }
+    button {
+        width: 100%;
+    }
+}
+
+.parkReviewImage {
+    width: 50%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    display: block;
+}
+
+.slideshow-container {
+    max-width: 1000px;
+    width: 80%;
+    position: relative;
+    margin: auto;
+    overflow: hidden;
+}
+
+.mySlides {
+    position: relative;
+    width: 100%;
+    display: none;
+    text-align: center;
+}
+
+.mySlides img {
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+}
+
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: gray;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+}
+
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.active, .dot:hover {
+    background-color: #717171;
+}
+
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ccc; 
+    font-size: 24px;
+    transition: color 0.3s ease;
+    padding-right: 20px;
+}
+
+.comments {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f0ece2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: inline-grid;
+}
+
+.comment {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: inline-grid;
+}
+
+.comment-content {
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.login-comment {
+    margin-top: 20px;
+}
+
+.addcomment-form {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: inline-grid;
+}
+
+.commentSubmit-btn, .go-back, .editComment, .editCommentSubmit, .deleteComment, 
+#editReviewSubmit, #editForm, #Delete, .editCommentSubmit{
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px 0;
+    background-color: #c7b198;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.commentSubmit-btn:hover, .go-back:hover, .editComment:hover, .editCommentSubmit:hover, .deleteComment:hover, 
+#editReviewSubmit:hover, #editForm:hover, #Delete:hover, .editCommentSubmit:hover {
+    background-color: #cd8a1f;
+}
+
+.commentSubmit-btn, .editComment, .editCommentSubmit, .deleteComment, 
+#editReviewSubmit, #editForm, #Delete {
+    max-width: 150px;
+    width: 100%;
+    margin-left: 10px;
+}
+
+.add-comment {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+#commentcontent {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+textarea{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+textarea::-webkit-input-placeholder{
+    color:rgba(0, 0, 0, 0.25);
+    line-height:33px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+textarea::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+    color: transparent;
+}
+
+.edit-delete-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.edit-comment-info {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f0ece2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: inline-grid;
+}
+
+.edit-review-container {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f0ece2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: inline-grid;
+}
