@@ -135,11 +135,6 @@ router
 router.get('/user', ensureLoggedIn, async(req, res) => {
   try {
       const user = await getUserById(req.session.user.userId);
-      let reviews = req.session.user.reviews;
-      for (let i=0; i<reviews.length; i++) {
-        let newReview = (await reviewData.getReview(reviews[i].reviewId)).review;
-        reviews[i]['photo'] = newReview.photos?.[0] ?? '';
-      }
       const parksPromises = user.personalParkPassport.map(async (tmp) => {
           const passportPark = await parksData.getParkById(tmp.parkId);
           return {
@@ -156,6 +151,11 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
       req.session.user.personalParkPassport = personalParkPassportParks;
       req.session.user.reviews = user.reviews;
       req.session.user.likedReviews = user.likedReviews;
+      let reviews = req.session.user.reviews;
+      for (let i=0; i<reviews.length; i++) {
+        let newReview = (await reviewData.getReview(reviews[i].reviewId)).review;
+        reviews[i]['photo'] = newReview.photos?.[0] ?? '';
+      }
 
   res.render('user', {
 
@@ -172,7 +172,6 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
     comments: req.session.user.comments
   })
 } catch (error) {
-  // Handle error
   console.error(error);
   res.status(500).send('Internal Server Error');
 }
