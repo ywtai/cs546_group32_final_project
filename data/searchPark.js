@@ -62,7 +62,7 @@ export const searchByActivity = async (activityIds, pageSize, offset) => {
 export const searchTop5 = async () => {
     try {
         const parkCollection = await parks();
-        const parkList = await parkCollection.aggregate([{ $sort: { averageRating: 1 } },
+        const parkList = await parkCollection.aggregate([{ $sort: { averageRating: -1 } },
                                                         { $limit: 5 }]).toArray();
         return parkList;
     } catch (e) {
