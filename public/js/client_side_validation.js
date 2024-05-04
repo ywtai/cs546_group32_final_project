@@ -1,4 +1,3 @@
-
 let registerForm = document.getElementById('registration-form');
 let errorDiv = document.getElementById('error')
 let userName = document.getElementById('userName')
