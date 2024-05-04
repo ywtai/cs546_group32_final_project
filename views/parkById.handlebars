@@ -1,16 +1,20 @@
 <link rel="stylesheet" href="/public/css/park.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-<button class="favorite-btn" data-postid="{{parkId}}" data-favorited="0" data-parkname="{{parkName}}">
-{{#if favorite}}
-    <i class="fas fa-heart"></i> <!-- Favorited icon -->
-{{else}}
-    <i class="far fa-heart"></i> <!-- Unfavorited icon -->
-{{/if}}
-</button>
-<button class="addpassport" data-parkname="{{parkName}}" data-postid="{{parkId}}">
-    add to passport
-</button>
+<div class="fav-passport-container">
+    {{#if favorite}}
+        <button class="favorite-btn" data-postid="{{parkId}}" data-favorited="1" data-parkname="{{parkName}}">
+            <img class="heart" src="/public/icon/redheart.png" alt="favorite">
+        </button>
+    {{else}}
+        <button class="favorite-btn" data-postid="{{parkId}}" data-favorited="0" data-parkname="{{parkName}}">
+            <img class="heart" src="/public/icon/heart.png" alt="favorite">
+        </button>
+    {{/if}}
+
+    <button class="addpassport" data-parkname="{{parkName}}" data-postid="{{parkId}}">
+        Add to Passport
+    </button>
+</div>
 
 {{#each parkData}}
 <article class="container">
@@ -21,7 +25,7 @@
     <h2>Description</h2>
     <p class="description">{{this.description}}</p>
     <section class="info">
-        <h3>Park Info</h3>
+        <h2>Park Info</h2>
         <dl>
             <dt>Park Code:</dt>
             <dd>{{this.parkCode}}</dd>
@@ -42,29 +46,36 @@
         </dl>
     </section>
     <section class="ratings">
-        <h4 class="rating">User Reviews</h4>
+        <h3 class="rating">User Reviews</h3>
         {{#if this.reviews}}
-        <div class="my_coolratings_table">
+        <div class="review-table">
             {{#each this.reviews}}
-                {{#if this.photos}}
-                    <img class="parkReviewImage" alt="Photo of Park" onerror="this.onerror=null;this.src='/public/icon/no-image.png';" src="/public{{this.photos.[0]}}">
-                {{/if}}
-                <a class='reviewLink' href="/review/{{this._id}}">{{this.title}}</a><br>
-                {{!-- <a class='reviewLink' href="/review/{{this.userId}}">{{this.userName}}</a> --}}
-                {{!-- <p>User : {{this.userName}}</p>
-                <p>Review Date : {{this.reviewDate}}</p>
-                <p>Rating : {{this.rating}} stars</p>
-                <p>Content :</p>
-                <p>{{this.content}}</p> --}}
+                <div class="review-element">
+                    <a class='reviewLink' href="/review/{{this._id}}">
+                        {{#if this.photos}}
+                            <img class="parkReviewImage" alt="Photo of Park" onerror="this.onerror=null;this.src='/public/icon/no-image.png';" src="/public{{this.photos.[0]}}"><br>
+                        {{else}}
+                            <p class="review-content">{{this.content}}</p>
+                        {{/if}}
+                        <p class="review-title">{{this.title}}</p>
+                        <p class="review-user">{{this.userName}}</p>
+                    </a>
+                    {{!-- <a class='reviewLink' href="/review/{{this.userId}}">{{this.userName}}</a> --}}
+                    {{!-- <p>User : {{this.userName}}</p>
+                    <p>Review Date : {{this.reviewDate}}</p>
+                    <p>Rating : {{this.rating}} stars</p>
+                    <p>Content :</p>
+                    <p>{{this.content}}</p> --}}
+                </div>
             {{/each}}
         </div>
         {{else}}
         <p>No reviews yet.</p>
         {{/if}}
+        <a class="addReviewBtn" href="/addReview/{{parkId}}">Add a Review</a>
     </section>
 </article>
 {{/each}}
-<a class="addReviewBtn" href="/addReview/{{parkId}}">Add a Review</a><br>
 <a class="search-other" href="/">Search for Another Park</a>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -102,10 +113,10 @@
             })
             .then(data => {
                 if (data.favorited) {
-                    button.innerHTML = '<i class="fas fa-heart"></i>'; // Filled heart
+                    button.innerHTML = '<img class="heart" src="/public/icon/redheart.png" alt="favorite">';
                     button.dataset.favorited = "1";
                 } else {
-                    button.innerHTML = '<i class="far fa-heart"></i>'; // Empty heart
+                    button.innerHTML = '<img class="heart" src="/public/icon/heart.png" alt="favorite">';
                     button.dataset.favorited = "0";
                 }
             })

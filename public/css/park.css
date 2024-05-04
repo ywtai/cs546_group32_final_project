@@ -4,6 +4,7 @@
     border-radius: 8px;
     background-color: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: inline-grid;
 }
 
 h1, h2, h3, h4 {
@@ -11,32 +12,73 @@ h1, h2, h3, h4 {
 }
 
 h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 h2, h3, h4 {
     margin-bottom: 8px;
 }
 
-.park-poster {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-    margin-bottom: 15px;
+h2 {
+    font-size: 25px;
 }
 
-.description, .info, .ratings {
+.park-poster {
+    width: 70%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 50px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.description, .info {
     margin-bottom: 10px;
+    font-size: 15px;
+}
+
+dl {
+    margin-left: 5px;
 }
 
 dl dt {
     font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
 }
 
 dl dd {
-    margin-left: 20px;
-    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.fav-passport-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding-right: 10px;
+    margin-bottom: 20px;
+}
+
+.heart {
+    width: 25px;
+    height: auto;
+    vertical-align: middle;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ccc; 
+    font-size: 24px;
+    transition: color 0.3s ease;
+    padding-right: 20px;
 }
 
 .addpassport  {
@@ -47,15 +89,12 @@ dl dd {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
+    font-size: 1.2rem;
+    line-height: normal;
 }
 
 .addpassport:hover {
     background-color: #cd8a1f;
-}
-
-.favorite-btn i, .addpassport {
-    font-size: 1.2rem;
 }
 
 .addReviewBtn, .search-other {
@@ -66,21 +105,79 @@ dl dd {
     background-color: #c7b198;
     color: white;
     border-radius: 4px;
+    font-weight: bold;
 }
 
 .addReviewBtn:hover, .search-other:hover {
     background-color: #cd8a1f;
 }
 
-.my_coolratings_table a {
-    display: block;
-    margin-bottom: 5px;
-    color: #007bff;
+.addReviewBtn {
+    max-width: 200px;
+    width: 100%;
+    margin-left: 10px;
 }
 
-.reviewLink {
+.ratings {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f0ece2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: inline-grid;
+}
+
+.review-table {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.review-element {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 10px 20px 10px;
+    position: relative;
+    min-width: 200px;
+    min-height:200px;
+    justify-content: center;
+}
+
+.review-content {
+    padding-top: 10px;
+    color: black;
+    font-size: 15;
+    display: flex;
+}
+
+.review-title, .review-user {
+    font-size: 15px; /* Text size */
     font-weight: bold;
-    margin-bottom: 5px;
+}
+
+.review-title {
+    position: absolute;
+    bottom: 32px;
+    left: 20px;
+    margin: 0;
+    color: #183657;
+}
+
+.review-user {
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    margin: 0;
+    color: black;
 }
 
 @media (max-width: 768px) {
@@ -93,26 +190,9 @@ dl dd {
 }
 
 .parkReviewImage {
-    width: 20%;
+    width: 100%;
     height: auto;
     border-radius: 4px;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
+    display: block;
 }
-
-/* .favorite-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #ccc; 
-    font-size: 24px;
-    transition: color 0.3s ease; /
-}
-
-.favorite-btn:hover,
-.favorite-btn:focus {
-    color: #ff6666; 
-}
-
-.favorite-btn.favorited i {
-    color: #ff0000; 
-} */
