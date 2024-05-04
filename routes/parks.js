@@ -172,7 +172,7 @@ router.route('/park/:id')
                     });
                 } else {
                     const user = await getUserById(req.session.user.userId)
-                    const favorite = user.favorite.some(obj => obj.parkId === parkId);
+                  const favorite = user.favorite.some(obj => obj.parkId === parkId)
                     res.render('parkById', {
                         parkId: parkId,
                         parkData: allData,
@@ -184,10 +184,10 @@ router.route('/park/:id')
                     });
                 }
             } else {
-                res.status(400).render('error', { message: e.message??e });
+                res.status(400).render('error', { message: e.message });
             }
         } catch (e) {
-            res.status(500).render('error', { message: e.message??e });
+            res.status(500).render('error', { message: e.message });
         }
     });
 
@@ -216,13 +216,13 @@ router.route('/favorite/:id')
     });
 
 router.post('/passport/add/:id', ensureLoggedIn, async (req, res) => {
-    const parkName = req.body.parkName;
+    const visitDate = req.body.visitDate;
     const userId = req.session.user.userId; 
     const parkId = req.params.id
 
     const park = {
         parkId: parkId,
-        parkName: parkName
+        visitDate: visitDate
     }
 
   try {

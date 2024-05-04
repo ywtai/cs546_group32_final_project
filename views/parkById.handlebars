@@ -10,10 +10,12 @@
             <img class="heart" src="/public/icon/heart.png" alt="favorite">
         </button>
     {{/if}}
-
-    <button class="addpassport" data-parkname="{{parkName}}" data-postid="{{parkId}}">
-        Add to Passport
-    </button>
+    <div class="passport-entry">
+        <input type="date" class="date-select" id="date-select">
+        <button class="addpassport" data-postid="{{parkId}}">
+            Add to Passport
+        </button>
+    </div>
 </div>
 
 {{#each parkData}}
@@ -59,6 +61,8 @@
                         {{/if}}
                         <p class="review-title">{{this.title}}</p>
                         <p class="review-user">{{this.userName}}</p>
+                        <img class="heart" src="/public/icon/redheart.png" alt="like">
+                        <label>{{this.likes}}</label>
                     </a>
                     {{!-- <a class='reviewLink' href="/review/{{this.userId}}">{{this.userName}}</a> --}}
                     {{!-- <p>User : {{this.userName}}</p>
@@ -66,18 +70,7 @@
                     <p>Rating : {{this.rating}} stars</p>
                     <p>Content :</p>
                     <p>{{this.content}}</p> --}}
-                </div>
-                {{#if islike}}
-                          <button class="like-btn" data-postid="{{reviewId}}" data-liked="1">
-                            <img class="heart" src="/public/icon/redheart.png" alt="like">
-                            <label>{{this.likes}}</label>
-                          </button>
-                {{else}}
-                          <button class="like-btn" data-postid="{{reviewId}}" data-liked="0">
-                            <img class="heart" src="/public/icon/heart.png" alt="like">
-                            <label>{{this.likes}}</label>
-                          </button>
-                {{/if}}
+                </div>        
             {{/each}}
         </div>
 

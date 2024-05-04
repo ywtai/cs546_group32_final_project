@@ -636,6 +636,12 @@ if (hasSlides) {
 
 // favorite-btn AJAX
 document.addEventListener('DOMContentLoaded', function () {
+  const dateInputs = document.querySelectorAll('.date-select');
+  const today = new Date().toISOString().split('T')[0];
+
+  dateInputs.forEach(input => {
+    input.setAttribute('max', today);
+  });
         const favoriteButtons = document.querySelectorAll('.favorite-btn');
         const passportButtons = document.querySelectorAll('.addpassport');
 
@@ -681,30 +687,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function addToPassport(button) {
-        const parkName = button.dataset.parkname;
-        const parkId = button.dataset.postid;
-        fetch(`/passport/add/${parkId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ parkName: parkName, parkId: parkId })
-        })
-            .then(response => {
-                console.log(response, "passport")
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-                return response.json()
-            })
-            .then(data => {
-                if (data.added) {
-                    alert('Added to passport successfully!');
-                } else {
-                    alert('Park already exists!')
-                }
+      const parkId = button.dataset.postid;
+      const dateInput = button.parentElement.querySelector('.date-select');
+      const visitDate = dateInput.value;
 
-            })
-            .catch(error => console.error('Error:', error));
-    }
+      if (!visitDate) {
+        alert('Please select a date!');
+        return;
+      }
+      const today = new Date().toISOString().split('T')[0];
+      if (visitDate > today) {
+        alert('Please select a date that is not in the future.');
+        return;
+      }
+
+      fetch(`/passport/add/${parkId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({visitDate: visitDate })
+     })
+      .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
+        return response.json()
+    })
+    .then(data => {
+        if (data.added) {
+            alert(`Added to passport successfully!`);
+        } else {
+            alert('Park already exists in passport for selected date!');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
 // review like-btn
 document.addEventListener('DOMContentLoaded', function () {
