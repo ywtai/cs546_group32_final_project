@@ -2,7 +2,6 @@
 import Router from "express";
 const router = Router();
 import helpers from '../helpers.js';
-import { parksData } from "../data/index.js";
 import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
 
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
@@ -136,6 +135,11 @@ router
 router.get('/user', ensureLoggedIn, async(req, res) => {
   try {
       const user = await getUserById(req.session.user.userId);
+      let reviews = req.session.user.reviews;
+      for (let i=0; i<reviews.length; i++) {
+        let newReview = (await reviewData.getReview(reviews[i].reviewId)).review;
+        reviews[i]['photo'] = newReview.photos?.[0] ?? '';
+      }
       const parksPromises = user.personalParkPassport.map(async (tmp) => {
           const passportPark = await parksData.getParkById(tmp.parkId);
           return {
@@ -163,11 +167,17 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
     bio: req.session.user.bio,
     personalParkPassport: req.session.user.personalParkPassport,
     favorite: req.session.user.favorite,
-    reviews: req.session.user.reviews,
+    reviews: reviews,
     likedReviews: req.session.user.likedReviews,
     comments: req.session.user.comments
   })
+} catch (error) {
+  // Handle error
+  console.error(error);
+  res.status(500).send('Internal Server Error');
+}
 });
+
 
 
 router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
