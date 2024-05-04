@@ -179,6 +179,7 @@ router
           isAuthor: review.userId === userId,
           isLogin: !!req.session.user,
           parkId: parkId,
+          likes: review.likes,
           commentIndex: 0,
           favorite: false,
           helpers: {
@@ -187,7 +188,7 @@ router
         })
       } else {
         const user = await getUserById(req.session.user.userId)
-        const favorite = user.likedReviews.some(obj => obj === reviewId);
+        const isLiked = user.likedReviews.some(obj => obj.reviewId === reviewId);
         res.render('review', {
           title: review.title,
           userName: review.userName,
@@ -200,8 +201,9 @@ router
           isAuthor: review.userId === userId,
           isLogin: !!req.session.user,
           parkId: parkId,
+          likes: review.likes,
           commentIndex: 0,
-          favorite: favorite,
+          isLiked: isLiked,
           helpers: {
             checkImage: validation.checkImage
           }
@@ -427,36 +429,20 @@ router
 router
   .route('/like/:reviewId')
   .post(ensureLoggedIn, async (req, res) => {
-    const favorite = req.body.favorite;
+    const islike = req.body.islike;
     req.session.user.userId = validation.checkId(req.session.user.userId);
-    req.params.reviewId = validation.checkId(req.params.reviewId);
+    req.params.reviewId = validation.checkId(req.params.reviewId);  
     try {
-      if (favorite) {
-        const addtoLiked = await addToLiked(req.session.user.userId, req.params.reviewId)
-        res.json({ favorited: favorite, message: "Favorite status updated successfully" });
-      } else {
-        const updatedUser = await deleteLiked(req.session.user.userId, req.params.reviewId);
-        res.json({ favorited: favorite, message: "Favorite status updated successfully" });
-      }
-        
-    } catch (e) {
-      res.status(500).json({ error: e.message });
-    }
-  });
+      const review = await reviewData.getReview(req.params.reviewId)
 
-router
-  .route('/like/:reviewId')
-  .post(ensureLoggedIn, async (req, res) => {
-    const favorite = req.body.favorite;
-    req.session.user.userId = validation.checkId(req.session.user.userId);
-    req.params.reviewId = validation.checkId(req.params.reviewId);
-    try {
-      if (favorite) {
+      if (islike) {
         const addtoLiked = await addToLiked(req.session.user.userId, req.params.reviewId)
-        res.json({ favorited: favorite, message: "Favorite status updated successfully" });
+        const likes = await reviewData.addLikes(req.params.reviewId)
+        res.json({ islike: islike, likes: likes, message: "Favorite status updated successfully" });
       } else {
         const updatedUser = await deleteLiked(req.session.user.userId, req.params.reviewId);
-        res.json({ favorited: favorite, message: "Favorite status updated successfully" });
+        const likes = await reviewData.minLikes(req.params.reviewId)
+        res.json({ islike: islike, likes: likes, message: "Favorite status updated successfully" });
       }
         
     } catch (e) {

@@ -1,8 +1,9 @@
+<link rel="stylesheet" href="/public/css/park.css">
 {{#if hasErrors}}
 <p class=" not-found">
   {{errors}}
 </p>
-{{/if}}
+{{/if}}`
 <article class="post">
     <h2>{{title}}</h2>
     <p>{{reviewDate}}</p>
@@ -15,13 +16,17 @@
         {{/each}}
     {{/if}}
 
-    <button class="like-btn" data-postid="{{reviewId}}" data-favorited="0">
-    {{#if favorite}}
-        <i class="fas fa-heart"></i> <!-- Favorited icon -->
+    {{#if isLiked}}
+        <button class="like-btn" data-postid="{{reviewId}}" data-liked="1">
+            <img class="heart" src="/public/icon/redheart.png" alt="like">
+            <label>{{likes}}</label>
+        </button>
     {{else}}
-        <i class="far fa-heart"></i> <!-- Unfavorited icon -->
+        <button class="like-btn" data-postid="{{reviewId}}" data-liked="0">
+            <img class="heart" src="/public/icon/heart.png" alt="like">
+            <label>{{likes}}</label>
+        </button>
     {{/if}}
-    </button>
 
     <div id="postDescription" class="description">
         <p>{{content}}</p>
@@ -83,42 +88,3 @@
     {{/if}}
 </article>
 <a href="/park/{{parkId}}" class="col">Go Back To Park</a>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const favoriteButtons = document.querySelectorAll('.like-btn');
-
-    favoriteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            toggleFavorite(this);
-        });
-    });
-});
-
-function toggleFavorite(button) {
-    const reviewId = button.dataset.postid;
-    const isFavorited = button.dataset.favorited === "1";
-
-    fetch(`/like/${reviewId}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ favorite: !isFavorited})
-    })
-    .then(response => {
-      if(response.redirected){
-        window.location.href=response.url;
-      }
-      return response.json()
-      })
-    .then(data => {
-        if (data.favorited) {
-            button.innerHTML = '<i class="fas fa-heart"></i>'; // Filled heart
-            button.dataset.favorited = "1";
-        } else {
-            button.innerHTML = '<i class="far fa-heart"></i>'; // Empty heart
-            button.dataset.favorited = "0";
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
-</script>

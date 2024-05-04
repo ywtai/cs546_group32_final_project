@@ -605,3 +605,118 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   })
 });
+// favorite-btn AJAX
+document.addEventListener('DOMContentLoaded', function () {
+        const favoriteButtons = document.querySelectorAll('.favorite-btn');
+        const passportButtons = document.querySelectorAll('.addpassport');
+
+        favoriteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                toggleFavorite(this);
+            });
+        });
+
+        passportButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                addToPassport(this);
+            });
+        });
+    });
+
+    function toggleFavorite(button) {
+        const parkId = button.dataset.postid;
+        const isFavorited = button.dataset.favorited === "1";
+        const parkName = button.dataset.parkname;
+
+        fetch(`/favorite/${parkId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ favorite: !isFavorited, parkId: parkId, parkName: parkName })
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+                return response.json()
+            })
+            .then(data => {
+                if (data.favorited) {
+                    button.innerHTML = '<img class="heart" src="/public/icon/redheart.png" alt="favorite">';
+                    button.dataset.favorited = "1";
+                } else {
+                    button.innerHTML = '<img class="heart" src="/public/icon/heart.png" alt="favorite">';
+                    button.dataset.favorited = "0";
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function addToPassport(button) {
+        const parkName = button.dataset.parkname;
+        const parkId = button.dataset.postid;
+        fetch(`/passport/add/${parkId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ parkName: parkName, parkId: parkId })
+        })
+            .then(response => {
+                console.log(response, "passport")
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+                return response.json()
+            })
+            .then(data => {
+                if (data.added) {
+                    alert('Added to passport successfully!');
+                } else {
+                    alert('Park already exists!')
+                }
+
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+// review like-btn
+document.addEventListener('DOMContentLoaded', function () {
+    const favoriteButtons = document.querySelectorAll('.like-btn');
+
+    favoriteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            toggleLike(this);
+        });
+    });
+});
+
+function toggleLike(button) {
+    const reviewId = button.dataset.postid;
+    const islike = button.dataset.liked === "1";
+
+    fetch(`/like/${reviewId}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ islike: !islike})
+    })
+    .then(response => {
+      if(response.redirected){
+        window.location.href=response.url;
+      }
+      return response.json()
+      })
+    .then(data => {
+        if (data.islike) {
+          button.innerHTML = `
+            <img class="heart" src="/public/icon/redheart.png" alt="favorite"> 
+            <label>${data.likes}</label>
+            `; // Filled heart
+            button.dataset.liked = "1";
+        } else {
+          button.innerHTML = `
+            <img class="heart" src="/public/icon/heart.png" alt="favorite"> 
+            <label>${data.likes}</label>
+            `; // Empty heart
+            button.dataset.liked = "0";
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}

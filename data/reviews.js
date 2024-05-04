@@ -197,7 +197,44 @@ const exportedMethods = {
     );
 
     return removedReviewInfo;
+  },
+
+  async addLikes(reviewId) {
+    reviewId = await validation.checkId(reviewId);
+    const parkCollection = await parks();
+
+    const reviewInfo = await parkCollection.findOneAndUpdate(
+      {"reviews._id": new ObjectId(reviewId)},
+      {$inc: {"reviews.$.likes": 1}},
+      {returnDocument: 'after'}  
+    );
+
+    if (!reviewInfo)
+      throw `Error: Update failed, could not find a user with id of ${reviewId}`
+
+    const temp = await this.getReview(reviewId)
+    const content = temp.review;
+    return content.likes;
+  },
+
+  async minLikes(reviewId) {
+    reviewId = await validation.checkId(reviewId);
+    const parkCollection = await parks();
+
+    const reviewInfo = await parkCollection.findOneAndUpdate(
+      {"reviews._id": new ObjectId(reviewId)},
+      {$inc: {"reviews.$.likes": -1}},
+      {returnDocument: 'after'}  
+    );
+
+    if (!reviewInfo)
+      throw `Error: Update failed, could not find a user with id of ${reviewId}`
+
+    const temp = await this.getReview(reviewId)
+    const content = temp.review;
+    return content.likes;
   }
 }
+
 
 export default exportedMethods;
