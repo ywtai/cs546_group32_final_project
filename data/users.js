@@ -1,6 +1,7 @@
 import helpers from '../helpers.js';
 import {ObjectId} from 'mongodb';
 import {users} from '../config/mongoCollections.js';
+import {parks} from '../config/mongoCollections.js';
 import bcrypt from 'bcrypt';
 
 export const getUserById = async (userId) => {

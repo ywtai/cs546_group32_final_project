@@ -1,4 +1,4 @@
-let registerForm = document.getElementById('registration-form');
+var registerForm = document.getElementById('registration-form');
 let errorDiv = document.getElementById('error')
 let userName = document.getElementById('userName')
 let email = document.getElementById('email')

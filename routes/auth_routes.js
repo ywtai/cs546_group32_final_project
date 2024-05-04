@@ -2,7 +2,9 @@
 import Router from "express";
 const router = Router();
 import helpers from '../helpers.js';
+import { parksData } from "../data/index.js";
 import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
+
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
 import { parksData, reviewData } from "../data/index.js";
 
@@ -101,26 +103,55 @@ router
       }
       redirectBasedOnRole(req, res);
     } catch (e) {
-
-      //res.redirect('/auth/login');
       return res.status(500).render('login', {title: "Login", error: e.message});
     }
   });
 
 
-  router.get('/user', ensureLoggedIn, async(req, res) => {
-    const user = await getUserById(req.session.user.userId); 
+//   router.get('/user', ensureLoggedIn, async(req, res) => {
+//     const user = await getUserById(req.session.user.userId); 
+//     const park = await getParkById(req.session)
 
-    req.session.user.favorite = user.favorite;
-    req.session.user.personalParkPassport = user.personalParkPassport;
-    req.session.user.reviews = user.reviews;
-    req.session.user.likedReviews = user.likedReviews;
+//     req.session.user.favorite = user.favorite;
+//     req.session.user.personalParkPassport = user.personalParkPassport;
+//     req.session.user.reviews = user.reviews;
+//     req.session.user.likedReviews = user.likedReviews;
 
-    let reviews = req.session.user.reviews;
-    for (let i=0; i<reviews.length; i++) {
-      let newReview = (await reviewData.getReview(reviews[i].reviewId)).review;
-      reviews[i]['photo'] = newReview.photos?.[0] ?? '';
-    }
+//   res.render('user', {
+
+//     currentTime: new Date().toUTCString(),
+//     userId: req.session.user.userId,
+//     userName: req.session.user.userName,
+//     email: req.session.user.email,
+//     dateOfBirth: req.session.user.dateOfBirth,
+//     bio: req.session.user.bio,
+//     personalParkPassport: req.session.user.personalParkPassport,
+//     favorite: req.session.user.favorite,
+//     reviews: req.session.user.reviews,
+//     likedReviews: req.session.user.likedReviews,
+//     comments: req.session.user.comments
+//   })
+// });
+
+router.get('/user', ensureLoggedIn, async(req, res) => {
+  try {
+      const user = await getUserById(req.session.user.userId);
+      const parksPromises = user.personalParkPassport.map(async (tmp) => {
+          const passportPark = await parksData.getParkById(tmp.parkId);
+          return {
+              parkId: tmp.parkId,
+              parkName: passportPark.parkName,
+              state: passportPark.state,
+              photos: passportPark.photos,
+              visitDate: tmp.visitDate,
+          };
+      });
+      const personalParkPassportParks = await Promise.all(parksPromises);
+
+      req.session.user.favorite = user.favorite;
+      req.session.user.personalParkPassport = personalParkPassportParks;
+      req.session.user.reviews = user.reviews;
+      req.session.user.likedReviews = user.likedReviews;
 
   res.render('user', {
 
@@ -132,11 +163,12 @@ router
     bio: req.session.user.bio,
     personalParkPassport: req.session.user.personalParkPassport,
     favorite: req.session.user.favorite,
-    reviews: reviews,
+    reviews: req.session.user.reviews,
     likedReviews: req.session.user.likedReviews,
     comments: req.session.user.comments
   })
 });
+
 
 router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
   const parkId = req.body.parkId;
