@@ -94,7 +94,7 @@ router
 
     let photoPaths = [];
     if (req.files) {
-      photoPaths = req.files.map(file => `/public/uploads/${file.filename}`);
+      photoPaths = req.files.map(file => `/uploads/${file.filename}`);
     }
 
     if (!reviewInfo || Object.keys(reviewInfo).length === 0) {
