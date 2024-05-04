@@ -1,82 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="/public/css/styles.css">
-    <link rel="stylesheet" href="/public/css/user.css">
-    <title>{{title}}</title>
-</head>
-<body>
-    <main class="main-content">
-    <h1 class="container">User Profile</h1>
-    <p class="phrase">Welcome {{userName}}, the time is now: {{currentTime}}.</p>
-    <p class="content">Your bio: {{bio}}</p>
+<link rel="stylesheet" href="/public/css/styles.css">
+<link rel="stylesheet" href="/public/css/user.css">
+<h1 class="container">User Profile</h1>
+<p class="phrase">Welcome {{userName}}, the time is now: {{currentTime}}.</p>
+<p class="content">Your bio: {{bio}}</p>
 
-    <!-- Personal Park Passport Section -->
-    <div class="content">
-        <p>Your Personal Park Passport:</p>
-        <ul id="passportList">
-            {{#each personalParkPassport}}
-            <li id="passport-{{parkId}}">
-                <a href="http://localhost:3000/park/{{parkId}}">
-                    {{parkName}} - Visit Date: {{visitDate}}
-                    <img src="{{photos.[0].url}}" alt="{{photos.[0].altText}}" class="park-photo">
-                </a> 
-                <button type="button" class="delete-btn" onclick="deletePassportPark('{{parkId}}')">Delete</button>
-            </li>
-            {{/each}}
-        </ul>
-    </div>
+<!-- Personal Park Passport Section -->
+<div class="content">
+    <p>Your Personal Park Passport:</p>
+    <ul id="passportList">
+        {{#each personalParkPassport}}
+        <li id="passport-{{parkId}}">
+            <a href="http://localhost:3000/park/{{parkId}}">
+                {{parkName}} - Visit Date: {{visitDate}}
+                <img src="{{photos.[0].url}}" alt="{{photos.[0].altText}}" class="park-photo">
+            </a>
+            <button type="button" class="delete-btn" onclick="deletePassportPark('{{parkId}}')">Delete</button>
+        </li>
+        {{/each}}
+    </ul>
+</div>
 
 
-    <!-- Favorites Section -->
-    <div class="content">
-        <p>Your Favorites:</p>
-        <ul id="favoritesList">
-            {{#each favorite}}
-            <li id="park-{{parkId}}">
-                <a href="/park/{{parkId}}">{{parkName}}</a> 
-                {{!-- <button type="button" class="delete-btn" onclick="deleteFavorite('{{parkId}}')">Delete</button> --}}
-            </li>
-            {{/each}}
-        </ul>
-    </div>
+<!-- Favorites Section -->
+<div class="content">
+    <p>Your Favorites:</p>
+    <ul id="favoritesList">
+        {{#each favorite}}
+        <li id="park-{{parkId}}">
+            <a href="/park/{{parkId}}">{{parkName}}</a>
+            {{!-- <button type="button" class="delete-btn" onclick="deleteFavorite('{{parkId}}')">Delete</button> --}}
+        </li>
+        {{/each}}
+    </ul>
+</div>
 
-    <!-- Reviews Section -->
-    <div class="content">
-        <p>Your Reviews:</p>
-        <ul id="reviewsList">
-            {{#each reviews}}
-            <li id="review-{{reviewId}}">
-                <a href="/review/{{reviewId}}">{{title}}
-                <img src="/public{{photo}}" class="review-photo">
+<!-- Reviews Section -->
+<div class="content">
+    <p>Your Reviews:</p>
+    <ul id="reviewsList">
+        {{#each reviews}}
+        <li id="review-{{reviewId}}">
+            <a href="/review/{{reviewId}}">{{title}}
+                <img src="/public{{photo}}" class="review-photo" alt="{{reviewId}} poster">
 
-                </a>
-                <p>{{reviewDate}}</p>
-            </li>
-            {{/each}}
-        </ul>
-    </div>
+            </a>
+            <p>{{reviewDate}}</p>
+        </li>
+        {{/each}}
+    </ul>
+</div>
 
-    <div class="link">
-        <a href="/auth/logout">Log out</a>
-    </div>
+<div class="link">
+    <a href="/auth/logout">Log out</a>
+</div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
     function deleteFavorite(parkId) {
         $.ajax({
             url: '/auth/delete-favorite',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ parkId }),
-            success: function(response) {
-                if(response.success) {
+            success: function (response) {
+                if (response.success) {
                     $('#park-' + parkId).remove();
                 } else {
                     alert('Error: ' + response.message);
                 }
             },
-            error: function() {
+            error: function () {
                 alert('Error deleting favorite.');
             }
         });
@@ -88,24 +81,16 @@
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ parkId }),
-            success: function(response) {
-                if(response.success) {
+            success: function (response) {
+                if (response.success) {
                     $('#passport-' + parkId).remove();
                 } else {
                     alert('Error: ' + response.message);
                 }
             },
-            error: function() {
+            error: function () {
                 alert('Error deleting park from passport.');
             }
         });
     }
-    </script>
-    </main>
-</body>
-</html>
-
-
-
-
-
+</script>

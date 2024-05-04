@@ -1,52 +1,55 @@
-<title>Parks Found</title>
-<main class="main-content">
 <link rel="stylesheet" href="/public/css/searchResult.css">
 <link rel="stylesheet" href="/public/css/styles.css">
-    <article class="parks-found">
-        <h1 class="title">Parks Found</h1>
-            <ul>
-                {{#each parks}}
-                        <li>
-                            <a href="/park/{{this._id}}"><h3>{{this.parkName}}</h3>
-                            <img class="searchResultImage" src="{{this.photos.[0].url}}" alt="{{this.parkName}} Poster">
-                            {{!-- <p>{{this.description}}</p> --}}
-                            </a>
-                        </li>
-                {{/each}}
-            </ul>
-    </article>
-    <nav>
-        <div class="pagination">
-            {{#if hasPreviousPage}}
-                <a href="/searchparks?page={{previousPage}}&searchType={{searchType}}&searchQuery={{searchQuery}}">&laquo;Previous</a>
-            {{/if}}
-            {{#if overPage}}
-                {{#each pagesFirst3}}
-                    <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
-                {{/each}}
-                {{#if showFirstEllipsis}}
-                    <a>...</a>
-                {{/if}}
-                {{#each pagesCur3}}
-                    <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
-                {{/each}}
-                {{#if showLastEllipsis}}
-                    <a>...</a>
-                {{/if}}
-                {{#each pagesLast3}}
-                    <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
-                {{/each}}
-            {{else}}
-                {{#each pages}}
-                    <a class="{{#if isActive}}active{{/if}}" href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
-                {{/each}}
-            {{/if}}
-            
-            {{#if hasNextPage}}
-                <a href="/searchparks?page={{nextPage}}&searchType={{searchType}}&searchQuery={{searchQuery}}">Next&raquo;</a>
-            {{/if}}
-        </div>
-    </nav>
-    <br>
-    <a href="/">Search for Another Park</a>
-</main>
+<article class="parks-found">
+    <h1 class="title">Parks Found</h1>
+    <ul>
+        {{#each parks}}
+        <li>
+            <a href="/park/{{this._id}}">
+                <h3>{{this.parkName}}</h3>
+                <img class="searchResultImage" src="{{this.photos.[0].url}}" alt="{{this.parkName}} Poster">
+                {{!-- <p>{{this.description}}</p> --}}
+            </a>
+        </li>
+        {{/each}}
+    </ul>
+</article>
+<nav>
+    <div class="pagination">
+        {{#if hasPreviousPage}}
+        <a
+            href="/searchparks?page={{previousPage}}&searchType={{searchType}}&searchQuery={{searchQuery}}">&laquo;Previous</a>
+        {{/if}}
+        {{#if overPage}}
+        {{#each pagesFirst3}}
+        <a class="{{#if isActive}}active{{/if}}"
+            href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
+        {{/each}}
+        {{#if showFirstEllipsis}}
+        <a>...</a>
+        {{/if}}
+        {{#each pagesCur3}}
+        <a class="{{#if isActive}}active{{/if}}"
+            href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
+        {{/each}}
+        {{#if showLastEllipsis}}
+        <a>...</a>
+        {{/if}}
+        {{#each pagesLast3}}
+        <a class="{{#if isActive}}active{{/if}}"
+            href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
+        {{/each}}
+        {{else}}
+        {{#each pages}}
+        <a class="{{#if isActive}}active{{/if}}"
+            href="/searchparks?page={{number}}&searchType={{../searchType}}&searchQuery={{../searchQuery}}">{{number}}</a>
+        {{/each}}
+        {{/if}}
+
+        {{#if hasNextPage}}
+        <a href="/searchparks?page={{nextPage}}&searchType={{searchType}}&searchQuery={{searchQuery}}">Next&raquo;</a>
+        {{/if}}
+    </div>
+</nav>
+<br>
+<a href="/">Search for Another Park</a>
