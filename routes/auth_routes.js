@@ -2,6 +2,7 @@
 import Router from "express";
 const router = Router();
 import helpers from '../helpers.js';
+import validation from '../validation.js';
 import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
 
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
@@ -150,8 +151,6 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
 }
 });
 
-
-
 router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
   const parkId = req.body.parkId;
   const userId = req.session.user.userId;  
@@ -171,8 +170,7 @@ router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
 
 router.post('/delete-passport-park', ensureLoggedIn, async (req, res) => {
   const parkId = req.body.parkId;
-  const userId = req.session.user.userId;  
-  
+  const userId = req.session.user.userId;    
   try {
     const result = await deleteParkFromPassport(userId, parkId);
     if (result) {

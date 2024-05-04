@@ -1,8 +1,8 @@
 import helpers from '../helpers.js';
 import {ObjectId} from 'mongodb';
 import {users} from '../config/mongoCollections.js';
-import {parks} from '../config/mongoCollections.js';
 import bcrypt from 'bcrypt';
+import validation from '../validation.js';
 
 export const getUserById = async (userId) => {
   if (!ObjectId.isValid(userId)) {
@@ -99,6 +99,8 @@ export const loginUser = async (usernameOrEmail, password) => {
 };
 
 export const addToLiked = async (userId, reviewId) => {
+  userId = validation.checkId(userId);
+  
   const userCollection = await users();
 
   const updateInfo = await userCollection.updateOne(
@@ -114,6 +116,7 @@ export const addToLiked = async (userId, reviewId) => {
 };
 
 export const deleteLiked = async (userId, reviewId) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
  
   const updateInfo = await userCollection.updateOne(
@@ -128,6 +131,7 @@ export const deleteLiked = async (userId, reviewId) => {
 };
 
 export const addToFavorites = async (userId, park) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
 
   const updateInfo = await userCollection.updateOne(
@@ -143,6 +147,7 @@ export const addToFavorites = async (userId, park) => {
 };
 
 export const deleteFavorite = async (userId, parkId) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
  
   const updateInfo = await userCollection.updateOne(
@@ -157,6 +162,7 @@ export const deleteFavorite = async (userId, parkId) => {
 };
 
 export const addToPassport = async (userId, park) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
   const updateInfo = await userCollection.updateOne(
     { _id: new ObjectId(userId) }, 
@@ -171,6 +177,7 @@ export const addToPassport = async (userId, park) => {
 };
 
 export const addToReviews = async (userId, review) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
 
   const updateInfo = await userCollection.updateOne(
@@ -186,6 +193,7 @@ export const addToReviews = async (userId, review) => {
 };
 
 export const deleteParkFromPassport = async (userId, parkId) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
 
 
@@ -202,6 +210,7 @@ export const deleteParkFromPassport = async (userId, parkId) => {
 };
 
 export const deleteReviews = async (userId, reviewId) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
 
   const updateInfo = await userCollection.updateOne(
@@ -217,6 +226,7 @@ export const deleteReviews = async (userId, reviewId) => {
 };
 
 export const addToComments = async (userId, comment) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
 
   const updateInfo = await userCollection.updateOne(
@@ -232,6 +242,7 @@ export const addToComments = async (userId, comment) => {
 };
 
 export const deleteComments = async (userId, commentId) => {
+  userId = validation.checkId(userId);
   const userCollection = await users();
 
   const updateInfo = await userCollection.updateOne(
