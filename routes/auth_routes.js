@@ -129,6 +129,8 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
       for (let i=0; i<reviews.length; i++) {
         let newReview = (await reviewData.getReview(reviews[i].reviewId)).review;
         reviews[i]['photo'] = newReview.photos?.[0] ?? '';
+        reviews[i]['title'] = newReview.title;
+        reviews[i]['reviewDate'] = newReview.reviewDate;
       }
 
   res.render('user', {

@@ -40,12 +40,12 @@ li {
 }
 
 a {
-    color: #007BFF;
+    color: #9d8c78;
     text-decoration: none;
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .delete-btn {
