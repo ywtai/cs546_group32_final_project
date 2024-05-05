@@ -42,4 +42,11 @@ function ensureNotLoggedIn(req, res, next) {
   }
 }
 
-export { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn, ensureAdmin};
+function captureUrl(req, res, next) {
+  if (req.headers.referer && !req.session.user) {
+    req.session.previousUrl = req.headers.referer;
+  }
+  next();
+}
+
+export { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn, ensureAdmin, captureUrl};

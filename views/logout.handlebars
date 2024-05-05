@@ -12,5 +12,10 @@
     <div>
         <p>You have been logged out.</p>
         <a href="/">Return to home page</a>
+        <!-- Add back to previous page link -->
+        {{#if previousUrl}}
+        <p>or</p>
+        <a href="{{previousUrl}}">Return to previous page</a>
+        {{/if}}
     </div>
 </main>

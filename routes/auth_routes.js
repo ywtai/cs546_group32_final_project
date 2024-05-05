@@ -6,7 +6,7 @@ import validation from '../validation.js';
 import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
 
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
-import { parksData, reviewData, searchData } from "../data/index.js";
+import { parksData, reviewData, searchData} from "../data/index.js";
 
 import xss from 'xss';
 import helmet from 'helmet';
@@ -19,7 +19,7 @@ router.route('/').get(async (req, res) => {
 
 router
   .route('/register')
-  .get(async (req, res) => {
+  .get(ensureNotLoggedIn, async (req, res) => {
     res.render('register', { title: 'Register' });
   })
   .post(async (req, res) => {
@@ -76,7 +76,7 @@ router
 
 router
   .route('/login')
-  .get(ensureNotLoggedIn, async (req, res) => {
+  .get(ensureNotLoggedIn, captureUrl, async (req, res) => {
     res.render('login', { title: 'Login' });
   })
   .post(async (req, res) => {
@@ -113,7 +113,8 @@ router
         likedReviews: user.likedReviews,
         comments: user.comments
       }
-      redirectBasedOnRole(req, res);
+      const previousUrl = req.session.previousUrl || '/';
+      res.redirect(previousUrl);
     } catch (e) {
       return res.status(500).render('login', {title: "Login", error: e});
     }
@@ -215,12 +216,29 @@ router.route('/error').get(async (req, res) => {
   res.render('error', { message: "" })
 });
 
-router.route('/logout').get(async (req, res) => {
 
-  res.clearCookie("AuthState")
+router.route('/logout').get(async (req, res) => {
+  const previousUrl = req.headers.originalUrl || '/'; 
+  req.session.destroy(); 
+  res.clearCookie('AuthState'); 
+
   res.render('logout', {
-    redirectUrl: '/'
-  })
+    redirectUrl: '/', 
+    previousUrl 
+  });
 });
+
+// router.route('/logout').get((req, res) => {
+//   req.session.destroy((err) => {
+//     if (err) {
+//       console.error('Failed to destroy session:', err);
+//       return res.status(500).send('Logout failed');
+//     }
+
+//     res.clearCookie('AuthState');
+//     res.redirect('/'); // Redirect to homepage after logout
+//   });
+// });
+
 
 export default router;
