@@ -532,6 +532,9 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(data => {
             alert('Review deleted successfully');
             if (data.redirectUrl) {
+              if (data.message) {
+                alert(data.message);
+              }
               window.location.href = data.redirectUrl;
             } else {
               alert(data.message);

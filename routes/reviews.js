@@ -94,7 +94,12 @@ router
     let parkId = xss(req.params.parkObjectId);
 
     try {
-      parkId = validation.checkId(parkId, 'id parameter in URL');
+      parkId = validation.checkId(parkId);
+    } catch (e) {
+      res.status(404).render('error', { message: 'Page not Found' });
+    }
+
+    try {
       const parkDetail = await parksData.getParkById(parkId);
       if (parkDetail) {
         res.render('addReview', {
@@ -110,10 +115,17 @@ router
   })
   .post(uploadPhotos, checkMinPhotoSize, ensureLoggedIn, async (req, res) => {
     let parkId = xss(req.params.parkObjectId);
+
+    try {
+      parkId = validation.checkId(parkId);
+    } catch (e) {
+      res.status(404).render('error', { message: 'Page not Found' });
+    }
+
     let reviewInfo = Object.keys(req.body).reduce((acc, key) => {
-    acc[key] = xss(req.body[key]);
-    return acc;
-  }, {});
+      acc[key] = xss(req.body[key]);
+      return acc;
+    }, {});
 
     let photoPaths = [];
     if (req.files) {
@@ -129,8 +141,6 @@ router
     let { title, content, rating } = reviewInfo;
 
     try {
-      req.params.parkObjectId = validation.checkId(req.params.parkObjectId);
-      req.params.parkObjectId = xss(req.params.parkObjectId);
       title = validation.checkString(title, 'Title', { min: '2', max: '20' });
       content = validation.checkString(content, 'Content', { min: '2', max: '200' });
       rating = validation.checkRating(rating, 'Rating');
@@ -141,7 +151,7 @@ router
     }
     try {
       const { reviewSubmittedCompleted, reviewId} = await reviewData.createReview(
-        req.params.parkObjectId,
+        parkId,
         req.session.user.userId,
         title,
         req.session.user.userName,
@@ -152,7 +162,7 @@ router
 
       const pushInfo =  {
         reviewId: reviewId,
-        parkId: req.params.parkObjectId
+        parkId: parkId
       }
       const addInfo = await addToReviews(req.session.user.userId, pushInfo);
       if (reviewSubmittedCompleted)
@@ -172,8 +182,9 @@ router
   .route('/review/:reviewId')
   .get(async (req, res) => {
     let reviewId = xss(req.params.reviewId);
+    
     try {
-      reviewId = validation.checkId(req.params.reviewId);
+      reviewId = validation.checkId(reviewId);
     } catch (e) {
       res.status(404).render('error', { message: 'Page not Found' });
     }
@@ -202,7 +213,7 @@ router
           reviewDate: review.reviewDate,
           rating: review.rating,
           photos: photos,
-          reviewId: req.params.reviewId,
+          reviewId: reviewId,
           isAuthor: isAuthor,
           isLogin: !!req.session.user,
           parkId: parkId,
@@ -225,7 +236,7 @@ router
           reviewDate: review.reviewDate,
           rating: review.rating,
           photos: photos,
-          reviewId: req.params.reviewId,
+          reviewId: reviewId,
           isAuthor: isAuthor,
           isLogin: !!req.session.user,
           parkId: parkId,
@@ -243,24 +254,28 @@ router
     }
   })
   .post(ensureLoggedIn, async (req, res) => {
+    let reviewId = xss(req.params.reviewId);
+
+    try {
+      reviewId = validation.checkId(reviewId);
+    } catch(e) {
+      res.status(404).render('error', { message: 'Page not Found' });
+    }
+
     let reqObject = Object.keys(req.body).reduce((acc, key) => {
-    acc[key] = xss(req.body[key]);
-    return acc;
-  }, {});
+      acc[key] = xss(req.body[key]);
+      return acc;
+    }, {});
     if (!reqObject || Object.keys(reqObject).length === 0) {
       return res.status(400).render('error', {
         message: 'There are no fields in the request body'
       });
-    }
-    const userId = req.session.user.userId;
-    
+    }    
     let title = reqObject['edit-title'];
     let content = reqObject['edit-content'];
     let rating = reqObject['edit-rating'];
 
     try {
-      req.params.reviewId = xss(req.parms.reviewId);
-      req.params.reviewId = validation.checkId(req.params.reviewId);     
       if (title)
         title = validation.checkString(title, 'Title', { min: '2', max: '20' });
 
@@ -290,7 +305,7 @@ router
         });
       }
       const updatedReview = await reviewData.updateReview(
-        req.params.reviewId,
+        reviewId,
         updateObject
       )
     } catch (e) {
@@ -301,7 +316,7 @@ router
       const {parkId, review} = await reviewData.getReview(req.params.reviewId);
       const isAuthor = req.session.user && (req.session.user.userId === review.userId) || (req.session.user.userName === 'admin');
       if (isAuthor) {
-        res.redirect(`/review/${req.params.reviewId}`);
+        res.redirect(`/review/${reviewId}`);
       }
       else {
         return res.status(400).render('error', {
@@ -315,44 +330,48 @@ router
     }
   })
   .delete(ensureLoggedIn, upload.none(), async (req, res) => {
-    const userId = req.session.user.userId;
+    let reviewId = xss(req.params.reviewId);
+
     try {
-      req.params.reviewId = xss(req.params.reviewId);
-      req.params.reviewId = validation.checkId(req.params.reviewId);
-    } catch (e) {
+      reviewId = validation.checkId(reviewId);
+    } catch(e) {
       res.status(404).render('error', { message: 'Page not Found' });
     }
     
     try {
-      let {parkId, review} = await reviewData.getReview(req.params.reviewId);
+      let {parkId, review} = await reviewData.getReview(reviewId);
       const isAuthor = req.session.user && ((req.session.user.userId === review.userId) || (req.session.user.userName === 'admin'));
       if (!isAuthor) {
-        res.json({redirectUrl: '/park/' + parkId});
+        res.json({
+          redirectUrl: '/park/' + parkId,
+          message: "You do not have permission to delete this review."
+        });
       }
-      let deletedReview = await reviewData.removeReview(req.params.reviewId);
-      let deleteInfo = await deleteReviews(review.userId, req.params.reviewId);
+      let deletedReview = await reviewData.removeReview(reviewId);
+      let deleteInfo = await deleteReviews(review.userId, reviewId);
       res.json({redirectUrl: '/park/' + parkId});
     } catch (e) {
-      res.json({redirectUrl: '/park/'});
+      res.status(500).json({ error: e.message });
     }
   });
 
 router
   .route('/review/:reviewId/addcomment')
   .post(ensureLoggedIn, async (req, res) => {
-    let reqObj = Object.keys(req.body).reduce((acc, key) => {
-    acc[key] = xss(req.body[key]);
-    return acc;
-  }, {});
-
-    let content = reqObj['commentContent'];
+    let reviewId = xss(req.params.reviewId)
 
     try {
-      req.params.reviewId = xss(req.params.reviewId)
-      req.params.reviewId = validation.checkId(req.params.reviewId);
-    } catch (e) {
+      reviewId = validation.checkId(reviewId);
+    } catch(e) {
       res.status(404).render('error', { message: 'Page not Found' });
     }
+
+    let reqObj = Object.keys(req.body).reduce((acc, key) => {
+      acc[key] = xss(req.body[key]);
+      return acc;
+    }, {});
+
+    let content = reqObj['commentContent'];
 
     try {
       content = validation.checkString(content, 'Content', { min: '2', max: '200' });
@@ -365,7 +384,7 @@ router
     try {
       
       const newComment = await commentData.createComment(
-        req.params.reviewId,
+        reviewId,
         req.session.user.userId,
         req.session.user.userName,
         content
@@ -376,7 +395,7 @@ router
         content: content
       }
       const addInfo = await addToComments(req.session.user.userId, commentTouser)
-      res.redirect(`/review/${req.params.reviewId}`);
+      res.redirect(`/review/${reviewId}`);
     } catch (e) {
       res.status(500).render('error', { message: 'Internal Server Error' });
     }
@@ -385,11 +404,20 @@ router
 router
   .route('/review/:reviewId/comment/:commentId')
   .post(ensureLoggedIn, upload.none(), async (req, res) => {
-    const userId = req.session.user.userId;
+    let commentId = xss(req.params.commentId);
+    let reviewId = xss(req.params.reviewId);
+
+    try {
+      commentId = validation.checkId(commentId);
+      reviewId = validation.checkId(reviewId);
+    } catch(e) {
+      res.status(404).render('error', { message: 'Page not Found' });
+    }
+
     let updateObject = Object.keys(req.body).reduce((acc, key) => {
-    acc[key] = xss(req.body[key]);
-    return acc;
-  }, {});
+      acc[key] = xss(req.body[key]);
+      return acc;
+    }, {});
     if (!updateObject || Object.keys(updateObject).length === 0) {
       return res.status(400).render('error', {
         message: 'There are no fields in the request body'
@@ -407,18 +435,7 @@ router
     }
 
     try {
-      req.params.commentId = xss(req.params.commentId);
-      req.params.commentId = validation.checkId(req.params.commentId);
-      req.params.reviewId = xss(req.params.reviewId);
-      req.params.reviewId = validation.checkId(req.params.reviewId);      
-    } catch (e) {
-      return res.status(400).render('error', {
-        message: e.toString()
-      });
-    }
-
-    try {
-      const comment = await commentData.getComment(req.params.commentId);
+      const comment = await commentData.getComment(commentId);
       const isAuthor = req.session.user && ((req.session.user.userId === comment.userId) || (req.session.user.userName === 'admin'));
       if (!isAuthor) {
         return res.status(403).render('error', {
@@ -433,38 +450,39 @@ router
 
     try{
       const updatedComment = await commentData.updateComment(
-        req.params.commentId,
+        commentId,
         updateObject
       );
-      res.redirect(`/review/${req.params.reviewId}`);
+      res.redirect(`/review/${reviewId}`);
     } catch (e) {
       res.status(500).render('error', { message: 'Internal Server Error' });
     }
   })
   .delete(ensureLoggedIn, upload.none(), async (req, res) => {
-    const userId = req.session.user.userId;
+    let commentId = xss(req.params.commentId);
+    let reviewId = xss(req.params.reviewId);
+    
     try {
-      req.params.commentId = xss(req.params.commentId);
-      req.params.commentId = validation.checkId(req.params.commentId);
-      req.params.reviewId = xss(req.params.reviewId);
-      req.params.reviewId = validation.checkId(req.params.reviewId);
-    } catch (e) {
-      res.json({redirectUrl: '/review/' + req.params.reviewId});
+      commentId = validation.checkId(commentId);
+      reviewId = validation.checkId(reviewId);
+    } catch(e) {
+      res.status(500).json({ error: e.message });
     }
     
     try {
-      const comment = await commentData.getComment(req.params.commentId);
+      const comment = await commentData.getComment(commentId);
       const isAuthor = req.session.user && ((req.session.user.userId === comment.userId) || (req.session.user.userName === 'admin'));
       if (!isAuthor) {
-        return res.status(403).render('error', {
-          message: "You do not have permission to delete this comment." 
+        res.json({
+          redirectUrl: '/review/' + reviewId,
+          message: "You do not have permission to delete this review."
         });
       }
-      let deletedComment = await commentData.removeComment(req.params.commentId);
-      const deleteinfo = await deleteComments(comment.userId, req.params.commentId)
-      res.json({redirectUrl: '/review/' + req.params.reviewId});
+      let deletedComment = await commentData.removeComment(commentId);
+      const deleteinfo = await deleteComments(comment.userId, commentId)
+      res.json({redirectUrl: '/review/' + reviewId});
     } catch (e) {
-      res.json({redirectUrl: '/review/' + req.params.reviewId});
+      res.status(500).json({ error: e.message });
     }
   })
 
@@ -472,18 +490,24 @@ router
   .route('/like/:reviewId')
   .post(ensureLoggedIn, async (req, res) => {
     const islike = xss(req.body.islike);
-    req.session.user.userId = validation.checkId(req.session.user.userId);
-    req.params.reviewId = validation.checkId(req.params.reviewId);  
+    let reviewId = xss(req.params.reviewId);
+      
     try {
-      const review = await reviewData.getReview(req.params.reviewId)
+      reviewId = validation.checkId(reviewId);
+    } catch(e) {
+      res.status(500).json({ error: e.message });
+    }
+
+    try {
+      const review = await reviewData.getReview(reviewId)
 
       if (islike) {
-        const addtoLiked = await addToLiked(req.session.user.userId, req.params.reviewId)
-        const likes = await reviewData.addLikes(req.params.reviewId)
+        const addtoLiked = await addToLiked(req.session.user.userId, rreviewId)
+        const likes = await reviewData.addLikes(reviewId)
         res.json({ islike: islike, likes: likes, message: "Favorite status updated successfully" });
       } else {
-        const updatedUser = await deleteLiked(req.session.user.userId, req.params.reviewId);
-        const likes = await reviewData.minLikes(req.params.reviewId)
+        const updatedUser = await deleteLiked(req.session.user.userId, reviewId);
+        const likes = await reviewData.minLikes(reviewId)
         res.json({ islike: islike, likes: likes, message: "Favorite status updated successfully" });
       }
         
