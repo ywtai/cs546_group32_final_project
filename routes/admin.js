@@ -87,6 +87,10 @@ router
     });
 
 router.get('/search', async(req, res) => {
+    if (!req.query.searchQuery) {
+        return res.status(404).render('error', { message: "Page not found."});
+    }
+
     try{ 
         const searchQuery = req.query.searchQuery;
         const name = searchQuery.trim();
