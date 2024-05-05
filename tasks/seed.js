@@ -65,6 +65,15 @@ const findParkIdByName = (parkIds, name) => {
 
 const createUsers = async (parkIds) => {
 	const index = [2, 5, 10, 20];
+
+	const adminData = [
+		"Admin",
+		"admin@aurora.com",
+		"01/01/2000",
+		"This is the admin account.",
+		"Admin123!"
+	]
+
 	const user1Data = [
 		"Jacky",
 		"jacky@gmail.com",
@@ -106,6 +115,7 @@ const createUsers = async (parkIds) => {
 	const user3 = await registerUser(...user3Data); 
 	const user4 = await registerUser(...user4Data);
 	const user5 = await registerUser(...user5Data);
+	const admin = await registerUser(...adminData);
 
 	const rockyParkId = findParkIdByName(parkIds, "Rocky Mountain National Park");
 	const CanyonParkId= findParkIdByName(parkIds, "Canyonlands National Park");

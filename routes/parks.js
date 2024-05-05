@@ -1,7 +1,6 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/movies.js that you will call in your routes below
 import * as express from 'express';
-import { searchByState, searchByActivity, searchByName, searchTop5 } from '../data/searchPark.js';
-import { parksData } from "../data/index.js";
+import { parksData, searchData } from "../data/index.js";
 import validation from "../validation.js";
 import {ensureLoggedIn, logRequests} from '../middleware.js'
 import {addToFavorites, deleteFavorite, addToPassport, getUserById} from '../data/users.js';
@@ -13,7 +12,7 @@ router.use(logRequests);
 router.route('/').get(async (req, res) => {
     //code here for GET will render the home handlebars file
     try {
-        const top5 = await searchTop5();
+        const top5 = await searchData.searchTop5();
         res.render('home', { top5: top5 });
     } catch (e) {
         res.status(500).render('error', { message: e });
@@ -38,7 +37,7 @@ router.route('/searchparks')
                     if (!state) {
                         throw new Error("Please provide a state to search.");
                     }
-                    [parkList, totalParks] = await searchByState(state, pageSize, offset);
+                    [parkList, totalParks] = await searchData.searchByState(state, pageSize, offset);
                     break;
 
                 case 'name':
@@ -46,7 +45,7 @@ router.route('/searchparks')
                     if (!name) {
                         throw new Error("Please provide a name to search.");
                     }
-                    [parkList, totalParks] = await searchByName(name, pageSize, offset);
+                    [parkList, totalParks] = await searchData.searchByName(name, pageSize, offset);
                     break;
 
                 case 'activity':
@@ -54,7 +53,7 @@ router.route('/searchparks')
                     if (!activities || activities.length === 0) {
                         throw new Error("Please select at least one activity to search.");
                     }
-                    [parkList, totalParks] = await searchByActivity(activities, pageSize, offset);
+                    [parkList, totalParks] = await searchData.searchByActivity(activities, pageSize, offset);
                     break;
 
                 default:

@@ -1,5 +1,109 @@
+
+<link rel="stylesheet" href="/public/css/styles.css">
+<link rel="stylesheet" href="/public/css/user.css">
+<h1 class="container">Admin Platform</h1>
+<p class="phrase">Welcome {{userName}}, the time is now: {{currentTime}}.</p>
+<p class="content">Your bio: {{bio}}</p>
+
+{{!-- <div class="link">
+    <p>Action: </p>
+    <br>
+    <a href="/auth/sync">Sync</a>
+</div> --}}
 <div class="adminContainer">
     <button>sync</button>
     <p>{{message}}</p>
     <a href="/" class="col">Go Back To Search Page</a>
 </div>
+
+
+<div class="link">
+    <h3>Search Parks</h3>
+    <form id="adminSearchForm">
+        <input type="text" id="searchInput" placeholder="Enter park name..." required>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<div class="content" id="searchResultDiv" hidden>
+    <h3>Park List: </h2>
+    <ul id="searchResultList" hidden></ul>
+    <div class="parkReviews" hidden></div>
+</div>
+
+<div class="link">
+    <a href="/auth/logout">Log out</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('adminSearchForm');
+        const searchResultList = document.getElementById('searchResultList');
+        const parkReviews = document.getElementById('parkReviews');
+        const searchResultDiv = document.getElementById('searchResultDiv');
+
+        
+        async function searchParks(searchInput) {
+            try {
+                const url = `/auth/admin/search?searchQuery=${encodeURIComponent(searchInput)}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                console.log(data.parkList);
+                diplaySearchResults(data.parkList);
+            } catch (e) {
+                console.error('Failed to fetch parks:', e);
+            }
+        }
+
+        async function diplaySearchResults(parks) {
+            searchResultList.innerHTML = '';
+            searchResultDiv.style.display = 'none';
+            if (parks.length === 0) {
+                alert('No parks found.');
+                return;
+            }
+
+            parks.forEach(park => {
+                const listItem = document.createElement('li');
+                const parkLink = document.createElement('a');
+                parkLink.href = `/park/${park._id}`;
+                parkLink.dataset.id = park._id;
+                parkLink.textContent = park.parkName;
+
+                const reviews = park.reviews;
+                const reviewsList = document.createElement('ul');
+
+                reviews.forEach(review => {
+                    const reviewItem = document.createElement('li');
+                    const reviewLink = document.createElement('a');
+                    reviewLink.href = `/review/${review._id}`;
+                    reviewLink.textContent = review.title + '-' + review.userName;
+
+                    reviewItem.appendChild(reviewLink);
+                    reviewsList.appendChild(reviewItem);
+                })
+                
+
+                listItem.appendChild(parkLink);
+                listItem.appendChild(reviewsList);
+                searchResultList.appendChild(listItem);
+            })
+
+            searchResultList.style.display = 'block';
+            searchResultDiv.style.display = 'block';
+        }
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const searchInput = document.getElementById('searchInput').value.trim();
+
+            if (!searchInput.trim()) {
+                alert('Please enter a park name to search.');
+                return;
+            }            
+
+            searchParks(searchInput);
+        });
+    })
+</script>

@@ -86,3 +86,17 @@ a:hover {
     display: block;
     margin: 10px 0; /* Add margin for spacing */
 }
+
+.link button {
+    display: inline-block;
+    background-color: #c7b198;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    border-radius: 4px;
+    border: #c7b198;
+}
+
+.link button:hover {
+    background-color: #cd8a1f;
+}

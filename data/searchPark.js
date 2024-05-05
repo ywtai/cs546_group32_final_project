@@ -1,8 +1,8 @@
 import validation from '../validation.js';
 import { parks } from "../config/mongoCollections.js";
 
-
-export const searchByState = async (stateCode, pageSize, offset) => {
+const exportedMethods = {
+async searchByState(stateCode, pageSize, offset) {
     try {
         const parkCollection = await parks();
         const query = { state: { $regex: new RegExp(`\\b${stateCode}\\b`, 'i') } };
@@ -17,9 +17,9 @@ export const searchByState = async (stateCode, pageSize, offset) => {
         console.error('Error searching for parks by state code:', e);
         throw e;
     }
-}
+},
 
-export const searchByName = async (name, pageSize, offset) => {
+async searchByName(name, pageSize, offset) {
     try {
         name = validation.checkString(name);
         const parkCollection = await parks();
@@ -34,10 +34,9 @@ export const searchByName = async (name, pageSize, offset) => {
         console.error('Error searching for parks:', e);
         throw e;
     }
-}
+},
 
-
-export const searchByActivity = async (activityIds, pageSize, offset) => {
+async searchByActivity(activityIds, pageSize, offset) {
     try {
         const parkCollection = await parks();
 
@@ -57,9 +56,9 @@ export const searchByActivity = async (activityIds, pageSize, offset) => {
         console.error('Error searching for parks by activities:', e);
         throw e;
     }
-}
+},
 
-export const searchTop5 = async () => {
+async searchTop5() {
     try {
         const parkCollection = await parks();
         const parkList = await parkCollection.aggregate([{ $sort: { averageRating: -1, parkName: 1} },
@@ -70,3 +69,6 @@ export const searchTop5 = async () => {
         throw e;
     }
 }
+}
+
+export default exportedMethods;

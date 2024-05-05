@@ -6,7 +6,7 @@ import validation from '../validation.js';
 import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
 
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
-import { parksData, reviewData } from "../data/index.js";
+import { parksData, reviewData, searchData } from "../data/index.js";
 
 import xss from 'xss';
 import helmet from 'helmet';
@@ -67,7 +67,7 @@ router
         bio,
         password);
       if (user.insertedUser) {
-        res.redirect('/auth/login')
+        res.redirect('/auth/login');
       }
     } catch (e) {
       return res.status(500).render('error', { title: "Error", message: "Internal Server Error" })
@@ -120,6 +120,11 @@ router
   });
 
 router.get('/user', ensureLoggedIn, async(req, res) => {
+  const user = await getUserById(req.session.user.userId);
+  if (user.userName == 'admin') {
+    res.redirect('/auth/admin');
+  }
+
   try {
       const user = await getUserById(req.session.user.userId);
 
@@ -217,5 +222,40 @@ router.route('/logout').get(async (req, res) => {
     redirectUrl: '/'
   })
 });
+
+router.get('/admin', ensureLoggedIn, async(req, res) => {
+  const user = await getUserById(req.session.user.userId);
+  if (user.userName !== 'admin') {
+    res.status(500).send('This account is not an admin account!');
+  }
+
+  try {
+    const user = await getUserById(req.session.user.userId);
+
+  res.render('admin', {
+    currentTime: new Date().toUTCString(),
+    userId: req.session.user.userId,
+    userName: req.session.user.userName,
+    email: req.session.user.email,
+    dateOfBirth: req.session.user.dateOfBirth,
+    bio: req.session.user.bio,
+  })
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/admin/search', async(req, res) => {
+  const searchQuery = req.query.searchQuery;
+  const name = searchQuery.trim();
+  let parkList = [];
+  let totalParks = 0;
+  if (!name) {
+      throw new Error("Please provide a name to search.");
+  }
+  [parkList, totalParks] = await searchData.searchByName(name, 10, 0);
+  res.json({ parkList });
+})
 
 export default router;
