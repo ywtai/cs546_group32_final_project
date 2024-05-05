@@ -15,7 +15,7 @@
 
 <div class="link">
     <h3>Search Parks</h3>
-    <form id="adminSearchForm">
+    <form id="adminSearchForm" action="/admin/search" method="GET">
         <input type="text" id="searchInput" placeholder="Enter park name..." required>
         <button type="submit">Search</button>
     </form>
@@ -44,11 +44,11 @@
                 const url = `/admin/search?searchQuery=${encodeURIComponent(searchInput)}`;
                 const response = await fetch(url);
                 const data = await response.json();
-                
-                console.log(data.parkList);
+
                 diplaySearchResults(data.parkList);
             } catch (e) {
                 console.error('Failed to fetch parks:', e);
+                alert('Error fetching park data. Please try again later.'); 
             }
         }
 

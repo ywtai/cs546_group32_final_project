@@ -41,8 +41,8 @@ router.route('/').get(async (req, res) => {
 
 router.route('/searchparks')
     .get(async (req, res) => {
-        const searchType = req.query.searchType;
-        const searchQuery = req.query.searchQuery;
+        const searchType = xss(req.query.searchType);
+        const searchQuery = xss(req.query.searchQuery);
         const page = parseInt(req.query.page) || 1;
         const pageSize = 20; // Number of results per page
         const offset = (page - 1) * pageSize;
@@ -170,7 +170,7 @@ router.route('/searchparks')
 
 router.route('/park/:id')
     .get(async (req, res) => {
-        let parkId = req.params.id;
+        let parkId = xss(req.params.id);
         try {
             parkId = validation.checkId(parkId, 'id parameter in URL');
             const allData = [];
@@ -251,7 +251,7 @@ router.route('/favorite/:id')
 router.post('/passport/add/:id', ensureLoggedIn, async (req, res) => {
     const visitDate = xss(req.body.visitDate);
     const userId = req.session.user.userId; 
-    const parkId = req.params.id
+    const parkId = xss(req.params.id)
     const park = {
         parkId: parkId,
         visitDate: visitDate

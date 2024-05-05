@@ -189,7 +189,7 @@ router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
       res.json({ success: false, message: "Failed to delete favorite" });
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
