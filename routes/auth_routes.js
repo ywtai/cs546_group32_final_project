@@ -122,7 +122,7 @@ router
 router.get('/user', ensureLoggedIn, async(req, res) => {
   const user = await getUserById(req.session.user.userId);
   if (user.userName == 'admin') {
-    res.redirect('/auth/admin');
+    res.redirect('/admin');
   }
 
   try {
