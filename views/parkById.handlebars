@@ -1,12 +1,15 @@
 <link rel="stylesheet" href="/public/css/park.css">
 
 <div class="fav-passport-container">
+  
     {{#if favorite}}
         <button class="favorite-btn" data-postid="{{parkId}}" data-favorited="1" data-parkname="{{parkName}}">
+            Add to Favorite
             <img class="heart" src="/public/icon/redheart.png" alt="favorite">
         </button>
     {{else}}
         <button class="favorite-btn" data-postid="{{parkId}}" data-favorited="0" data-parkname="{{parkName}}">
+            Add to Favorite
             <img class="heart" src="/public/icon/heart.png" alt="favorite">
         </button>
     {{/if}}
@@ -18,12 +21,28 @@
     </div>
 </div>
 
+{{#if photos}}
+  <img class="park-poster" alt="{{parkName}} Image" src="{{photos.[0].url}}">
+{{/if}}
+<div class="name-overlay">{{parkName}}</div>
+
+
+<div class="park-info">
+  <h3>Average Rating</h3>
+    <div class="star-rating">
+        {{{starsHTML}}}
+        <label>{{averageRating}}</label>
+    </div>
+    <label for="ratedPeople">{{ratedPeople}} rated this park</label>
+</div>
+  
+
 {{#each parkData}}
 <article class="container">
-    <h1>{{this.parkName}}</h1>
+    {{!-- <h1>{{this.parkName}}</h1>
     {{#if this.photos}}
     <img class="park-poster" alt="{{this.parkName}} Image" src="{{this.photos.[0].url}}">
-    {{/if}}
+    {{/if}} --}}
     <h2>Description</h2>
     <p class="description">{{this.description}}</p>
     <section class="info">
@@ -31,8 +50,6 @@
         <dl>
             <dt>Park Code:</dt>
             <dd>{{this.parkCode}}</dd>
-            <dt>Average Rating:</dt>
-            <dd>{{this.averageRating}}</dd>
             <dt>Location:</dt>
             <dd>{{this.state}}</dd>
             <dt>Address:</dt>
@@ -59,13 +76,13 @@
                         {{else}}
                             <p class="review-content">{{this.content}}</p>
                         {{/if}}
+                        <img class="user-icon" alt="user" src="/public/icon/user.png">
                         <p class="review-title">{{this.title}}</p>
                         <p class="review-user">{{this.userName}}</p>
-                        <div class="review-like">
-                            <img class="heart" src="/public/icon/redheart.png" alt="like">
-                            <label>{{this.likes}}</label>
-                        </div>
+                        
                     </a>
+                    <img class="liked-heart" src="/public/icon/redheart.png" alt="like">
+                    <label>{{this.likes}} liked this post</label>
                     {{!-- <a class='reviewLink' href="/review/{{this.userId}}">{{this.userName}}</a> --}}
                     {{!-- <p>User : {{this.userName}}</p>
                     <p>Review Date : {{this.reviewDate}}</p>

@@ -25,7 +25,9 @@
     <p class="review-content">{{content}}</p>
     <div class="date-rating">
         <p class="date">Review Date : {{reviewDate}}</p>
-        <p class="rating">{{rating}} stars</p>
+        <div class="star-rating">
+          {{{starsHTML}}}
+        </div>
     </div>
 
     {{#if isLiked}}

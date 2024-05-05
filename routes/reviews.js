@@ -1,6 +1,7 @@
 // Import the express router as shown in the lecture code
 // Note: please do not forget to export the router!
 import { Router } from 'express';
+import xss from 'xss';
 import { parksData, reviewData, commentData } from "../data/index.js";
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureAdmin } from '../middleware.js'
 import validation from '../validation.js';
@@ -64,6 +65,25 @@ const checkMinPhotoSize = (req, res, next) => {
 const maxFiles = 5;
 const uploadPhotos = upload.array('photos', maxFiles);
 
+function createStarRatingHTML(rating) {
+    const roundedRating = Math.round(rating * 2) / 2;  
+    let starsHTML = '';
+
+    for (let i = 0; i < Math.floor(roundedRating); i++) {
+        starsHTML += '<span class="star full">&#9733;</span>'; 
+    }
+
+    if (roundedRating % 1 !== 0) {
+        starsHTML += '<span class="star half">&#9733;</span>'; 
+    }
+
+    for (let i = Math.ceil(roundedRating); i < 5; i++) {
+        starsHTML += '<span class="star empty">&#9733;</span>'; 
+    }
+
+    return starsHTML;
+}
+
 const router = Router();
 
 router.use(logRequests);
@@ -71,7 +91,7 @@ router.use(logRequests);
 router
   .route('/addReview/:parkObjectId')
   .get(ensureLoggedIn, async (req, res) => {
-    let parkId = req.params.parkObjectId;
+    let parkId = xss(req.params.parkObjectId);
 
     try {
       parkId = validation.checkId(parkId, 'id parameter in URL');
@@ -89,8 +109,11 @@ router
     }
   })
   .post(uploadPhotos, checkMinPhotoSize, ensureLoggedIn, async (req, res) => {
-    let parkId = req.params.parkObjectId;
-    let reviewInfo = req.body;
+    let parkId = xss(req.params.parkObjectId);
+    let reviewInfo = Object.keys(req.body).reduce((acc, key) => {
+    acc[key] = xss(req.body[key]);
+    return acc;
+  }, {});
 
     let photoPaths = [];
     if (req.files) {
@@ -107,6 +130,7 @@ router
 
     try {
       req.params.parkObjectId = validation.checkId(req.params.parkObjectId);
+      req.params.parkObjectId = xss(req.params.parkObjectId);
       title = validation.checkString(title, 'Title', { min: '2', max: '20' });
       content = validation.checkString(content, 'Content', { min: '2', max: '200' });
       rating = validation.checkRating(rating, 'Rating');
@@ -147,7 +171,7 @@ router
 router
   .route('/review/:reviewId')
   .get(async (req, res) => {
-    let reviewId = req.params.reviewId
+    let reviewId = xss(req.params.reviewId);
     try {
       reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
@@ -158,6 +182,7 @@ router
       const {parkId, review} = await reviewData.getReview(reviewId);
       const comments = await commentData.getAllComments(reviewId);
       const userId = req.session.user ? req.session.user.userId : null;
+      const starsHTML = createStarRatingHTML(review.rating);
       const userName = req.session.user ? req.session.user.userName : null;
 
       const commentsWithAuthCheck = comments.map(comment => ({
@@ -183,7 +208,8 @@ router
           parkId: parkId,
           likes: review.likes,
           commentIndex: 0,
-          favorite: false,
+          isLiked: false,
+          starsHTML: starsHTML,
           helpers: {
             checkImage: validation.checkImage
           }
@@ -206,6 +232,7 @@ router
           likes: review.likes,
           commentIndex: 0,
           isLiked: isLiked,
+          starsHTML: starsHTML,
           helpers: {
             checkImage: validation.checkImage
           }
@@ -216,7 +243,10 @@ router
     }
   })
   .post(ensureLoggedIn, async (req, res) => {
-    let reqObject = req.body;
+    let reqObject = Object.keys(req.body).reduce((acc, key) => {
+    acc[key] = xss(req.body[key]);
+    return acc;
+  }, {});
     if (!reqObject || Object.keys(reqObject).length === 0) {
       return res.status(400).render('error', {
         message: 'There are no fields in the request body'
@@ -229,8 +259,8 @@ router
     let rating = reqObject['edit-rating'];
 
     try {
-      req.params.reviewId = validation.checkId(req.params.reviewId);
-
+      req.params.reviewId = xss(req.parms.reviewId);
+      req.params.reviewId = validation.checkId(req.params.reviewId);     
       if (title)
         title = validation.checkString(title, 'Title', { min: '2', max: '20' });
 
@@ -287,7 +317,8 @@ router
   .delete(ensureLoggedIn, upload.none(), async (req, res) => {
     const userId = req.session.user.userId;
     try {
-      req.params.reviewId = validation.checkId(req.params.reviewId)
+      req.params.reviewId = xss(req.params.reviewId);
+      req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
       res.status(404).render('error', { message: 'Page not Found' });
     }
@@ -309,11 +340,15 @@ router
 router
   .route('/review/:reviewId/addcomment')
   .post(ensureLoggedIn, async (req, res) => {
-    let reqObj = req.body;
+    let reqObj = Object.keys(req.body).reduce((acc, key) => {
+    acc[key] = xss(req.body[key]);
+    return acc;
+  }, {});
 
     let content = reqObj['commentContent'];
 
     try {
+      req.params.reviewId = xss(req.params.reviewId)
       req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
       res.status(404).render('error', { message: 'Page not Found' });
@@ -351,7 +386,10 @@ router
   .route('/review/:reviewId/comment/:commentId')
   .post(ensureLoggedIn, upload.none(), async (req, res) => {
     const userId = req.session.user.userId;
-    let updateObject = req.body;
+    let updateObject = Object.keys(req.body).reduce((acc, key) => {
+    acc[key] = xss(req.body[key]);
+    return acc;
+  }, {});
     if (!updateObject || Object.keys(updateObject).length === 0) {
       return res.status(400).render('error', {
         message: 'There are no fields in the request body'
@@ -369,7 +407,9 @@ router
     }
 
     try {
+      req.params.commentId = xss(req.params.commentId);
       req.params.commentId = validation.checkId(req.params.commentId);
+      req.params.reviewId = xss(req.params.reviewId);
       req.params.reviewId = validation.checkId(req.params.reviewId);      
     } catch (e) {
       return res.status(400).render('error', {
@@ -404,7 +444,9 @@ router
   .delete(ensureLoggedIn, upload.none(), async (req, res) => {
     const userId = req.session.user.userId;
     try {
+      req.params.commentId = xss(req.params.commentId);
       req.params.commentId = validation.checkId(req.params.commentId);
+      req.params.reviewId = xss(req.params.reviewId);
       req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
       res.json({redirectUrl: '/review/' + req.params.reviewId});
@@ -429,7 +471,7 @@ router
 router
   .route('/like/:reviewId')
   .post(ensureLoggedIn, async (req, res) => {
-    const islike = req.body.islike;
+    const islike = xss(req.body.islike);
     req.session.user.userId = validation.checkId(req.session.user.userId);
     req.params.reviewId = validation.checkId(req.params.reviewId);  
     try {

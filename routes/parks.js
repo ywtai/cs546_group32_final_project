@@ -4,10 +4,30 @@ import { parksData, searchData } from "../data/index.js";
 import validation from "../validation.js";
 import {ensureLoggedIn, logRequests} from '../middleware.js'
 import {addToFavorites, deleteFavorite, addToPassport, getUserById} from '../data/users.js';
-
+import xss from 'xss'
 
 const router = express.Router();
 router.use(logRequests);
+
+function createStarRatingHTML(rating) {
+    const roundedRating = Math.round(rating * 2) / 2;  
+    let starsHTML = '';
+
+    for (let i = 0; i < Math.floor(roundedRating); i++) {
+        starsHTML += '<span class="star full">&#9733;</span>'; 
+    }
+
+    if (roundedRating % 1 !== 0) {
+        starsHTML += '<span class="star half">&#9733;</span>'; 
+    }
+
+    for (let i = Math.ceil(roundedRating); i < 5; i++) {
+        starsHTML += '<span class="star empty">&#9733;</span>'; 
+    }
+
+    return starsHTML;
+}
+
 
 router.route('/').get(async (req, res) => {
     //code here for GET will render the home handlebars file
@@ -156,7 +176,10 @@ router.route('/park/:id')
             const allData = [];
 
             const parkDetail = await parksData.getParkById(parkId);
-            const parkName = parkDetail.parkName;
+          const parkName = parkDetail.parkName;
+          const ratedPeople = parkDetail.reviews.length;
+          const starsHTML = createStarRatingHTML(parkDetail.averageRating);
+          
             allData.push(parkDetail);
 
             if (parkDetail) {
@@ -167,7 +190,11 @@ router.route('/park/:id')
                     parkData: allData,
                     parkName: parkName,
                     isLogin: false,
-                    favorite: false
+                    favorite: false,
+                    ratedPeople: ratedPeople,
+                      starsHTML: starsHTML,
+                      averageRating: parseFloat(parkDetail.averageRating.toFixed(1)),
+                    photos: parkDetail.photos
                     });
                 } else {
                     const user = await getUserById(req.session.user.userId)
@@ -179,7 +206,11 @@ router.route('/park/:id')
                         isLogin: true,
                         userId: req.session.user.userId,
                         userName: req.session.user.userName,
-                        favorite : favorite
+                      favorite: favorite,
+                      ratedPeople: ratedPeople,
+                      starsHTML: starsHTML,
+                      averageRating: parseFloat(parkDetail.averageRating.toFixed(1)),
+                    photos: parkDetail.photos          
                     });
                 }
             } else {
@@ -193,7 +224,10 @@ router.route('/park/:id')
 router.route('/favorite/:id')
     .post(ensureLoggedIn, async (req, res) => {
     
-        const { parkId, parkName, favorite } = { ...req.params, ...req.body };
+      let parkId = xss(req.params.id);
+      parkId = validation.checkId(parkId);
+      let favorite = xss(req.body.favorite);
+      let parkName = xss(req.body.parkName);
 
         const park = {
             parkId: parkId,
@@ -215,10 +249,9 @@ router.route('/favorite/:id')
     });
 
 router.post('/passport/add/:id', ensureLoggedIn, async (req, res) => {
-    const visitDate = req.body.visitDate;
+    const visitDate = xss(req.body.visitDate);
     const userId = req.session.user.userId; 
     const parkId = req.params.id
-
     const park = {
         parkId: parkId,
         visitDate: visitDate

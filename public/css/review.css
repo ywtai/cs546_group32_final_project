@@ -67,6 +67,10 @@ dl dd {
 .review-content {
     font-weight: bold;
     margin-left: 20px;
+    background-color: #ecf0f1;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
 }
 
 .date-rating {
@@ -369,4 +373,26 @@ input {
     background-color: #f0ece2;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: inline-grid;
+}
+
+.star {
+    font-size: 24px;  
+    display: inline-block;
+    -webkit-font-smoothing: antialiased; 
+}
+
+.star.full {
+    color: gold; 
+}
+
+.star.empty {
+    color: gray; 
+}
+
+.star.half {
+    background: linear-gradient(90deg, gold 50%, gray 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent; 
 }

@@ -32,6 +32,19 @@ h2 {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+}
+
+.name-overlay {
+    position: absolute; /* positions the overlay over the image */
+    bottom: 0; /* aligns the overlay at the bottom of the image */
+    left: 0;
+    width: 100%; /* ensures it stretches across the image */
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black background */
+    color: white; /* text color */
+    padding: 10px 20px; /* some padding inside the overlay */
+    font-size: 24px; /* larger text */
+    text-align: center; /* centers text horizontally */
 }
 
 .description, .info {
@@ -62,6 +75,8 @@ dl dd {
     width: 100%;
     padding-right: 10px;
     margin-bottom: 20px;
+    border-radius: 5ps;
+    background-color:#c7b198;
 }
 
 .favorite-btn {
@@ -69,14 +84,14 @@ dl dd {
     border: none;
     cursor: pointer;
     color: #ccc; 
-    font-size: 24px;
+    font-size: 18px;
     transition: color 0.3s ease;
     padding-right: 20px;
 }
 
 .addpassport  {
     padding: 10px 15px;
-    font-size: 16px;
+    font-size: 10px;
     color: white;
     background-color: #c7b198;
     border: none;
@@ -159,7 +174,7 @@ dl dd {
 .review-title {
     position: absolute;
     bottom: 32px;
-    left: 20px;
+    left: 10px;
     margin: 0;
     color: #183657;
 }
@@ -167,7 +182,7 @@ dl dd {
 .review-user {
     position: absolute;
     bottom: 10px;
-    left: 20px;
+    left: 30px;
     margin: 0;
     color: black;
 }
@@ -252,12 +267,39 @@ button:hover {
 }
 
 .heart {
+    width: 30px;
+    height: 30px;
+
+}
+
+.liked-heart {
+    position: absolute;
+    bottom: 10px;  
+    right: 120px;   
     width: 20px;
     height: auto;
 }
 
 .review-like {
     float: right;
+}
+
+.user-icon {
+    position: absolute;
+    width: 20px;
+    left: 10px;
+    bottom: 10px;
+}
+
+.review-element label {
+    position: absolute;
+    bottom: 10px;  /* Align vertically with the heart */
+    right: 10px;   /* Closer to the right edge */
+    background-color: #ffffff; /* Optional: for better readability */
+    padding: 2px 5px;
+    border-radius: 5px;
+    color: #333;
+    font-size: 0.9em;
 }
 
 .description, .review-info, .comment-info, .edit-comment-info {
@@ -308,3 +350,69 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+.star {
+    font-size: 24px;  /* Adjust the size of the stars */
+    display: inline-block;
+    -webkit-font-smoothing: antialiased; /* Improves the appearance of the font icons */
+}
+
+.star.full {
+    color: gold; /* Full stars in gold color */
+}
+
+.star.empty {
+    color: gray; /* Empty stars in solid gray color */
+}
+
+.star.half {
+    background: linear-gradient(90deg, gold 50%, gray 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent; 
+}
+
+
+.date-select {
+    background-color: #f8f8f8;  
+    border: 2px solid #ccc;     
+    border-radius: 5px;         
+    padding: 10px;              
+    font-size: 16px;            
+    color: #333;                
+    outline: none;             
+    transition: border-color 0.3s; 
+}
+
+.date-select:hover {
+    border-color: #888;         
+}
+
+
+.date-select:focus {
+    border-color: #0056b3;      
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.25); 
+}
+
+
+.date-select::-webkit-clear-button {
+    display: none;             
+}
+
+.date-select::-webkit-calendar-picker-indicator {
+    color: rgba(0, 0, 0, 0);   
+    background-size: cover;    
+    opacity: 0.8;              
+    cursor: pointer;           
+}
+
+
+.date-select::-moz-calendar {
+    color: #333;
+}
+
+.date-select::-moz-focus-inner {
+    border: 0;
+}
+

@@ -76,7 +76,7 @@ router
 
 router
   .route('/login')
-  .get(ensureNotLoggedIn, captureUrl, async (req, res) => {
+  .get(ensureNotLoggedIn, async (req, res) => {
     res.render('login', { title: 'Login' });
   })
   .post(async (req, res) => {
