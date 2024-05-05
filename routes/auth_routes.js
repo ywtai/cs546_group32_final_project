@@ -236,7 +236,7 @@ router.route('/logout').get((req, res) => {
     }
 
     res.clearCookie('AuthState');
-    res.redirect('/'); 
+    res.render('logout'); 
   });
 });
 

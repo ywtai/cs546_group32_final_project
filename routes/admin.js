@@ -87,15 +87,20 @@ router
     });
 
 router.get('/search', async(req, res) => {
-    const searchQuery = req.query.searchQuery;
-    const name = searchQuery.trim();
-    let parkList = [];
-    let totalParks = 0;
-    if (!name) {
-        throw new Error("Please provide a name to search.");
+    try{ 
+        const searchQuery = req.query.searchQuery;
+        const name = searchQuery.trim();
+        let parkList = [];
+        let totalParks = 0;
+        if (!name) {
+            throw new Error("Please provide a name to search.");
+        }
+        [parkList, totalParks] = await searchData.searchByName(name, 500, 0);
+        res.json({ parkList });
+    } catch(e) {
+        res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' });
     }
-    [parkList, totalParks] = await searchData.searchByName(name, 10, 0);
-    res.json({ parkList });
+
     })
       
 

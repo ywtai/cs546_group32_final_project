@@ -44,7 +44,7 @@
                 const url = `/admin/search?searchQuery=${encodeURIComponent(searchInput)}`;
                 const response = await fetch(url);
                 const data = await response.json();
-
+                
                 console.log(data.parkList);
                 diplaySearchResults(data.parkList);
             } catch (e) {
