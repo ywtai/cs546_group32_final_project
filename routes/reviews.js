@@ -158,14 +158,15 @@ router
       const {parkId, review} = await reviewData.getReview(reviewId);
       const comments = await commentData.getAllComments(reviewId);
       const userId = req.session.user ? req.session.user.userId : null;
+      const userName = req.session.user ? req.session.user.userName : null;
 
       const commentsWithAuthCheck = comments.map(comment => ({
         ...comment,
-        commentIsAuthor: comment.userId === userId || req.session.user.userName === 'admin'
+        commentIsAuthor: comment.userId === userId || userName === 'admin'
       }));
 
       let photos = validation.checkPhotoExist(review.photos);
-      const isAuthor = review.userId === userId || req.session.user.userName === 'admin';
+      const isAuthor = review.userId === userId || userName === 'admin';
 
       if (!req.session.user) {
         res.render('review', {
@@ -295,18 +296,12 @@ router
       let {parkId, review} = await reviewData.getReview(req.params.reviewId);
       const isAuthor = req.session.user && ((req.session.user.userId === review.userId) || (req.session.user.userName === 'admin'));
       if (!isAuthor) {
-        // return res.status(403).render('error', {
-        //   message: "You do not have permission to delete this review."
-        // });
         res.json({redirectUrl: '/park/' + parkId});
       }
       let deletedReview = await reviewData.removeReview(req.params.reviewId);
       let deleteInfo = await deleteReviews(review.userId, req.params.reviewId);
-      // parkId = deletedReview._id.toString();
       res.json({redirectUrl: '/park/' + parkId});
     } catch (e) {
-      // res.status(500).render('error', { message: 'Internal Server Error' });
-      console.log(e);
       res.json({redirectUrl: '/park/'});
     }
   });
@@ -412,9 +407,6 @@ router
       req.params.commentId = validation.checkId(req.params.commentId);
       req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
-      // return res.status(400).render('error', {
-      //   message: e.toString()
-      // });
       res.json({redirectUrl: '/review/' + req.params.reviewId});
     }
     
