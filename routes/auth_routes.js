@@ -223,39 +223,4 @@ router.route('/logout').get(async (req, res) => {
   })
 });
 
-router.get('/admin', ensureLoggedIn, async(req, res) => {
-  const user = await getUserById(req.session.user.userId);
-  if (user.userName !== 'admin') {
-    res.status(500).send('This account is not an admin account!');
-  }
-
-  try {
-    const user = await getUserById(req.session.user.userId);
-
-  res.render('admin', {
-    currentTime: new Date().toUTCString(),
-    userId: req.session.user.userId,
-    userName: req.session.user.userName,
-    email: req.session.user.email,
-    dateOfBirth: req.session.user.dateOfBirth,
-    bio: req.session.user.bio,
-  })
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-router.get('/admin/search', async(req, res) => {
-  const searchQuery = req.query.searchQuery;
-  const name = searchQuery.trim();
-  let parkList = [];
-  let totalParks = 0;
-  if (!name) {
-      throw new Error("Please provide a name to search.");
-  }
-  [parkList, totalParks] = await searchData.searchByName(name, 10, 0);
-  res.json({ parkList });
-})
-
 export default router;

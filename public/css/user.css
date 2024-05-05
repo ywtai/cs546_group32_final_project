@@ -74,17 +74,17 @@ a:hover {
     background-color: #cd8a1f;
 }
 .park-photo {
-    max-width: 200px; /* Adjust as needed */
-    max-height: 150px; /* Adjust as needed */
+    max-width: 200px; 
+    max-height: 150px; 
     display: block;
-    margin: 10px 0; /* Add margin for spacing */
+    margin: 10px 0; 
 }
 
 .review-photo {
-    max-width: 200px; /* Adjust as needed */
-    max-height: 150px; /* Adjust as needed */
+    max-width: 200px; 
+    max-height: 150px;
     display: block;
-    margin: 10px 0; /* Add margin for spacing */
+    margin: 10px 0; 
 }
 
 .link button {
@@ -95,6 +95,7 @@ a:hover {
     text-align: center;
     border-radius: 4px;
     border: #c7b198;
+    cursor: pointer;
 }
 
 .link button:hover {

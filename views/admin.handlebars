@@ -5,17 +5,13 @@
 <p class="phrase">Welcome {{userName}}, the time is now: {{currentTime}}.</p>
 <p class="content">Your bio: {{bio}}</p>
 
-{{!-- <div class="link">
-    <p>Action: </p>
-    <br>
-    <a href="/auth/sync">Sync</a>
-</div> --}}
-<div class="adminContainer">
-    <button>sync</button>
+<div class="link">
     <p>{{message}}</p>
-    <a href="/" class="col">Go Back To Search Page</a>
+    <br>
+    <form action="/admin/sync" method="POST">
+        <button type="submit">Sync</button>
+    </form>
 </div>
-
 
 <div class="link">
     <h3>Search Parks</h3>
@@ -45,7 +41,7 @@
         
         async function searchParks(searchInput) {
             try {
-                const url = `/auth/admin/search?searchQuery=${encodeURIComponent(searchInput)}`;
+                const url = `/admin/search?searchQuery=${encodeURIComponent(searchInput)}`;
                 const response = await fetch(url);
                 const data = await response.json();
 
