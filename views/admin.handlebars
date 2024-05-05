@@ -22,7 +22,7 @@
 </div>
 
 <div class="content" id="searchResultDiv" hidden>
-    <h3>Park List: </h2>
+    <h3>Park List: </h3>
     <ul id="searchResultList" hidden></ul>
     <div class="parkReviews" hidden></div>
 </div>
@@ -74,7 +74,7 @@
                     const reviewItem = document.createElement('li');
                     const reviewLink = document.createElement('a');
                     reviewLink.href = `/review/${review._id}`;
-                    reviewLink.textContent = review.title + '-' + review.userName;
+                    reviewLink.textContent = review.title + ' - ' + review.userName;
 
                     reviewItem.appendChild(reviewLink);
                     reviewsList.appendChild(reviewItem);

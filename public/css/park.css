@@ -64,12 +64,6 @@ dl dd {
     margin-bottom: 20px;
 }
 
-.heart {
-    width: 25px;
-    height: auto;
-    vertical-align: middle;
-}
-
 .favorite-btn {
     background: none;
     border: none;
@@ -260,6 +254,10 @@ button:hover {
 .heart {
     width: 20px;
     height: auto;
+}
+
+.review-like {
+    float: right;
 }
 
 .description, .review-info, .comment-info, .edit-comment-info {

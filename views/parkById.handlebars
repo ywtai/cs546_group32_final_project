@@ -61,8 +61,10 @@
                         {{/if}}
                         <p class="review-title">{{this.title}}</p>
                         <p class="review-user">{{this.userName}}</p>
-                        <img class="heart" src="/public/icon/redheart.png" alt="like">
-                        <label>{{this.likes}}</label>
+                        <div class="review-like">
+                            <img class="heart" src="/public/icon/redheart.png" alt="like">
+                            <label>{{this.likes}}</label>
+                        </div>
                     </a>
                     {{!-- <a class='reviewLink' href="/review/{{this.userId}}">{{this.userName}}</a> --}}
                     {{!-- <p>User : {{this.userName}}</p>
