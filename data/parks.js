@@ -195,6 +195,7 @@ const exportedMethods = {
     }
     console.log(`Delete ${dbParksMap.size} parks from DB that were not in the API data.`);
     console.log("Data: finish sync.");
+    return true;
   }
 }
 
