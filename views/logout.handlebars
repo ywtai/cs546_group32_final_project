@@ -22,7 +22,7 @@
 
 
 <script>
-    function preventBack() { window.history.forward(); }
-    setTimeout("preventBack()", 0);
-    window.onunload = function () { null };
+    setTimeout(function() {
+            window.location.href = '/'; // Redirects to the home page
+        }, 3000);
 </script>
