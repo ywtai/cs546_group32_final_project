@@ -109,6 +109,11 @@ router
 router.get('/user', ensureLoggedIn, async(req, res) => {
   try {
       const user = await getUserById(req.session.user.userId);
+
+      if (user.userName === 'admin') {
+        res.redirect('/admin');
+      }
+
       const parksPromises = user.personalParkPassport.map(async (tmp) => {
           const passportPark = await parksData.getParkById(tmp.parkId);
           return {

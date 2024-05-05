@@ -16,7 +16,7 @@ router.route('/').get(async (req, res) => {
         const top5 = await searchTop5();
         res.render('home', { top5: top5 });
     } catch (e) {
-        res.status(500).json({ error: e });
+        res.status(500).render('error', { message: e });
     }
 });
 
