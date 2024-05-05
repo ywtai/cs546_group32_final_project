@@ -176,9 +176,9 @@ router.route('/park/:id')
             const allData = [];
 
             const parkDetail = await parksData.getParkById(parkId);
-          const parkName = parkDetail.parkName;
-          const ratedPeople = parkDetail.reviews.length;
-          const starsHTML = createStarRatingHTML(parkDetail.averageRating);
+            const parkName = parkDetail.parkName;
+            const ratedPeople = parkDetail.reviews.length;
+            const starsHTML = createStarRatingHTML(parkDetail.averageRating);
           
             allData.push(parkDetail);
 
