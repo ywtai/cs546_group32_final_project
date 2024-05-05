@@ -8,6 +8,9 @@ import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUse
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
 import { parksData, reviewData } from "../data/index.js";
 
+import xss from 'xss';
+import helmet from 'helmet';
+
 router.use(logRequests);
 
 router.route('/').get(async (req, res) => {
@@ -26,6 +29,13 @@ router
       password,
       confirmPassword,
       bio } = req.body;
+
+    userName = xss(userName);
+    email = xss(email);
+    dateOfBirth = xss(dateOfBirth);
+    bio = xss(bio);
+    password = xss(password);
+    confirmPassword = xss(confirmPassword);
 
     try {
       helpers.checkIfValid(userName,
@@ -71,6 +81,9 @@ router
   })
   .post(async (req, res) => {
     let { usernameOrEmail, password } = req.body;
+
+    usernameOrEmail = xss(usernameOrEmail);
+    password = xss(password);
     try {
       helpers.checkIfValid(usernameOrEmail, password)
     } catch (e) {
@@ -142,10 +155,10 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
 
     currentTime: new Date().toUTCString(),
     userId: req.session.user.userId,
-    userName: req.session.user.userName,
-    email: req.session.user.email,
-    dateOfBirth: req.session.user.dateOfBirth,
-    bio: req.session.user.bio,
+    userName: xss(req.session.user.userName),
+    email: xss(req.session.user.email),
+    dateOfBirth: xss(req.session.user.dateOfBirth),
+    bio: xss(req.session.user.bio),
     personalParkPassport: req.session.user.personalParkPassport,
     favorite: req.session.user.favorite,
     reviews: reviews,
@@ -159,7 +172,7 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
 });
 
 router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
-  const parkId = req.body.parkId;
+  const parkId = xss(req.body.parkId);
   const userId = req.session.user.userId;  
   try {
     const result = await deleteFavorite(userId, parkId);
@@ -176,7 +189,7 @@ router.route('/delete-favorite/:id').post(ensureLoggedIn, async (req, res) => {
 });
 
 router.post('/delete-passport-park', ensureLoggedIn, async (req, res) => {
-  const parkId = req.body.parkId;
+  const parkId = xss(req.body.parkId);
   const userId = req.session.user.userId;    
   try {
     const result = await deleteParkFromPassport(userId, parkId);
