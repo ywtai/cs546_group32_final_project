@@ -12,14 +12,15 @@
         <li id="passport-{{parkId}}">
             <a href="http://localhost:3000/park/{{parkId}}">
                 {{parkName}} - Visit Date: {{visitDate}}
-                <img src="{{photos.[0].url}}" alt="{{photos.[0].altText}}" class="park-photo">
+                {{#if photos.[0]}}
+                    <img src="{{photos.[0].url}}" alt="{{photos.[0].altText}}" class="park-photo">
+                {{/if}}
             </a>
             <button type="button" class="delete-btn" onclick="deletePassportPark('{{parkId}}')">Delete</button>
         </li>
         {{/each}}
     </ul>
 </div>
-
 
 <!-- Favorites Section -->
 <div class="content">
@@ -41,8 +42,9 @@
         {{#each reviews}}
         <li id="review-{{reviewId}}">
             <a href="/review/{{reviewId}}">{{title}}
-                <img src="/public{{photo}}" class="review-photo" alt="{{reviewId}} poster">
-
+                {{#if photo}}
+                    <img src="/public{{photo}}" class="review-photo" alt="{{reviewId}} poster">
+                {{/if}}
             </a>
             <p>{{reviewDate}}</p>
         </li>
