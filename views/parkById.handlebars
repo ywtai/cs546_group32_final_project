@@ -31,29 +31,19 @@
         </div>
     {{/if}}
 
-
-{{!-- <div class="park-info">
-  <h3>Average Rating</h3>
-    <div class="star-rating">
-        {{{starsHTML}}}
-        <label>{{averageRating}}</label>
-    </div>
-    <label for="ratedPeople">{{ratedPeople}} rated this park</label>
-</div> --}}
-
 <article class="container">
-  <h2>Average Rating</h2>
+    <h2>Average Rating</h2>
     <div class="description">
-        <dl>
-           <dt>{{{starsHTML}}}</dt>
-          <dd>{{averageRating}} out of 5</dd>
-          <dd>{{ratedPeople}} rated this park</dd>
-        </dl>  
+        <div class="rating">
+            <div>{{{starsHTML}}}</div>
+            <p>{{averageRating}} out of 5</p>
+        </div>
+        <p class="rated-people">{{ratedPeople}} people rated this park</p>
     </div>
   {{#each parkData}}
     <h2>Description</h2>
     <p class="description">{{this.description}}</p>
-      <h2>Park Info</h2>
+    <h2>Park Info</h2>
     <section class="info"> 
         <dl>
             <dt>Park Code:</dt>
