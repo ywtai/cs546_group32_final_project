@@ -5,7 +5,7 @@ import helpers from '../helpers.js';
 import validation from '../validation.js';
 import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUserById} from "../data/users.js";
 
-import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn} from '../middleware.js'
+import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn, captureUrl} from '../middleware.js'
 import { parksData, reviewData, searchData} from "../data/index.js";
 
 import xss from 'xss';
