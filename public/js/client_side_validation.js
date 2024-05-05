@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.redirectUrl) {
               window.location.href = data.redirectUrl;
             } else {
-              alert('Review deleted, but no redirect information received.');
+              alert(data.message);
             }
           })
           .catch(error => console.error('Error:', error));

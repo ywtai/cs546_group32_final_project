@@ -161,10 +161,11 @@ router
 
       const commentsWithAuthCheck = comments.map(comment => ({
         ...comment,
-        commentIsAuthor: comment.userId === userId
+        commentIsAuthor: comment.userId === userId || req.session.user.userName === 'admin'
       }));
 
       let photos = validation.checkPhotoExist(review.photos);
+      const isAuthor = review.userId === userId || req.session.user.userName === 'admin';
 
       if (!req.session.user) {
         res.render('review', {
@@ -176,7 +177,7 @@ router
           rating: review.rating,
           photos: photos,
           reviewId: req.params.reviewId,
-          isAuthor: review.userId === userId,
+          isAuthor: isAuthor,
           isLogin: !!req.session.user,
           parkId: parkId,
           likes: review.likes,
@@ -198,7 +199,7 @@ router
           rating: review.rating,
           photos: photos,
           reviewId: req.params.reviewId,
-          isAuthor: review.userId === userId,
+          isAuthor: isAuthor,
           isLogin: !!req.session.user,
           parkId: parkId,
           likes: review.likes,
@@ -251,7 +252,8 @@ router
 
     try {
       const {parkId, review} = await reviewData.getReview(req.params.reviewId);
-      if (review.userId !== userId) {
+      const isAuthor = req.session.user && ((req.session.user.userId === review.userId) || (req.session.user.userName === 'admin'));
+      if (!isAuthor) {
         return res.status(403).render('error', {
           message: "You do not have permission to edit this review."
         });
@@ -266,7 +268,7 @@ router
 
     try {
       const {parkId, review} = await reviewData.getReview(req.params.reviewId);
-      const isAuthor = req.session.user && (req.session.user.userId === review.userId);
+      const isAuthor = req.session.user && (req.session.user.userId === review.userId) || (req.session.user.userName === 'admin');
       if (isAuthor) {
         res.redirect(`/review/${req.params.reviewId}`);
       }
@@ -291,17 +293,21 @@ router
     
     try {
       let {parkId, review} = await reviewData.getReview(req.params.reviewId);
-      if (review.userId !== userId) {
-        return res.status(403).render('error', {
-          message: "You do not have permission to delete this review."
-        });
+      const isAuthor = req.session.user && ((req.session.user.userId === review.userId) || (req.session.user.userName === 'admin'));
+      if (!isAuthor) {
+        // return res.status(403).render('error', {
+        //   message: "You do not have permission to delete this review."
+        // });
+        res.json({redirectUrl: '/park/' + parkId});
       }
       let deletedReview = await reviewData.removeReview(req.params.reviewId);
-      let deleteInfo = await deleteReviews(userId, req.params.reviewId);
-      parkId = deletedReview._id.toString();
+      let deleteInfo = await deleteReviews(review.userId, req.params.reviewId);
+      // parkId = deletedReview._id.toString();
       res.json({redirectUrl: '/park/' + parkId});
     } catch (e) {
-      res.status(500).render('error', { message: 'Internal Server Error' });
+      // res.status(500).render('error', { message: 'Internal Server Error' });
+      console.log(e);
+      res.json({redirectUrl: '/park/'});
     }
   });
 
@@ -378,7 +384,7 @@ router
 
     try {
       const comment = await commentData.getComment(req.params.commentId);
-      const isAuthor = req.session.user && (userId === comment.userId);
+      const isAuthor = req.session.user && ((req.session.user.userId === comment.userId) || (req.session.user.userName === 'admin'));
       if (!isAuthor) {
         return res.status(403).render('error', {
           message: "You do not have permission to edit this comment." 
@@ -406,23 +412,25 @@ router
       req.params.commentId = validation.checkId(req.params.commentId);
       req.params.reviewId = validation.checkId(req.params.reviewId);
     } catch (e) {
-      return res.status(400).render('error', {
-        message: e.toString()
-      });
+      // return res.status(400).render('error', {
+      //   message: e.toString()
+      // });
+      res.json({redirectUrl: '/review/' + req.params.reviewId});
     }
     
     try {
       const comment = await commentData.getComment(req.params.commentId);
-      if (comment.userId !== userId) {
+      const isAuthor = req.session.user && ((req.session.user.userId === comment.userId) || (req.session.user.userName === 'admin'));
+      if (!isAuthor) {
         return res.status(403).render('error', {
           message: "You do not have permission to delete this comment." 
         });
       }
       let deletedComment = await commentData.removeComment(req.params.commentId);
-      const deleteinfo = await deleteComments(req.session.user.userId, req.params.commentId)
+      const deleteinfo = await deleteComments(comment.userId, req.params.commentId)
       res.json({redirectUrl: '/review/' + req.params.reviewId});
     } catch (e) {
-      res.status(500).render('error', { message: 'Internal Server Error' });
+      res.json({redirectUrl: '/review/' + req.params.reviewId});
     }
   })
 

@@ -149,7 +149,7 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
   })
 } catch (error) {
   console.error(error);
-  res.status(500).send('Internal Server Error');
+  return res.status(500).render('error', { title: "Error", message: "Internal Server Error" })
 }
 });
 
