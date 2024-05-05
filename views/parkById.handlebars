@@ -1,15 +1,12 @@
 <link rel="stylesheet" href="/public/css/park.css">
 
 <div class="fav-passport-container">
-  
     {{#if favorite}}
         <button class="favorite-btn" data-postid="{{parkId}}" data-favorited="1" data-parkname="{{parkName}}">
-            Add to Favorite
             <img class="heart" src="/public/icon/redheart.png" alt="favorite">
         </button>
     {{else}}
         <button class="favorite-btn" data-postid="{{parkId}}" data-favorited="0" data-parkname="{{parkName}}">
-            Add to Favorite
             <img class="heart" src="/public/icon/heart.png" alt="favorite">
         </button>
     {{/if}}
@@ -21,32 +18,35 @@
     </div>
 </div>
 
-{{#if photos}}
-  <img class="park-poster" alt="{{parkName}} Image" src="{{photos.[0].url}}">
+<h1>{{parkName}}</h1>
+    {{#if photos}}
+    <img class="park-poster" alt="{{parkName}} Image" src="{{photos.[0].url}}">
 {{/if}}
-<div class="name-overlay">{{parkName}}</div>
 
 
-<div class="park-info">
+{{!-- <div class="park-info">
   <h3>Average Rating</h3>
     <div class="star-rating">
         {{{starsHTML}}}
         <label>{{averageRating}}</label>
     </div>
     <label for="ratedPeople">{{ratedPeople}} rated this park</label>
-</div>
-  
+</div> --}}
 
-{{#each parkData}}
 <article class="container">
-    {{!-- <h1>{{this.parkName}}</h1>
-    {{#if this.photos}}
-    <img class="park-poster" alt="{{this.parkName}} Image" src="{{this.photos.[0].url}}">
-    {{/if}} --}}
+  <h2>Average Rating</h2>
+    <div class="description">
+        <dl>
+           <dt>{{{starsHTML}}}</dt>
+          <dd>{{averageRating}} out of 5</dd>
+          <dd>{{ratedPeople}} rated this park</dd>
+        </dl>  
+    </div>
+  {{#each parkData}}
     <h2>Description</h2>
     <p class="description">{{this.description}}</p>
-    <section class="info">
-        <h2>Park Info</h2>
+      <h2>Park Info</h2>
+    <section class="info"> 
         <dl>
             <dt>Park Code:</dt>
             <dd>{{this.parkCode}}</dd>
@@ -64,8 +64,8 @@
             </dd>
         </dl>
     </section>
+    <h2 >User Reviews</h2>
     <section class="ratings">
-        <h3 class="rating">User Reviews</h3>
         {{#if this.reviews}}
         <div class="review-table">
             {{#each this.reviews}}

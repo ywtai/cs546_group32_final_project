@@ -36,36 +36,43 @@ h2 {
 }
 
 .name-overlay {
-    position: absolute; /* positions the overlay over the image */
-    bottom: 0; /* aligns the overlay at the bottom of the image */
+    position: absolute; 
+    bottom: 0; 
     left: 0;
-    width: 100%; /* ensures it stretches across the image */
-    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black background */
-    color: white; /* text color */
-    padding: 10px 20px; /* some padding inside the overlay */
-    font-size: 24px; /* larger text */
-    text-align: center; /* centers text horizontally */
+    width: 100%; 
+    background-color: rgba(0, 0, 0, 0.5); 
+    color: white; 
+    padding: 10px 20px; 
+    font-size: 24px; 
+    text-align: center; 
 }
 
 .description, .info {
+    background-color: #f0ece2;
     margin-bottom: 10px;
     font-size: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
 }
 
 dl {
     margin-left: 5px;
+    background-color: #f0ece2;
 }
 
 dl dt {
     font-weight: bold;
     font-size: 20px;
     margin-bottom: 5px;
+    background-color: #f0ece2;
 }
 
 dl dd {
     margin-left: 10px;
     margin-bottom: 10px;
     font-size: 15px;
+    background-color: #f0ece2;
 }
 
 .fav-passport-container {
@@ -87,6 +94,10 @@ dl dd {
     font-size: 18px;
     transition: color 0.3s ease;
     padding-right: 20px;
+}
+
+.favorite-btn:hover{
+background-color:#c7b198;
 }
 
 .addpassport  {
@@ -302,8 +313,8 @@ button:hover {
     font-size: 0.9em;
 }
 
-.description, .review-info, .comment-info, .edit-comment-info {
-    background-color: #ecf0f1;
+.review-info, .comment-info, .edit-comment-info {
+    background-color: #f0ece2;
     padding: 15px;
     border-radius: 5px;
     margin-top: 10px;
@@ -416,3 +427,52 @@ a:hover {
     border: 0;
 }
 
+article.container {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* Section Headers within the Article */
+article h2 {
+    color: #2c3e50;
+    font-size: 22px;
+    border-bottom: 2px solid #c7b198; /* Adds a line under the header */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Description Paragraphs */
+p.description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Detailed List (DL) for Park Info */
+dl {
+    /* background-color: #; */
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+dl dt {
+    font-weight: bold;
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+dl dd {
+    font-size: 16px;
+    color: #666;
+    margin-left: 20px;
+}

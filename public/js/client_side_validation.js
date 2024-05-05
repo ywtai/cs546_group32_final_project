@@ -679,10 +679,10 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 if (data.favorited) {
-                    button.innerHTML = 'Add to Favorite <img class="heart" src="/public/icon/redheart.png" alt="favorite">';
+                    button.innerHTML = '<img class="heart" src="/public/icon/redheart.png" alt="favorite">';
                     button.dataset.favorited = "1";
                 } else {
-                    button.innerHTML = 'Add to Favorite <img class="heart" src="/public/icon/heart.png" alt="favorite">';
+                    button.innerHTML = '<img class="heart" src="/public/icon/heart.png" alt="favorite">';
                     button.dataset.favorited = "0";
                 }
             })
