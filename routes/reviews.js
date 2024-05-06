@@ -100,6 +100,21 @@ router
     }
 
     try {
+      let parkInfo = await parksData.getParkById(parkId);
+      let parkReviews = parkInfo.reviews;
+      if (parkReviews.some(review => review.userId === req.session.user.userId))
+      {
+        return res.status(400).render('error', {
+          message: 'You can not leave more than one review in the same park.'
+        });
+      }
+    } catch(e) {
+      return res.status(400).render('error', {
+        message: e
+      });
+    }
+
+    try {
       const parkDetail = await parksData.getParkById(parkId);
       if (parkDetail) {
         res.render('addReview', {
@@ -147,21 +162,6 @@ router
     } catch (e) {
       return res.status(400).render('error', {
         message: e.toString()
-      });
-    }
-
-    try {
-      let parkInfo = await parksData.getParkById(parkId);
-      let parkReviews = parkInfo.reviews;
-      if (parkReviews.some(review => review.userId === req.session.user.userId))
-      {
-        return res.status(400).render('error', {
-          message: 'You can not leave more than one review in the same park.'
-        });
-      }
-    } catch(e) {
-      return res.status(400).render('error', {
-        message: e
       });
     }
 
