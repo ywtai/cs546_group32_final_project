@@ -1,22 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/public/css/login.css">
+</head>
 <body>
-<link rel="stylesheet" href="/public/css/login.css">
-
-</body>
 
 <div class="container">
     <h1 class="login">{{title}}</h1>
     <form id="login-form" action="/auth/login" method="POST">
         <label for="usernameOrEmail">Email Address or your username:</label>
-        <input type="usernameOrEmail" name="usernameOrEmail" id="usernameOrEmail" value = {{usernameOrEmail}}><br>
+        <input type="text" name="usernameOrEmail" id="usernameOrEmail" value = {{usernameOrEmail}}><br>
         <label for="loginpassword">Password:</label>
         <input type="password" name="password" id="loginpassword" value = {{password}}><br>
         <input type="submit" value="Login">
     </form>
     <div id="error" class="error" hidden>I'm an error. I will change through Client-Side JS</div>
-    {{#if error}}
-        <div id="error" class="error">{{error}}</div>
-    {{else}}
-        <div id="error" class="error" hidden></div>
-    {{/if}}
+
     <a class="login-a" href="/auth/register">Click here to register!</a>
-    {{!-- <script src="../public/js/client_side_validation.js"></script> --}}
+</div>
+</body>
+</html>
+
+
