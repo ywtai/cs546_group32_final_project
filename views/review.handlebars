@@ -28,12 +28,12 @@
         {{#if isLiked}}
             <button class="like-btn" data-postid="{{reviewId}}" data-liked="1">
                 <img class="heart" src="/public/icon/redheart.png" alt="like">
-                <label>{{likes}}</label>
+                {{likes}}
             </button>
         {{else}}            
             <button class="like-btn" data-postid="{{reviewId}}" data-liked="0">
                 <img class="heart" src="/public/icon/heart.png" alt="like">
-                <label>{{likes}}</label>
+                {{likes}}
             </button>
         {{/if}}
         </div>

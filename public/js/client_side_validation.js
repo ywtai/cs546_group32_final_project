@@ -732,13 +732,13 @@ function toggleLike(button) {
         if (data.islike) {
           button.innerHTML = `
             <img class="heart" src="/public/icon/redheart.png" alt="favorite"> 
-            <label>${data.likes}</label>
+            ${data.likes}
             `; // Filled heart
             button.dataset.liked = "1";
         } else {
           button.innerHTML = `
             <img class="heart" src="/public/icon/heart.png" alt="favorite"> 
-            <label>${data.likes}</label>
+            ${data.likes}
             `; // Empty heart
             button.dataset.liked = "0";
         }
