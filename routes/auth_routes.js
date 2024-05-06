@@ -7,7 +7,7 @@ import { loginUser, registerUser, deleteFavorite, deleteParkFromPassport, getUse
 
 import { logRequests, redirectBasedOnRole, ensureLoggedIn, ensureNotLoggedIn, captureUrl} from '../middleware.js'
 import { parksData, reviewData, searchData} from "../data/index.js";
-
+import {users} from '../config/mongoCollections.js';
 import xss from 'xss';
 import helmet from 'helmet';
 
@@ -36,6 +36,14 @@ router
     bio = xss(bio);
     password = xss(password);
     confirmPassword = xss(confirmPassword);
+    let errors =[];
+    const userCollection = await users(); 
+    const checkEmailExisted = await userCollection.findOne({ email: email });
+    if (checkEmailExisted) errors.push( 'Error: A user with this email already exists!');
+    const checkUserExisted = await userCollection.findOne({ userName: userName });
+    if (checkUserExisted) errors.push( 'Error: A user with this userName already exists!');
+    if(errors.length > 0){
+    return res.render('register', {errors: errors})}
 
     try {
       helpers.checkIfValid(userName,
@@ -173,7 +181,7 @@ router.get('/user', ensureLoggedIn, async(req, res) => {
   })
 } catch (error) {
   console.error(error);
-  return res.status(500).render('error', { title: "Error", message: "Internal Server Error" })
+  return res.status(500).render('error', { title: "Error", message: error })
 }
 });
 

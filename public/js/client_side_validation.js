@@ -259,29 +259,6 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 
-// var loginForm = document.getElementById('login-form')
-// console.log(loginForm)
-
-// if (loginForm) {
-
-//   loginForm.addEventListener('submit', (event) => {
-//     event.preventDefault();
-//     try {
-//       helpers.checkIfValid(
-//         usernameOrEmail.value,
-//         loginpassword.value,
-//       )
-//       usernameOrEmail = helpers.checkuserNameorEmail(usernameOrEmail.value);
-//       loginpassword = helpers.checkPassword(loginpassword.value);
-//       errorDiv.hidden = true;
-//       loginForm.submit();
-//     } catch (e) {
-//       errorDiv.hidden = false;
-//       errorDiv.innerHTML = e;
-//     }
-//   })
-// }
-
 //review
 const watcher = (elementID, error) => {
 
