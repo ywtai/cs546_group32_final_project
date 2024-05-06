@@ -517,7 +517,7 @@ router
       const review = await reviewData.getReview(reviewId)
 
       if (islike) {
-        const addtoLiked = await addToLiked(req.session.user.userId, rreviewId)
+        const addtoLiked = await addToLiked(req.session.user.userId, reviewId)
         const likes = await reviewData.addLikes(reviewId)
         res.json({ islike: islike, likes: likes, message: "Favorite status updated successfully" });
       } else {
