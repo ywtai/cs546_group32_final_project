@@ -326,7 +326,186 @@ const createUsers = async (parkIds) => {
 			content: content
 		});    
     }
+  
+  await addToPassport(
+    user1.userId.toString(),
+    {
+      parkId : RedwoodParkId,
+      visitDate : "2023-03-12"
+    });
+  
+  await addToPassport(
+    user1.userId.toString(),
+    {
+      parkId : BostonParkId,
+      visitDate : "2023-04-10"
+    }
+  )
 
+  await addToPassport(
+    user2.userId.toString(),
+    {
+      parkId : CaptainJohnParkId,
+      visitDate : "2020-05-10"
+    });
+  
+  await addToPassport(
+    user2.userId.toString(),
+    {
+      parkId : CanyonParkId,
+      visitDate : "2018-12-10"
+    });
+  
+  await addToPassport(
+    user3.userId.toString(),
+    {
+      parkId : CaptainJohnParkId,
+      visitDate : "2010-04-16"
+    });
+  
+  await addToPassport(
+    user4.userId.toString(),
+    {
+      parkId : AcadiaParkId,
+      visitDate : "2015-11-10"
+    });
+  
+  await addToPassport(
+    user5.userId.toString(),
+    {
+      parkId : rockyParkId,
+      visitDate : "2017-09-26"
+    });
+  
+  await addToLiked(
+    user1.userId.toString(),
+    user1Review1.reviewId
+  );
+  await reviews.addLikes(user1Review1.reviewId);
+
+  await addToLiked(
+    user1.userId.toString(),
+    user1Review2.reviewId
+  );
+  await reviews.addLikes(user1Review2.reviewId);
+  
+  await addToLiked(
+    user1.userId.toString(),
+    user4Review2.reviewId
+  );
+  await reviews.addLikes(user4Review2.reviewId);
+  
+  await addToLiked(
+    user2.userId.toString(),
+    user1Review1.reviewId
+  );
+  await reviews.addLikes(user1Review1.reviewId);
+  
+  await addToLiked(
+    user2.userId.toString(),
+    user4Review2.reviewId
+  );
+  await reviews.addLikes(user4Review2.reviewId);
+  
+  await addToLiked(
+    user3.userId.toString(),
+    user1Review1.reviewId
+  );
+  await reviews.addLikes(user1Review1.reviewId);
+  
+  await addToLiked(
+    user3.userId.toString(),
+    user5Review2.reviewId
+  );
+  await reviews.addLikes(user5Review2.reviewId);
+  
+  await addToLiked(
+    user4.userId.toString(),
+    user1Review1.reviewId
+  );
+  await reviews.addLikes(user1Review1.reviewId);
+  
+  await addToLiked(
+    user4.userId.toString(),
+    user5Review1.reviewId,
+  );
+  await reviews.addLikes(user5Review1.reviewId);
+  
+  await addToLiked(
+    user5.userId.toString(),
+    user1Review1.reviewId
+  );
+  await reviews.addLikes(user1Review1.reviewId);
+  
+  await addToLiked(
+    user5.userId.toString(),
+    user2Review1.reviewId,
+  );
+  await reviews.addLikes(user2Review1.reviewId);
+
+  await addToFavorites(
+    user1.userId.toString(),
+    {
+      parkId: rockyParkId.toString(),
+      parkName: "Rocky Mountain National Park"
+    }
+  )
+
+  await addToFavorites(
+    user1.userId.toString(),
+    {
+      parkId: CanyonParkId.toString(),
+      parkName: "Canyonlands National Park"
+    }
+  )
+
+  await addToFavorites(
+    user1.userId.toString(),
+    {
+      parkId: BostonParkId.toString(),
+      parkName: "Boston National Historical Park"
+    }
+  )
+
+  await addToFavorites(
+    user2.userId.toString(),
+    {
+      parkId: AcadiaParkId.toString(),
+      parkName: "Acadia National Park"
+    }
+  )
+
+  await addToFavorites(
+    user2.userId.toString(),
+    {
+      parkId: rockyParkId.toString(),
+      parkName: "Rocky Mountain National Park"
+    }
+  )
+
+  await addToFavorites(
+    user3.userId.toString(),
+    {
+      parkId: RedwoodParkId.toString(),
+      parkName: "RedwoodParkId"
+    }
+  )
+
+  await addToFavorites(
+    user4.userId.toString(),
+    {
+      parkId: rockyParkId.toString(),
+      parkName: "Rocky Mountain National Park"
+    }
+  )
+
+  await addToFavorites(
+    user5.userId.toString(),
+    {
+      parkId: AcadiaParkId.toString(),
+      parkName: "Acadia National Park"
+    }
+  )
 }
 
 const parkIds = await saveParksFromApi();
