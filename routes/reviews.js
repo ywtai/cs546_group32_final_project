@@ -105,7 +105,8 @@ router
       if (parkReviews.some(review => review.userId === req.session.user.userId))
       {
         return res.status(400).render('error', {
-          message: 'You can not leave more than one review in the same park.'
+          message: 'You can not leave more than one review in the same park.',
+          backUrl: '/park/' + parkId
         });
       }
     } catch(e) {
