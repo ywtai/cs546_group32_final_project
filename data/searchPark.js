@@ -39,10 +39,7 @@ async searchByName(name, pageSize, offset) {
 async searchByActivity(activityIds, pageSize, offset) {
     try {
         const parkCollection = await parks();
-
-        if (!Array.isArray(activityIds)) {
-            activityIds = [activityIds];
-        }
+        activityIds = activityIds.split(',');
 
         const query = { "activities.id": { $in: activityIds } };
 
