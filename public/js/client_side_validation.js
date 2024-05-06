@@ -66,7 +66,7 @@ if (loginForm) {
 const helpers = {
   checkIfValid(...parVal) {
     for (let val of parVal) {
-      if (!val || val === undefined || val === null) throw `You must supply a valid input`;
+      if (!val || val === undefined || val === null) throw `All inputs can not be empty!`;
     }
   },
   checkuserName(username) {
