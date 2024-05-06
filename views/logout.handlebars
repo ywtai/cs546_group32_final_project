@@ -1,24 +1,18 @@
-<body>
 <link rel="stylesheet" href="/public/css/styles.css">
 <link rel="stylesheet" href="/public/css/login.css">
 
-</body>
 
-<header>
-    <h1>Log out</h1>
-</header>
+<h1 class="title">Log out</h1>
 
-<main class="container alertPage">
-    <div>
-        <p>You have been logged out.</p>
-        <a href="/">Return to home page</a>
+<div class="container alertPage">
+    <p>You have been logged out.</p>
+    <a href="/">Return to home page</a>
 
-        {{#if previousUrl}}
-        <p>or</p>
-        <a href="{{previousUrl}}">Return to previous page</a>
-        {{/if}}
-    </div>
-</main>
+    {{#if previousUrl}}
+    <p>or</p>
+    <a href="{{previousUrl}}">Return to previous page</a>
+    {{/if}}
+</div>
 
 <script>
     function preventBack() { window.history.forward(); }
