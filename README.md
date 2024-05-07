@@ -12,3 +12,6 @@ npm run seed
 ```bash
 npm start
 ```
+## The ADMIN account:
+#### username: admin
+#### password: Admin123!
