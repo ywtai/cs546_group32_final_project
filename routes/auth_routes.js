@@ -36,6 +36,9 @@ router
     bio = xss(bio);
     password = xss(password);
     confirmPassword = xss(confirmPassword);
+    userName = userName.trim().toLowerCase();
+    email = email.trim().toLowerCase();
+
     let errors =[];
     const userCollection = await users(); 
     const checkEmailExisted = await userCollection.findOne({ email: email });
