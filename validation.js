@@ -78,7 +78,6 @@ const exportedMethods = {
     calculateAverageRating(reviews) {
       if (reviews.length === 0) return 0;
       const totalRating = reviews.reduce((acc, cur) => acc + cur.rating, 0);
-      // let averageRating = (totalRating / reviews.length).toFixed(1);
       let averageRating = totalRating / reviews.length;
       return averageRating;
     },
