@@ -120,7 +120,7 @@ export const deleteLiked = async (userId, reviewId) => {
   const userCollection = await users();
  
   const updateInfo = await userCollection.updateOne(
-    { _id: new ObjectId(userId) }, // Convert to ObjectId
+    { _id: new ObjectId(userId) },
     { $pull: { likedReviews: {reviewId} } } 
   );
   
@@ -151,7 +151,7 @@ export const deleteFavorite = async (userId, parkId) => {
   const userCollection = await users();
  
   const updateInfo = await userCollection.updateOne(
-    { _id: new ObjectId(userId) }, // Convert to ObjectId
+    { _id: new ObjectId(userId) }, 
     { $pull: { favorite: { parkId } } } 
   );
   

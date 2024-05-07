@@ -3,7 +3,6 @@ import authRoutes from './auth_routes.js';
 import reviewsRoutes from "./reviews.js";
 import adminRoutes from "./admin.js";
 
-// import postsRoutes from"./posts.js";
 const constructorMethod = (app) => {
     app.use('/', parksRoutes, reviewsRoutes);
     app.use('/auth', authRoutes);
