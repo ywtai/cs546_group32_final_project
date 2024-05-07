@@ -696,7 +696,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.added) {
             alert(`Added to passport successfully!`);
         } else {
-            alert('Park already exists in passport for selected date!');
+            alert('Park already exists in passport!');
         }
     })
     .catch(error => console.error('Error:', error));
