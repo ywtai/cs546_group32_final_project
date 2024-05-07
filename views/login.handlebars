@@ -8,9 +8,9 @@
     <h1 class="login">{{title}}</h1>
     <form id="login-form" action="/auth/login" method="POST">
         <label for="usernameOrEmail">Email Address or your username:</label>
-        <input type="text" name="usernameOrEmail" id="usernameOrEmail" value = {{usernameOrEmail}}><br>
+        <input type="text" name="usernameOrEmail" id="usernameOrEmail" ><br>
         <label for="loginpassword">Password:</label>
-        <input type="password" name="password" id="loginpassword" value = {{password}}><br>
+        <input type="password" name="password" id="loginpassword" ><br>
         <input type="submit" value="Login">
     </form>
     <div id="error" class="error" hidden>I'm an error. I will change through Client-Side JS</div>
