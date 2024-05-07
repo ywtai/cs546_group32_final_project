@@ -124,7 +124,8 @@ router
       const previousUrl = req.session.previousUrl || '/';
       res.redirect(previousUrl);
     } catch (e) {
-      return res.status(500).render('login', {title: "Login", error: e});
+      const ifError = e !== undefined;
+      return res.status(500).render('login', {ifError: ifError, error: e});
     }
   });
 

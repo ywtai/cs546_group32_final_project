@@ -1,18 +1,18 @@
-
 <link rel="stylesheet" href="/public/css/styles.css">
 <link rel="stylesheet" href="/public/css/login.css">
 
-
-
 <div class="container">
-    <h1 class="login">{{title}}</h1>
+    <h1 class="login">Login</h1>
     <form id="login-form" action="/auth/login" method="POST">
         <label for="usernameOrEmail">Email Address or your username:</label>
-        <input type="text" name="usernameOrEmail" id="usernameOrEmail" ><br>
+        <input type="text" name="usernameOrEmail" id="usernameOrEmail"><br>
         <label for="loginpassword">Password:</label>
-        <input type="password" name="password" id="loginpassword" ><br>
+        <input type="password" name="password" id="loginpassword"><br>
         <input type="submit" value="Login">
     </form>
+    {{#if ifError}}
+        <p>Error: {{error}}</p>
+    {{/if}}
     <div id="error" class="error" hidden>I'm an error. I will change through Client-Side JS</div>
 
     <a class="login-a" href="/auth/register">Click here to register!</a>
