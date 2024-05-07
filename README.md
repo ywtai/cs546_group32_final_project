@@ -14,4 +14,5 @@ npm start
 ```
 ## The ADMIN account:
 #### username: admin
+#### emailaddress: admin@aurora.com
 #### password: Admin123!
