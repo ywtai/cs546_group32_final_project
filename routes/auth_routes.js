@@ -225,28 +225,29 @@ router.route('/error').get(async (req, res) => {
 });
 
 
-// router.route('/logout').get(async (req, res) => {
-//   const previousUrl = req.headers.originalUrl || '/'; 
-//   req.session.destroy(); 
-//   res.clearCookie('AuthState'); 
+router.route('/logout').get(async (req, res) => {
+  const previousUrl = req.headers.originalUrl || '/'; 
+  req.session.destroy(); 
+  res.clearCookie('AuthState'); 
+  res.redirect('/')
 
-//   res.render('logout', {
-//     redirectUrl: '/', 
-//     previousUrl 
+  // res.render('logout', {
+  //   redirectUrl: '/', 
+  //   previousUrl 
+  // });
+});
+
+// router.route('/logout').get((req, res) => {
+//   req.session.destroy((err) => {
+//     if (err) {
+//       console.error('Failed to destroy session:', err);
+//       return res.status(500).send('Logout failed');
+//     }
+
+//     res.clearCookie('AuthState');
+//     res.render('logout'); 
 //   });
 // });
-
-router.route('/logout').get((req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error('Failed to destroy session:', err);
-      return res.status(500).send('Logout failed');
-    }
-
-    res.clearCookie('AuthState');
-    res.render('logout'); 
-  });
-});
 
 
 export default router;
