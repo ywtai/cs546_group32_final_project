@@ -30,4 +30,4 @@ npm start
 #### emailaddress: morgan@gmail.com
 #### password: Morgan12345!
 
-
+### Git repo: https://github.com/ywtai/cs546_group32_final_project
