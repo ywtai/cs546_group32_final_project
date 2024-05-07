@@ -43,7 +43,7 @@ router
     const checkUserExisted = await userCollection.findOne({ userName: userName });
     if (checkUserExisted) errors.push( 'Error: A user with this userName already exists!');
     if(errors.length > 0){
-    return res.render('register', {errors: errors})}
+    return res.render('register', {title: "Register", errors: errors})}
 
     try {
       helpers.checkIfValid(userName,
@@ -232,23 +232,9 @@ router.route('/logout').get(async (req, res) => {
   res.clearCookie('AuthState'); 
   res.redirect('/')
 
-  // res.render('logout', {
-  //   redirectUrl: '/', 
-  //   previousUrl 
-  // });
 });
 
-// router.route('/logout').get((req, res) => {
-//   req.session.destroy((err) => {
-//     if (err) {
-//       console.error('Failed to destroy session:', err);
-//       return res.status(500).send('Logout failed');
-//     }
 
-//     res.clearCookie('AuthState');
-//     res.render('logout'); 
-//   });
-// });
 
 
 export default router;
